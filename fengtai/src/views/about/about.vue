@@ -7,7 +7,7 @@ const info = ref('这是 About 页面，用于展示项目信息。')
 <template>
   <div class="about">
     <h1>About111-222-333</h1>
-    <p>{{ info }}</p>
+    <p>{{ info }}--333</p>
     <router-link to="/" class="link-btn">返回首页</router-link>
   </div>
 </template>
