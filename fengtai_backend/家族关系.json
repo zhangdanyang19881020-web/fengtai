@@ -1,0 +1,83 @@
+{
+  "name": "家族",
+  "children": [
+    {
+      "name": "祖辈",
+      "children": [
+        {
+          "name": "爷爷",
+          "spouse": "奶奶",
+          "children": [
+            {
+              "name": "父亲",
+              "spouse": "母亲",
+              "children": [
+                {
+                  "name": "我",
+                  "spouse": "配偶",
+                  "children": [
+                    {
+                      "name": "子女",
+                      "children": [
+                        { "name": "儿子" },
+                        { "name": "女儿" }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "兄弟姐妹",
+                  "children": [
+                    { "name": "哥哥" },
+                    { "name": "姐姐" },
+                    { "name": "弟弟" },
+                    { "name": "妹妹" }
+                  ]
+                },
+                {
+                  "name": "侄外甥辈",
+                  "children": [
+                    { "name": "侄子（兄弟的儿子）" },
+                    { "name": "侄女（兄弟的女儿）" },
+                    { "name": "外甥（姐妹的儿子）" },
+                    { "name": "外甥女（姐妹的女儿）" }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "伯父",
+              "spouse": "伯母"
+            },
+            {
+              "name": "叔叔",
+              "spouse": "婶婶"
+            },
+            {
+              "name": "姑妈",
+              "spouse": "姑父"
+            }
+          ]
+        },
+        {
+          "name": "外公",
+          "spouse": "外婆",
+          "children": [
+            {
+              "name": "母亲",
+              "spouse": "父亲（已在父系）"
+            },
+            {
+              "name": "舅舅",
+              "spouse": "舅妈"
+            },
+            {
+              "name": "姨妈",
+              "spouse": "姨父"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

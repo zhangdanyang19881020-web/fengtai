@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>家族图谱 - Vue 3</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Microsoft YaHei', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+      color: #333;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    
+    .app-description {
+      color: #7f8c8d;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .main-content {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .family-tree {
+      flex: 1;
+      min-width: 300px;
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      overflow: auto;
+      max-height: 600px;
+    }
+    
+    .member-form {
+      flex: 1;
+      min-width: 300px;
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-title {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #eee;
+    }
+    
+    .tree-node {
+      margin-left: 20px;
+      padding: 10px;
+      border-left: 2px solid #3498db;
+    }
+    
+    .member-card {
+      background: #f8f9fa;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .member-card:hover {
+      background: #e9f7fe;
+      transform: translateX(5px);
+    }
+    
+    .member-name {
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    
+    .member-details {
+      font-size: 0.9em;
+      color: #7f8c8d;
+      margin-top: 5px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+      transition: background 0.3s;
+    }
+    
+    button:hover {
+      background: #2980b9;
+    }
+    
+    .btn-delete {
+      background: #e74c3c;
+    }
+    
+    .btn-delete:hover {
+      background: #c0392b;
+    }
+    
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .empty-message {
+      text-align: center;
+      color: #7f8c8d;
+      padding: 20px;
+    }
+    
+    .selected {
+      background: #d6eaf8;
+      border-left: 4px solid #3498db;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <header>
+      <h1><i class="fas fa-tree"></i> 家族图谱</h1>
+      <p class="app-description">使用Vue 3构建的家族关系管理系统，帮助您记录和可视化家族成员之间的关系。</p>
+    </header>
+    
+    <div class="main-content">
+      <div class="family-tree">
+        <h2 class="section-title"><i class="fas fa-sitemap"></i> 家族树</h2>
+        <div v-if="members.length === 0" class="empty-message">
+          <p>暂无家族成员数据，请添加第一位家庭成员</p>
+        </div>
+        <div class="tree-root" v-for="member in rootMembers" :key="member.id">
+          <family-member :member="member" :members="members" 
+                         :selected-id="selectedMemberId" 
+                         @select="selectMember">
+          </family-member>
+        </div>
+      </div>
+      
+      <div class="member-form">
+        <h2 class="section-title">
+          <i class="fas" :class="isEditing ? 'fa-user-edit' : 'fa-user-plus'"></i> 
+          {{ isEditing ? '编辑成员' : '添加成员' }}
+        </h2>
+        
+        <form @submit.prevent="saveMember">
+          <div class="form-group">
+            <label for="name">姓名 *</label>
+            <input type="text" id="name" v-model="formData.name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="gender">性别</label>
+            <select id="gender" v-model="formData.gender">
+              <option value="男">男</option>
+              <option value="女">女</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="birthdate">出生日期</label>
+            <input type="date" id="birthdate" v-model="formData.birthdate">
+          </div>
+          
+          <div class="form-group">
+            <label for="parent">父亲/母亲</label>
+            <select id="parent" v-model="formData.parentId">
+              <option value="">-- 选择父节点 --</option>
+              <option v-for="member in members" :key="member.id" :value="member.id">
+                {{ member.name }} ({{ member.gender }})
+              </option>
+            </select>
+          </div>
+          
+          <div class="actions">
+            <button type="submit">{{ isEditing ? '更新' : '添加' }}</button>
+            <button type="button" class="btn-delete" v-if="isEditing" @click="deleteMember">
+              删除
+            </button>
+            <button type="button" v-if="isEditing" @click="cancelEdit">
+              取消
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref, computed, onMounted } = Vue;
+    
+    // 家族成员组件
+    const FamilyMember = {
+      props: ['member', 'members', 'selectedId'],
+      template: `
+        <div>
+          <div 
+            class="member-card" 
+            :class="{ selected: selectedId === member.id }"
+            @click="$emit('select', member)"
+          >
+            <div class="member-name">
+              <i class="fas" :class="member.gender === '男' ? 'fa-mars' : (member.gender === '女' ? 'fa-venus' : 'fa-genderless')"></i>
+              {{ member.name }}
+            </div>
+            <div class="member-details">
+              {{ member.gender }} | {{ member.birthdate || '未知' }}
+            </div>
+          </div>
+          
+          <div class="tree-node" v-if="hasChildren(member.id)">
+            <family-member 
+              v-for="child in getChildren(member.id)" 
+              :key="child.id"
+              :member="child"
+              :members="members"
+              :selected-id="selectedId"
+              @select="$emit('select', $event)"
+            >
+            </family-member>
+          </div>
+        </div>
+      `,
+      methods: {
+        hasChildren(memberId) {
+          return this.members.some(m => m.parentId === memberId);
+        },
+        getChildren(memberId) {
+          return this.members.filter(m => m.parentId === memberId);
+        }
+      }
+    };
+    
+    const app = createApp({
+      setup() {
+        // 成员数据
+        const members = ref([]);
+        const selectedMemberId = ref(null);
+        const isEditing = ref(false);
+        
+        // 表单数据
+        const formData = ref({
+          id: null,
+          name: '',
+          gender: '男',
+          birthdate: '',
+          parentId: ''
+        });
+        
+        // 计算根节点（没有父节点的成员）
+        const rootMembers = computed(() => {
+          return members.value.filter(member => !member.parentId);
+        });
+        
+        // 选择成员
+        const selectMember = (member) => {
+          selectedMemberId.value = member.id;
+          isEditing.value = true;
+          
+          // 填充表单数据
+          formData.value = {
+            id: member.id,
+            name: member.name,
+            gender: member.gender,
+            birthdate: member.birthdate,
+            parentId: member.parentId || ''
+          };
+        };
+        
+        // 保存成员
+        const saveMember = () => {
+          if (isEditing.value) {
+            // 更新现有成员
+            const index = members.value.findIndex(m => m.id === formData.value.id);
+            if (index !== -1) {
+              members.value[index] = { ...formData.value };
+            }
+          } else {
+            // 添加新成员
+            const newMember = {
+              id: Date.now(), // 使用时间戳作为ID
+              name: formData.value.name,
+              gender: formData.value.gender,
+              birthdate: formData.value.birthdate,
+              parentId: formData.value.parentId || null
+            };
+            
+            members.value.push(newMember);
+          }
+          
+          // 保存到localStorage
+          saveToLocalStorage();
+          
+          // 重置表单
+          resetForm();
+        };
+        
+        // 删除成员
+        const deleteMember = () => {
+          if (confirm('确定要删除这个成员吗？')) {
+            // 删除该成员
+            members.value = members.value.filter(m => m.id !== formData.value.id);
+            
+            // 删除该成员的所有子成员
+            const deleteChildren = (parentId) => {
+              const children = members.value.filter(m => m.parentId === parentId);
+              children.forEach(child => {
+                members.value = members.value.filter(m => m.id !== child.id);
+                deleteChildren(child.id);
+              });
+            };
+            deleteChildren(formData.value.id);
+            
+            // 保存到localStorage
+            saveToLocalStorage();
+            
+            // 重置表单
+            resetForm();
+          }
+        };
+        
+        // 取消编辑
+        const cancelEdit = () => {
+          resetForm();
+        };
+        
+        // 重置表单
+        const resetForm = () => {
+          formData.value = {
+            id: null,
+            name: '',
+            gender: '男',
+            birthdate: '',
+            parentId: ''
+          };
+          
+          selectedMemberId.value = null;
+          isEditing.value = false;
+        };
+        
+        // 保存到localStorage
+        const saveToLocalStorage = () => {
+          localStorage.setItem('familyMembers', JSON.stringify(members.value));
+        };
+        
+        // 从localStorage加载数据
+        const loadFromLocalStorage = () => {
+          const data = localStorage.getItem('familyMembers');
+          if (data) {
+            members.value = JSON.parse(data);
+          } else {
+            // 默认示例数据
+            members.value = [
+              { id: 1, name: '祖父', gender: '男', birthdate: '1950-01-01' },
+              { id: 2, name: '祖母', gender: '女', birthdate: '1952-03-15' },
+              { id: 3, name: '父亲', gender: '男', birthdate: '1975-05-20', parentId: 1 },
+              { id: 4, name: '母亲', gender: '女', birthdate: '1978-08-12' },
+              { id: 5, name: '儿子', gender: '男', birthdate: '2005-11-30', parentId: 3 },
+              { id: 6, name: '女儿', gender: '女', birthdate: '2010-07-22', parentId: 3 }
+            ];
+          }
+        };
+        
+        // 组件挂载时加载数据
+        onMounted(() => {
+          loadFromLocalStorage();
+        });
+        
+        return {
+          members,
+          selectedMemberId,
+          isEditing,
+          formData,
+          rootMembers,
+          selectMember,
+          saveMember,
+          deleteMember,
+          cancelEdit
+        };
+      }
+    });
+    
+    app.component('family-member', FamilyMember);
+    app.mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>家族图谱 - 组织架构风格</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+      color: #334e68;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    }
+    
+    h1 {
+      color: #102a43;
+      margin-bottom: 10px;
+      font-size: 2.2rem;
+    }
+    
+    .app-description {
+      color: #486581;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      background: white;
+      padding: 15px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    }
+    
+    .view-options {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .view-option-btn {
+      padding: 8px 16px;
+      background: #f0f4f8;
+      border: 1px solid #bcccdc;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .view-option-btn.active {
+      background: #d5e0f2;
+      border-color: #829ab1;
+      font-weight: 600;
+    }
+    
+    .main-content {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .org-chart {
+      flex: 2;
+      min-width: 300px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+      overflow: auto;
+      position: relative;
+    }
+    
+    .member-form {
+      flex: 1;
+      min-width: 300px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    }
+    
+    .section-title {
+      color: #102a43;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f4f8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    /* 组织架构样式 */
+    .org-tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+    }
+    
+    .tree-level {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 40px;
+      position: relative;
+    }
+    
+    .tree-level::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      border-top: 2px solid #829ab1;
+      z-index: 1;
+    }
+    
+    .tree-level:first-child::before {
+      display: none;
+    }
+    
+    .tree-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 15px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .tree-node::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      width: 2px;
+      height: 20px;
+      background: #829ab1;
+      z-index: 1;
+    }
+    
+    .node-children {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      margin-top: 40px;
+    }
+    
+    .node-children::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      border-top: 2px solid #829ab1;
+    }
+    
+    .member-card {
+      background: white;
+      border: 1px solid #d9e2ec;
+      border-radius: 8px;
+      padding: 15px;
+      width: 180px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .member-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-color: #9fb3c8;
+    }
+    
+    .member-card.selected {
+      background: #f0f7ff;
+      border-color: #4098d7;
+      box-shadow: 0 5px 15px rgba(64, 152, 215, 0.2);
+    }
+    
+    .member-name {
+      font-weight: 600;
+      color: #102a43;
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+    
+    .member-details {
+      font-size: 0.85rem;
+      color: #627d98;
+      margin-top: 5px;
+    }
+    
+    .member-relation {
+      display: inline-block;
+      background: #f0f4f8;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      margin-top: 8px;
+      color: #486581;
+    }
+    
+    /* 表单样式 */
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #334e68;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d9e2ec;
+      border-radius: 6px;
+      font-size: 1rem;
+      color: #334e68;
+      transition: border 0.3s;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: #4098d7;
+      box-shadow: 0 0 0 3px rgba(64, 152, 215, 0.2);
+    }
+    
+    button {
+      background: #4098d7;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-right: 10px;
+      transition: background 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    button:hover {
+      background: #2680c2;
+    }
+    
+    .btn-delete {
+      background: #e12d39;
+    }
+    
+    .btn-delete:hover {
+      background: #c61a24;
+    }
+    
+    .btn-cancel {
+      background: #829ab1;
+    }
+    
+    .btn-cancel:hover {
+      background: #627d98;
+    }
+    
+    .actions {
+      margin-top: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .empty-message {
+      text-align: center;
+      color: #829ab1;
+      padding: 40px 20px;
+    }
+    
+    .member-count {
+      background: #f0f4f8;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      margin-left: 10px;
+      color: #486581;
+    }
+    
+    .spouse-connection {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+    }
+    
+    .spouse-line {
+      flex-grow: 1;
+      height: 2px;
+      background: #829ab1;
+    }
+    
+    .spouse-label {
+      margin: 0 10px;
+      font-size: 0.8rem;
+      color: #829ab1;
+    }
+    
+    .couple-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 15px;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        flex-direction: column;
+      }
+      
+      .controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .view-options {
+        justify-content: center;
+      }
+      
+      .tree-level {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .tree-node {
+        margin: 10px 0;
+      }
+      
+      .node-children {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <header>
+      <h1><i class="fas fa-sitemap"></i> 家族组织架构图</h1>
+      <p class="app-description">以公司组织架构风格展示您的家族关系，清晰直观地了解家庭成员间的层级关系。</p>
+    </header>
+    
+    <div class="controls">
+      <div class="view-title">
+        <h2>家族图谱 <span class="member-count">{{ members.length }} 位成员</span></h2>
+      </div>
+      <div class="view-options">
+        <button class="view-option-btn active">组织架构视图</button>
+        <button class="view-option-btn">列表视图</button>
+        <button class="view-option-btn">时间线视图</button>
+      </div>
+    </div>
+    
+    <div class="main-content">
+      <div class="org-chart">
+        <h3 class="section-title"><i class="fas fa-network-wired"></i> 家族结构</h3>
+        <div v-if="members.length === 0" class="empty-message">
+          <p><i class="fas fa-users fa-3x"></i></p>
+          <p>暂无家族成员数据，请添加第一位家庭成员</p>
+        </div>
+        <div class="org-tree" v-else>
+          <!-- 第一代 -->
+          <div class="tree-level" v-if="firstGeneration.length > 0">
+            <div class="tree-node" v-for="member in firstGeneration" :key="member.id">
+              <div class="member-card" :class="{ selected: selectedMemberId === member.id }" @click="selectMember(member)">
+                <div class="member-name">{{ member.name }}</div>
+                <div class="member-details">{{ member.gender }} | {{ formatDate(member.birthdate) }}</div>
+                <div class="member-relation">第一代</div>
+              </div>
+              
+              <!-- 显示配偶 -->
+              <div v-if="getSpouse(member.id)" class="couple-container">
+                <div class="spouse-connection">
+                  <div class="spouse-line"></div>
+                  <div class="spouse-label">配偶</div>
+                  <div class="spouse-line"></div>
+                </div>
+                <div class="member-card" :class="{ selected: selectedMemberId === getSpouse(member.id).id }" 
+                     @click="selectMember(getSpouse(member.id))">
+                  <div class="member-name">{{ getSpouse(member.id).name }}</div>
+                  <div class="member-details">{{ getSpouse(member.id).gender }} | {{ formatDate(getSpouse(member.id).birthdate) }}</div>
+                  <div class="member-relation">第一代</div>
+                </div>
+              </div>
+              
+              <!-- 第二代 -->
+              <div class="node-children" v-if="getChildren(member.id).length > 0">
+                <div class="tree-node" v-for="child in getChildren(member.id)" :key="child.id">
+                  <div class="member-card" :class="{ selected: selectedMemberId === child.id }" @click="selectMember(child)">
+                    <div class="member-name">{{ child.name }}</div>
+                    <div class="member-details">{{ child.gender }} | {{ formatDate(child.birthdate) }}</div>
+                    <div class="member-relation">第二代</div>
+                  </div>
+                  
+                  <!-- 显示配偶 -->
+                  <div v-if="getSpouse(child.id)" class="couple-container">
+                    <div class="spouse-connection">
+                      <div class="spouse-line"></div>
+                      <div class="spouse-label">配偶</div>
+                      <div class="spouse-line"></div>
+                    </div>
+                    <div class="member-card" :class="{ selected: selectedMemberId === getSpouse(child.id).id }" 
+                         @click="selectMember(getSpouse(child.id))">
+                      <div class="member-name">{{ getSpouse(child.id).name }}</div>
+                      <div class="member-details">{{ getSpouse(child.id).gender }} | {{ formatDate(getSpouse(child.id).birthdate) }}</div>
+                      <div class="member-relation">第二代</div>
+                    </div>
+                  </div>
+                  
+                  <!-- 第三代 -->
+                  <div class="node-children" v-if="getChildren(child.id).length > 0">
+                    <div class="tree-node" v-for="grandChild in getChildren(child.id)" :key="grandChild.id">
+                      <div class="member-card" :class="{ selected: selectedMemberId === grandChild.id }" @click="selectMember(grandChild)">
+                        <div class="member-name">{{ grandChild.name }}</div>
+                        <div class="member-details">{{ grandChild.gender }} | {{ formatDate(grandChild.birthdate) }}</div>
+                        <div class="member-relation">第三代</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="member-form">
+        <h3 class="section-title">
+          <i class="fas" :class="isEditing ? 'fa-user-edit' : 'fa-user-plus'"></i> 
+          {{ isEditing ? '编辑成员信息' : '添加新成员' }}
+        </h3>
+        
+        <form @submit.prevent="saveMember">
+          <div class="form-group">
+            <label for="name">姓名 *</label>
+            <input type="text" id="name" v-model="formData.name" required placeholder="输入成员姓名">
+          </div>
+          
+          <div class="form-group">
+            <label for="gender">性别</label>
+            <select id="gender" v-model="formData.gender">
+              <option value="男">男</option>
+              <option value="女">女</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="birthdate">出生日期</label>
+            <input type="date" id="birthdate" v-model="formData.birthdate">
+          </div>
+          
+          <div class="form-group">
+            <label for="parent">父亲/母亲</label>
+            <select id="parent" v-model="formData.parentId">
+              <option value="">-- 选择父节点 --</option>
+              <option v-for="member in members" :key="member.id" :value="member.id">
+                {{ member.name }} ({{ member.gender }})
+              </option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="spouse">配偶</label>
+            <select id="spouse" v-model="formData.spouseId">
+              <option value="">-- 选择配偶 --</option>
+              <option v-for="member in potentialSpouses" :key="member.id" :value="member.id">
+                {{ member.name }} ({{ member.gender }})
+              </option>
+            </select>
+          </div>
+          
+          <div class="actions">
+            <button type="submit"><i class="fas" :class="isEditing ? 'fa-save' : 'fa-plus'"></i> {{ isEditing ? '更新' : '添加' }}</button>
+            <button type="button" class="btn-delete" v-if="isEditing" @click="deleteMember">
+              <i class="fas fa-trash"></i> 删除
+            </button>
+            <button type="button" class="btn-cancel" v-if="isEditing" @click="cancelEdit">
+              <i class="fas fa-times"></i> 取消
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref, computed, onMounted } = Vue;
+    
+    const app = createApp({
+      setup() {
+        // 成员数据
+        const members = ref([]);
+        const selectedMemberId = ref(null);
+        const isEditing = ref(false);
+        
+        // 表单数据
+        const formData = ref({
+          id: null,
+          name: '',
+          gender: '男',
+          birthdate: '',
+          parentId: '',
+          spouseId: ''
+        });
+        
+        // 计算第一代成员（没有父节点的成员）
+        const firstGeneration = computed(() => {
+          return members.value.filter(member => !member.parentId);
+        });
+        
+        // 获取潜在配偶（异性成员）
+        const potentialSpouses = computed(() => {
+          const currentGender = formData.value.gender;
+          return members.value.filter(m => m.gender !== currentGender && !m.spouseId);
+        });
+        
+        // 获取成员的孩子
+        const getChildren = (memberId) => {
+          return members.value.filter(m => m.parentId === memberId);
+        };
+        
+        // 获取成员的配偶
+        const getSpouse = (memberId) => {
+          const member = members.value.find(m => m.id === memberId);
+          if (member && member.spouseId) {
+            return members.value.find(m => m.id === member.spouseId);
+          }
+          return null;
+        };
+        
+        // 选择成员
+        const selectMember = (member) => {
+          selectedMemberId.value = member.id;
+          isEditing.value = true;
+          
+          // 填充表单数据
+          formData.value = {
+            id: member.id,
+            name: member.name,
+            gender: member.gender,
+            birthdate: member.birthdate,
+            parentId: member.parentId || '',
+            spouseId: member.spouseId || ''
+          };
+        };
+        
+        // 格式化日期
+        const formatDate = (dateString) => {
+          if (!dateString) return '未知';
+          const date = new Date(dateString);
+          return date.toLocaleDateString('zh-CN');
+        };
+        
+        // 保存成员
+        const saveMember = () => {
+          if (isEditing.value) {
+            // 更新现有成员
+            const index = members.value.findIndex(m => m.id === formData.value.id);
+            if (index !== -1) {
+              members.value[index] = { ...formData.value };
+              
+              // 如果设置了配偶，同时更新配偶信息
+              if (formData.value.spouseId) {
+                const spouseIndex = members.value.findIndex(m => m.id === formData.value.spouseId);
+                if (spouseIndex !== -1) {
+                  members.value[spouseIndex].spouseId = formData.value.id;
+                }
+              }
+            }
+          } else {
+            // 添加新成员
+            const newMember = {
+              id: Date.now(), // 使用时间戳作为ID
+              name: formData.value.name,
+              gender: formData.value.gender,
+              birthdate: formData.value.birthdate,
+              parentId: formData.value.parentId || null,
+              spouseId: formData.value.spouseId || null
+            };
+            
+            members.value.push(newMember);
+            
+            // 如果设置了配偶，同时更新配偶信息
+            if (formData.value.spouseId) {
+              const spouseIndex = members.value.findIndex(m => m.id === formData.value.spouseId);
+              if (spouseIndex !== -1) {
+                members.value[spouseIndex].spouseId = newMember.id;
+              }
+            }
+          }
+          
+          // 保存到localStorage
+          saveToLocalStorage();
+          
+          // 重置表单
+          resetForm();
+        };
+        
+        // 删除成员
+        const deleteMember = () => {
+          if (confirm('确定要删除这个成员吗？')) {
+            const memberId = formData.value.id;
+            
+            // 删除该成员
+            members.value = members.value.filter(m => m.id !== memberId);
+            
+            // 清除配偶关系
+            members.value.forEach(m => {
+              if (m.spouseId === memberId) {
+                m.spouseId = null;
+              }
+            });
+            
+            // 删除该成员的所有子成员
+            const deleteChildren = (parentId) => {
+              const children = members.value.filter(m => m.parentId === parentId);
+              children.forEach(child => {
+                members.value = members.value.filter(m => m.id !== child.id);
+                deleteChildren(child.id);
+              });
+            };
+            deleteChildren(memberId);
+            
+            // 保存到localStorage
+            saveToLocalStorage();
+            
+            // 重置表单
+            resetForm();
+          }
+        };
+        
+        // 取消编辑
+        const cancelEdit = () => {
+          resetForm();
+        };
+        
+        // 重置表单
+        const resetForm = () => {
+          formData.value = {
+            id: null,
+            name: '',
+            gender: '男',
+            birthdate: '',
+            parentId: '',
+            spouseId: ''
+          };
+          
+          selectedMemberId.value = null;
+          isEditing.value = false;
+        };
+        
+        // 保存到localStorage
+        const saveToLocalStorage = () => {
+          localStorage.setItem('familyMembers', JSON.stringify(members.value));
+        };
+        
+        // 从localStorage加载数据
+        const loadFromLocalStorage = () => {
+          const data = localStorage.getItem('familyMembers');
+          if (data) {
+            members.value = JSON.parse(data);
+          } else {
+            // 默认示例数据
+            members.value = [
+              { id: 1, name: '张建国', gender: '男', birthdate: '1950-01-01' },
+              { id: 2, name: '李爱华', gender: '女', birthdate: '1952-03-15', spouseId: 1 },
+              { id: 3, name: '张伟', gender: '男', birthdate: '1975-05-20', parentId: 1 },
+              { id: 4, name: '王芳', gender: '女', birthdate: '1978-08-12', spouseId: 3 },
+              { id: 5, name: '张明', gender: '男', birthdate: '2005-11-30', parentId: 3 },
+              { id: 6, name: '张丽', gender: '女', birthdate: '2010-07-22', parentId: 3 }
+            ];
+          }
+        };
+        
+        // 组件挂载时加载数据
+        onMounted(() => {
+          loadFromLocalStorage();
+        });
+        
+        return {
+          members,
+          selectedMemberId,
+          isEditing,
+          formData,
+          firstGeneration,
+          potentialSpouses,
+          getChildren,
+          getSpouse,
+          selectMember,
+          saveMember,
+          deleteMember,
+          cancelEdit,
+          formatDate
+        };
+      }
+    });
+    
+    app.mount('#app');
+  </script>
+</body>
+</html>
