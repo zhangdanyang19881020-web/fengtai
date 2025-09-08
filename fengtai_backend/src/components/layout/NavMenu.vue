@@ -55,27 +55,9 @@
 	export default defineComponent({
 		name: 'NavMenu',
 		setup() {
-			const adHeight = ref(300);
-			const lengthList = ref(50);
-
-
-
-			// 监听窗口大小变化
-			const handleResize = () => {
-				calculateHeight();
-			};
-			// 计算滚动区域高度的函数
-			const calculateHeight = () => {
-				// 获取浏览器视口高度
-				adHeight.value = window.innerHeight - 450;
-				console.log('adHeight', adHeight)
-				// 减去菜单标题高度 (约80px) + 导航菜单高度 (约200px) + 底部应用按钮高度 (约50px) + 一些边距
-			}
 
 			// 路由信息读取
 			const route = useRoute() // 使用 `useRoute` 获取当前路由
-
-			console.log(route.meta.name) // 访问 meta 数据
 
 
 			// 定义菜单项类型
@@ -107,88 +89,7 @@
 
 			])
 
-			const openPageList = reactive([{
-				name: '礼貌微笑11 (57754388577543885775438857754388)广告主',
-				id: 11,
-			}, {
-				name: '礼貌微笑礼貌微笑礼貌微笑礼貌微笑22 (57754388)广告主',
-				id: 22,
-			}, {
-				name: '礼貌微笑33 33 33 33 33 (57754388)广告主',
-				id: 33,
-			}, {
-				name: '礼貌微笑44 (57754388)广告主',
-				id: 44,
-			}, {
-				name: '礼貌微笑55 (57754388)广告主',
-				id: 55,
-			}, {
-				name: '礼貌微笑66 (57754388)广告主',
-				id: 66,
-			}, {
-				name: '礼貌微笑77 (57754388)广告主',
-				id: 77,
-			}, {
-				name: '礼貌微笑88 (57754388)广告主',
-				id: 88,
-			}, {
-				name: '礼貌微笑99 (57754388)广告主',
-				id: 99,
-			}, {
-				name: '礼貌微笑11 (57754388)广告主',
-				id: 110,
-			}, {
-				name: '礼貌微笑22 (57754388)广告主',
-				id: 220,
-			}, {
-				name: '礼貌微笑33 (57754388)广告主',
-				id: 330,
-			}, {
-				name: '礼貌微笑44 (57754388)广告主',
-				id: 440,
-			}, {
-				name: '礼貌微笑55 (57754388)广告主',
-				id: 550,
-			}, {
-				name: '礼貌微笑66 (57754388)广告主',
-				id: 660,
-			}, {
-				name: '礼貌微笑77 (57754388)广告主',
-				id: 770,
-			}, {
-				name: '礼貌微笑88 (57754388)广告主',
-				id: 880,
-			}, {
-				name: '礼貌微笑99 (57754388)广告主',
-				id: 990,
-			}, {
-				name: '礼貌微笑11 (57754388)广告主',
-				id: 1111,
-			}, {
-				name: '礼貌微笑22 (57754388)广告主',
-				id: 2211,
-			}, {
-				name: '礼貌微笑33 (57754388)广告主',
-				id: 3311,
-			}, {
-				name: '礼貌微笑44 (57754388)广告主',
-				id: 4411,
-			}, {
-				name: '礼貌微笑55 (57754388)广告主',
-				id: 5511,
-			}, {
-				name: '礼貌微笑66 (57754388)广告主',
-				id: 6611,
-			}, {
-				name: '礼貌微笑77 (57754388)广告主',
-				id: 7711,
-			}, {
-				name: '礼貌微笑88 (57754388)广告主',
-				id: 8811,
-			}, {
-				name: '礼貌微笑99 (57754388)广告主',
-				id: 9911,
-			}])
+	
 
 			// 路由跳转
 			const router = useRouter()
@@ -211,7 +112,7 @@
 
 			// 在 return 之前调用 onMounted
 			onMounted(() => {
-				calculateHeight();
+			
 				window.addEventListener('resize', handleResize);
 			});
 
@@ -222,13 +123,9 @@
 			return {
 				route, // 可以在模板中直接访问
 
-				tradeManageNavs,
-				openPageList,
-				adHeight,
-				lengthList,
+				tradeManageNavs, //左侧导航数据
 
 				goPage,
-				calculateHeight,
 				activeItemFn,
 
 
@@ -328,76 +225,6 @@
 			li:hover {
 				background: #deedff;
 			}
-		}
-
-
-		.open-page--box {
-			font-size: 14px;
-			padding: 10px 0 30px;
-			text-align: left;
-
-			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-
-			.open-title {
-				display: flex;
-				text-align: left;
-				margin: 10px 20px 0;
-				background: #409eff;
-				padding: 5px 10px;
-				color: #fff;
-				display: inline-block;
-				border-top-left-radius: 10px;
-				border-top-right-radius: 10px;
-				font-size: 14px;
-			}
-
-			.open-item--list {
-				border: 1px solid rgba(0, 0, 0, 0.05);
-				border-radius: 4px;
-				padding-top: 10px;
-				margin: 0 20px;
-				background: rgba(0, 0, 0, 0.03);
-
-				.open-item {
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					padding: 5px 10px;
-					margin: 0 15px;
-					color: rgba(0, 0, 0, 0.6);
-					border-radius: 4px;
-					box-sizing: border-box;
-
-					.open-item--name {
-						width: 100%;
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
-					}
-
-					&.active {
-						background: #3977f3;
-						color: #fff;
-					}
-
-					.icon-chacha {
-						display: none;
-					}
-
-					&:hover {
-
-						background: #409EFF;
-						color: #fff;
-
-						.icon-chacha {
-							display: block;
-							cursor: pointer;
-						}
-					}
-				}
-			}
-
-
 		}
 
 	}
