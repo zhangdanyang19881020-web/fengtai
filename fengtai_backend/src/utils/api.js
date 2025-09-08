@@ -8,7 +8,7 @@ import {
 // 测试
 // var _ServiceUrl = 'https://www.gihoo.work'; //ok
 // var _commonApiUrl = "https://api.x.gihoo.work";
-var _ServiceUrl = 'http://192.168.0.17:8080'; //ok
+var _ServiceUrl = 'http://192.168.0.17:8000'; //ok
 var _commonApiUrl = "https://api.x.gihoo.work";
 
 // 用户相关接口
@@ -17,18 +17,16 @@ export const userApi = {
 	login: (data) => {
 		let requestData = "";
 		let headers = {}
-		
-		// 构建登录数据
-		requestData = `username=${data.username}&password=${data.password}`;
-		
-		headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-		
-		// 添加 Basic 认证头（登录接口特有的）
-		headers['Authorization'] = `Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW`
 
-		return post(_ServiceUrl + '/auth/login/', requestData, {
-			headers
-		})
+		// 构建登录数据
+		// requestData = `username=${data.username}&password=${data.password}`;
+
+		headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+
+		// 添加 Basic 认证头（登录接口特有的）
+		// headers['Authorization'] = `Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW`
+
+		return post(_ServiceUrl + '/api/auth/login/', data, )
 	},
 
 	// 用户登出

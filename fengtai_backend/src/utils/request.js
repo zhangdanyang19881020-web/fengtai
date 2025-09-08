@@ -73,8 +73,9 @@ service.interceptors.response.use(
 		} = response
 
 		console.log('响应拦截器:', response)
+		console.log('config:', config)
 
-		// console.log('status',status)
+		console.log('status', status)
 		// 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
 		if (status === 200) {
 			// 检查是否是登录接口的响应，如果是则自动保存 token
@@ -84,24 +85,42 @@ service.interceptors.response.use(
 				// config.url.includes('/auth')
 			)
 			console.log('isLoginResponse--', isLoginResponse);
-			
-			if (isLoginResponse && data.access_token) {
-				// 自动保存登录返回的 token
-				import('./token').then(({
-					setAccessToken,
-					setRefreshToken
-				}) => {
-					setAccessToken(data.access_token, data.expires_in || 3600)
-					if (data.refresh_token) {
-						setRefreshToken(data.refresh_token)
-					}
-					console.log('登录成功，Token 已自动保存')
-				})
-			}
+
+			// if (isLoginResponse && data.access_token) {
+			// 自动保存登录返回的 token
+			// import('./token').then(({
+			// 	setAccessToken,
+			// 	setRefreshToken
+			// }) => {
+			// 	setAccessToken(data.access_token, data.expires_in || 3600)
+			// 	if (data.refresh_token) {
+			// 		setRefreshToken(data.refresh_token)
+			// 	}
+			// 	console.log('登录成功，Token 已自动保存')
+			// })
+			// }
 
 			// 这里可以根据后端的响应结构进行调整
-			// console.log('data--', data)
-			if (data.status === 1 || data.token_type || data.CompanyId) {
+			console.log('data--', data)
+			if (data.status === 1 || data.code == 200) {
+				if (config.url.indexOf('/api/auth/login/') > -1) {
+					// 自动保存登录返回的 token
+					var loginResOb = data.data;
+					import('./token').then(({
+						setAccessToken,
+						setRefreshToken,
+						setUserInfo
+					}) => {
+						setAccessToken(loginResOb.access_token, loginResOb.expires_in || 3600)
+						if (loginResOb.refresh_token) {
+							setRefreshToken(loginResOb.refresh_token)
+						}
+						if (loginResOb.user + "") {
+							setUserInfo(loginResOb.user)
+						}
+						console.log('登录成功，Token 已自动保存')
+					})
+				}
 				return data
 			} else {
 				// 业务错误处理
