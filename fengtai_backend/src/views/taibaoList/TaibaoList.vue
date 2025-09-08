@@ -25,7 +25,7 @@
 
 		<div class="pagination-box">
 			<el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-				:page-sizes="[10, 20, 30, 40]" :background="background"
+				:page-sizes="[10, 20, 30, 40]" :background="background" size="default"
 				layout="total, sizes, prev, pager, next, jumper" :total="filteredTotal" @size-change="handleSizeChange"
 				@current-change="handleCurrentChange" />
 		</div>
