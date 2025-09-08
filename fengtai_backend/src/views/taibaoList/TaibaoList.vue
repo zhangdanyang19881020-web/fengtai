@@ -2,14 +2,15 @@
 	<div class="container">
 		<div class="header">
 			<el-input v-model="searchQuery" placeholder="输入名字搜索" :suffix-icon="Search" class="search-box" />
-			<el-button type="primary" class="new-button">新增</el-button>
+			<el-button type="primary" class="new-button" @click="goNewFn">新增</el-button>
 		</div>
 
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
 			<el-table-column label="头像" width="100">
 				<template #default="scope">
 					<el-avatar v-if="scope.row.headImg" :src="scope.row.headImg" size="small"></el-avatar>
-					<el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" size="small"></el-avatar>
+					<el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+						size="small"></el-avatar>
 				</template>
 			</el-table-column>
 			<el-table-column label="名字" prop="userName"></el-table-column>
@@ -40,6 +41,9 @@
 		watch,
 		onMounted
 	} from 'vue'
+	import {
+		useRouter
+	} from 'vue-router'
 	import {
 		ElInput,
 		ElTable,
@@ -73,6 +77,8 @@
 			const background = ref(true)
 			const total = ref(0)
 
+			const router = useRouter();
+
 			// params object to track page info and search query
 			const params = computed(() => ({
 				userName: searchQuery.value,
@@ -87,7 +93,7 @@
 			const filteredData = computed(() => {
 				return data.value;
 			})
-			const filteredTotal= computed(() => {
+			const filteredTotal = computed(() => {
 				return total.value;
 			})
 
@@ -113,6 +119,9 @@
 				} catch (error) {
 					console.error('Failed to fetch data:', error)
 				}
+			}
+			const goNewFn = () => {
+				router.push('/newTaibao')
 			}
 
 			// Search query watcher
@@ -143,6 +152,7 @@
 					}
 				},
 				Search,
+				goNewFn
 			}
 		}
 	}
