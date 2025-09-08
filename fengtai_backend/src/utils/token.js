@@ -153,11 +153,11 @@ class TokenManager {
 	}
 
 	getUserInfo() {
-		const raw = localStorage.getItem(USER_INFO);
+		const rawUserInfo = localStorage.getItem(USER_INFO);
 		try {
-			return raw ? JSON.parse(raw) : null;
-		} catch {
-			return null;
+			return rawUserInfo ? JSON.parse(rawUserInfo) : {}; // 返回解析后的对象，或空对象
+		} catch (e) {
+			return {}; // 防止 JSON 解析失败，返回空对象
 		}
 	}
 

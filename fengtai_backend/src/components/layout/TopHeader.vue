@@ -1,27 +1,29 @@
 <template>
 	<div class="top-header">
+		<div class="header-title"> {{route.meta.title}}</div>
 		<div class="header-actions">
+
 			<el-space size="large">
-			
-					<el-dropdown popper-class="z-dropdown" trigger="click"  @command="onCommand">
-						<span class="user-entry">
-							<el-avatar :size="28" :src="avatarUrl">{{ userInitial }}</el-avatar>
-						</span>
-						<template #dropdown>
-							<el-dropdown-menu>
-								<el-dropdown-item disabled>
-									<div class="user-brief">
-										<div class="user-name">{{ userName }}</div>
-										<div class="user-phone">{{ phone }}</div>
-									</div>
-								</el-dropdown-item>								
-								<el-dropdown-item divided command="logout">
-									退出登录
-								</el-dropdown-item>
-							</el-dropdown-menu>
-						</template>
-					</el-dropdown>
-		
+
+				<el-dropdown popper-class="z-dropdown" trigger="click" @command="onCommand">
+					<span class="user-entry">
+						<el-avatar :size="28" :src="avatarUrl">{{ userInitial }}</el-avatar>
+					</span>
+					<template #dropdown>
+						<el-dropdown-menu>
+							<el-dropdown-item disabled>
+								<div class="user-brief">
+									<div class="user-name">{{ userName }}</div>
+									<div class="user-phone">{{ phone }}</div>
+								</div>
+							</el-dropdown-item>
+							<el-dropdown-item divided command="logout">
+								退出登录
+							</el-dropdown-item>
+						</el-dropdown-menu>
+					</template>
+				</el-dropdown>
+
 			</el-space>
 		</div>
 	</div>
@@ -37,6 +39,7 @@
 		defineComponent,
 		ref,
 		reactive,
+		computed,
 	} from 'vue'
 	import {
 		ElMessageBox,
@@ -49,25 +52,24 @@
 	export default defineComponent({
 		name: 'TopHeader',
 		setup() {
-			const router = useRouter()  // 在 setup 函数内获取 router 对象
-			
-			const UserInfo = reactive(getUserInfo());
-			console.log('UserInfo', UserInfo);
+			const router = useRouter() // 在 setup 函数内获取 router 对象
 
-			const userName = ref(UserInfo.username);
+			// 路由信息读取
+			const route = useRoute() // 使用 `useRoute` 获取当前路由
 
+			// 给一个兜底对象，避免 null
+			const rawUser = getUserInfo() || {
+				username: '未登录',
+				phone: '',
+				avatarUrl: ''
+			}
+			const UserInfo = reactive(rawUser)
 
-			const phone = ref(UserInfo.phone)
-			
-
-
-			const avatarUrl = ref(UserInfo.avatarUrl || '')
-
-			const userInitial = ref(userName.value.charAt(0))
-
-
-
-
+			// 这些字段也做兜底，避免 undefined
+			const userName = computed(() => UserInfo.username || '未登录')
+			const phone = computed(() => UserInfo.phone || '—')
+			const avatarUrl = computed(() => UserInfo.avatarUrl || '')
+			const userInitial = computed(() => (userName.value?.charAt(0) || 'U'))
 
 			const onCommand = (cmd) => {
 				switch (cmd) {
@@ -95,6 +97,7 @@
 			}
 
 			return {
+				route,
 				UserInfo,
 				userName,
 				phone,
@@ -108,15 +111,20 @@
 </script>
 
 <style lang="scss" scoped>
-
 	.top-header {
 		display: flex;
 		align-items: center;
-		justify-content: flex-end;
+		justify-content: space-between;
 		width: 100%;
 		height: 100%;
 		box-sizing: border-box;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+		.header-title {
+			font-size:16px;
+			font-weight: bold;
+			color: #333;
+		}
 
 	}
 

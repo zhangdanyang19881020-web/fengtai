@@ -64,8 +64,8 @@
 			const tradeManageNavs = reactive([{
 					name: "台胞列表",
 					icon: "iconfont icon-renyuanliebiao",
-					go: "/table",
-					type: "table",
+					go: "/taibaoList",
+					type: "taibaoList",
 				},
 				{
 					name: "家乡风貌",

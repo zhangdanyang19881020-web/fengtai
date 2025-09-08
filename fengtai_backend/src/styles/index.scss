@@ -1,10 +1,7 @@
-// 用于放置项目中自己封装的一些常用的样式，class类名，比如flex布局，定位，字体等等，这个只写了一个
-//合并图标
+@use "./constant.scss" as *;
+@use "./fixed.scss" as *;
 @import url('//at.alicdn.com/t/c/font_5014666_iuf5nqrwyje.css');
 
-@import "./constant.scss";
-
-@import './fixed.scss';
  
  body,ul,li{
 	 margin:0;

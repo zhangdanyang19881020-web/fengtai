@@ -11,13 +11,16 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
+	server: {
+		hmr: true, // 确保 HMR 是开启的
+	},
 	plugins: [
 		vue(),
 		vueDevTools(),
 	],
 	resolve: {
 		alias: {
-			'@': fileURLToPath(new URL('./src', import.meta.url)),
+			'@': '/src',
 		},
 	},
 	css: {

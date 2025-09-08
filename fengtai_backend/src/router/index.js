@@ -20,11 +20,13 @@ const routes = [
 			name:'奉台家缘',
 		},
 		children: [{
-			path: '/about',
-			name: 'about',
-			component: () => import('@/views/about/about.vue'),
+			path: '/taibaoList',
+			name: 'taibaoList',
+			component: () => import('@/views/taibaoList/TaibaoList.vue'),
 			meta:{
 				name:'奉台家缘',
+				type:'taibaoList',
+				title:'台胞人员列表'
 			},
 		}]
 	},

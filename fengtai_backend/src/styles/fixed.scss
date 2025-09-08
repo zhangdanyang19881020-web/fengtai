@@ -1,5 +1,46 @@
-	// 组建样式覆盖
-	
-	.z-dropdown{
-		width:160px;
-	}
+// 覆盖 Element Plus 组件的样式
+.z-dropdown {
+  width: 160px;
+}
+
+.search-box {
+  .el-input__wrapper {
+    border-radius: 20px;
+    border: 1px solid #409eff;
+
+    .el-input__inner {
+      margin-left: 10px;
+      height: 35px;
+      line-height: 35px;
+
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .el-input__suffix {
+      color: #409eff;
+      font-size: 22px;
+    }
+  }
+}
+
+.z-table {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+
+  .el-table__header-wrapper {
+    th {
+      background: #F0F7FF;
+    }
+  }
+
+  .el-table__row {
+    background-color: #fafafa;
+
+    &:hover {
+      background-color: #e6f7ff;
+    }
+  }
+}
