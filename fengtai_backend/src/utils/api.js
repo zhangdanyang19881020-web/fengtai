@@ -8,7 +8,8 @@ import {
 // 测试
 // var _ServiceUrl = 'https://www.gihoo.work'; //ok
 // var _commonApiUrl = "https://api.x.gihoo.work";
-var _ServiceUrl = 'http://192.168.0.17:8000'; //ok
+// var _ServiceUrl = 'http://192.168.0.17:8000'; //ok
+var _ServiceUrl = 'http://8.136.3.28:8000'; //ok
 var _commonApiUrl = "https://api.x.gihoo.work";
 
 // 用户相关接口

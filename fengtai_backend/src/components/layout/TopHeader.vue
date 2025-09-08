@@ -2,7 +2,7 @@
 	<div class="top-header">
 		<div class="header-actions">
 			<el-space size="large">
-				<template #default>
+			
 					<el-dropdown popper-class="z-dropdown" trigger="click"  @command="onCommand">
 						<span class="user-entry">
 							<el-avatar :size="28" :src="avatarUrl">{{ userInitial }}</el-avatar>
@@ -11,7 +11,7 @@
 							<el-dropdown-menu>
 								<el-dropdown-item disabled>
 									<div class="user-brief">
-										<div class="user-name">{{ UserInfo.username }}</div>
+										<div class="user-name">{{ userName }}</div>
 										<div class="user-phone">{{ phone }}</div>
 									</div>
 								</el-dropdown-item>								
@@ -21,7 +21,7 @@
 							</el-dropdown-menu>
 						</template>
 					</el-dropdown>
-				</template>
+		
 			</el-space>
 		</div>
 	</div>
@@ -49,6 +49,8 @@
 	export default defineComponent({
 		name: 'TopHeader',
 		setup() {
+			const router = useRouter()  // 在 setup 函数内获取 router 对象
+			
 			const UserInfo = reactive(getUserInfo());
 			console.log('UserInfo', UserInfo);
 
@@ -85,9 +87,8 @@
 
 							ElMessage.success('已退出登录')
 							// TODO: 在此处执行实际登出逻辑，如清理 Token、跳转登录页
-
 							clearTokens(); //清除所有token
-							useRouter.push('/login') // 跳转到登录页面
+							router.push('/') // 跳转到登录页面
 						}).catch(() => {})
 						break
 				}

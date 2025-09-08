@@ -148,14 +148,17 @@ class TokenManager {
 	//设置用户信息
 	setUserInfo(userInfo) {
 		if (userInfo) {
-			var ob = JSON.stringify(userInfo);
-			localStorage.setItem(USER_INFO, ob);
+			localStorage.setItem(USER_INFO, JSON.stringify(userInfo));
 		}
 	}
 
 	getUserInfo() {
-		const userInfo = localStorage.getItem(USER_INFO)
-		return userInfo ? JSON.parse(userInfo) : null
+		const raw = localStorage.getItem(USER_INFO);
+		try {
+			return raw ? JSON.parse(raw) : null;
+		} catch {
+			return null;
+		}
 	}
 
 
