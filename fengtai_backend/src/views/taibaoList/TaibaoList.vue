@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="header">
 			<el-input v-model="searchQuery" placeholder="输入名字搜索" :suffix-icon="Search" class="search-box" />
-			<el-button type="primary" plain class="new-button">新增</el-button>
+			<el-button type="primary"  class="new-button">新增</el-button>
 		</div>
 
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
@@ -16,8 +16,8 @@
 			<el-table-column label="祖籍" prop="hometown"></el-table-column>
 			<el-table-column label="操作">
 				<template #default="scope">
-					<el-button @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
-					<el-button @click="deleteRow(scope.row)" size="small" type="danger">删除</el-button>
+					<el-button link @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
+					<el-button link @click="deleteRow(scope.row)" size="small" type="danger">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -157,6 +157,13 @@
 		align-items: center;
 		margin-bottom: 30px;
 		position: relative;
+		.search-box{
+			width:400px;
+		}
+		.new-button{
+			position: absolute;
+			right:0;
+		}
 	}
 	.pagination-box{
 		display: flex;

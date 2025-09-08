@@ -27,12 +27,13 @@
 
 .z-table {
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border-radius: 4px;
   overflow: hidden;
 
   .el-table__header-wrapper {
     th {
       background: #F0F7FF;
+	  height:45px;
     }
   }
 
