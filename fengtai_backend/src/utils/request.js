@@ -80,47 +80,34 @@ service.interceptors.response.use(
 		if (status === 200) {
 			// 检查是否是登录接口的响应，如果是则自动保存 token
 			const isLoginResponse = config.url && (
-				config.url.includes('/cas/OAuth/Token')
+				config.url.includes('/api/auth/login/')
 				// config.url.includes('/login') ||
 				// config.url.includes('/auth')
 			)
 			console.log('isLoginResponse--', isLoginResponse);
 
-			// if (isLoginResponse && data.access_token) {
-			// 自动保存登录返回的 token
-			// import('./token').then(({
-			// 	setAccessToken,
-			// 	setRefreshToken
-			// }) => {
-			// 	setAccessToken(data.access_token, data.expires_in || 3600)
-			// 	if (data.refresh_token) {
-			// 		setRefreshToken(data.refresh_token)
-			// 	}
-			// 	console.log('登录成功，Token 已自动保存')
-			// })
-			// }
+			if (isLoginResponse || data.code == 200) {
+				// 自动保存登录返回的 token
+				var loginResOb = data.data;
+				import('./token').then(({
+					setAccessToken,
+					setRefreshToken,
+					setUserInfo
+				}) => {
+					setAccessToken(loginResOb.access_token, loginResOb.expires_in || 3600)
+					if (loginResOb.refresh_token) {
+						setRefreshToken(loginResOb.refresh_token)
+					}
+					if (loginResOb.user + "") {
+						setUserInfo(loginResOb.user)
+					}
+					console.log('登录成功，Token 已自动保存')
+				})
+			}
 
 			// 这里可以根据后端的响应结构进行调整
 			console.log('data--', data)
-			if (data.status === 1 || data.code == 200) {
-				if (config.url.indexOf('/api/auth/login/') > -1) {
-					// 自动保存登录返回的 token
-					var loginResOb = data.data;
-					import('./token').then(({
-						setAccessToken,
-						setRefreshToken,
-						setUserInfo
-					}) => {
-						setAccessToken(loginResOb.access_token, loginResOb.expires_in || 3600)
-						if (loginResOb.refresh_token) {
-							setRefreshToken(loginResOb.refresh_token)
-						}
-						if (loginResOb.user + "") {
-							setUserInfo(loginResOb.user)
-						}
-						console.log('登录成功，Token 已自动保存')
-					})
-				}
+			if (data.code == 200) {
 				return data
 			} else {
 				// 业务错误处理

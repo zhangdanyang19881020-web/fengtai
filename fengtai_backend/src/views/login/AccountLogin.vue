@@ -82,10 +82,7 @@
 						// 登录接口会自动保存 token
 						const result = await userApi.login(form)
 						console.log('result--', result)
-						if (result.access_token) {
-							const userInfo = await userApi.getUserInfo();
-							console.log('userInfo', userInfo)
-							getUserInfo(userInfo);
+						if (result.code==200) {
 							router.push('/home');
 						}
 						// responseData.value = JSON.stringify(result, null, 2)
