@@ -2,13 +2,23 @@ import {
 	createRouter,
 	createWebHashHistory
 } from 'vue-router'
+import AccountLogin from '@/views/login/AccountLogin.vue'
 
-
-const routes = [{
+const routes = [
+	{
 		path: '/',
+		name: 'login',
+		component: AccountLogin,
+		meta: {
+			public: true
+		}
+	},
+	{
+		path: '/home',
 		name: 'home',
 		component: () => import('@/views/home/home.vue'),
-		children: [{
+		children: [
+			{
 				path: '/about',
 				name: 'about',
 				component: () => import('@/views/about/about.vue')
@@ -74,8 +84,7 @@ const routes = [{
 				component: () => import('@/views/quill/wangeditor.vue')
 			}
 		]
-	},
-
+	}
 ]
 
 const router = createRouter({
