@@ -2,7 +2,7 @@
 	<div class="main-box">
 		<div v-if="$route.name !== 'login'" class="home-page">
 			<el-container>
-				<el-aside width="300px">
+				<el-aside width="100px">
 					<NavMenu />
 				</el-aside>
 				<el-container class="z-container">
@@ -65,6 +65,7 @@
 		width: 100%;
 		height: 100%;
 	}
+
 
 	.main-box {
 		width: 100%;

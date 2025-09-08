@@ -2,8 +2,8 @@
 	<div class="top-header">
 		<div class="header-actions">
 			<el-space size="large">
-				<el-link type="info" @click="onHelp">帮助</el-link>
-				<el-link type="info" @click="onFeedback">意见收集</el-link>
+<!-- 				<el-link type="info" @click="onHelp">帮助</el-link>
+				<el-link type="info" @click="onFeedback">意见收集</el-link> -->
 				<el-dropdown trigger="click" @command="onCommand">
 					<span class="user-entry">
 						<el-avatar :size="28" :src="avatarUrl">{{ userInitial }}</el-avatar>

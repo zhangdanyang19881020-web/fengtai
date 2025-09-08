@@ -1,10 +1,7 @@
 <template>
 	<nav class="menu">
 		<div class="menu-title">
-			{{$route.meta.name}}
-			<div class="menu-version">
-				{{$route.meta.version}}
-			</div>
+			{{route.meta.name}}
 		</div>
 		<ul class="nav-ul">
 			<li class="nav-li" :class="{'active':item.type==$route.meta.type}" v-for="item in tradeManageNavs"
@@ -22,7 +19,7 @@
 			</li>
 		</ul>
 
-		<div class="open-page--box">
+		<!-- 	<div class="open-page--box">
 			<div class="open-title">广告主访问列表</div>
 			<el-scrollbar class="open-item--list" :style="{height:adHeight+'px'}">
 
@@ -33,7 +30,7 @@
 				</div>
 
 			</el-scrollbar>
-		</div>
+		</div> -->
 
 	</nav>
 </template>
@@ -47,9 +44,12 @@
 		onMounted,
 		onUnmounted,
 
+		watch
+
 	} from 'vue'
 	import {
-		useRouter
+		useRouter,
+		useRoute
 	} from 'vue-router'
 
 	export default defineComponent({
@@ -57,6 +57,8 @@
 		setup() {
 			const adHeight = ref(300);
 			const lengthList = ref(50);
+
+
 
 			// 监听窗口大小变化
 			const handleResize = () => {
@@ -70,38 +72,38 @@
 				// 减去菜单标题高度 (约80px) + 导航菜单高度 (约200px) + 底部应用按钮高度 (约50px) + 一些边距
 			}
 
+			// 路由信息读取
+			const route = useRoute() // 使用 `useRoute` 获取当前路由
+
+			console.log(route.meta.name) // 访问 meta 数据
+
 
 			// 定义菜单项类型
 			const tradeManageNavs = reactive([{
-					name: "广告主列表",
-					icon: "iconfont icon-table",
+					name: "台胞列表",
+					icon: "iconfont icon-renyuanliebiao",
 					go: "/table",
 					type: "table",
 				},
 				{
-					name: "充值页面",
-					icon: "iconfont icon-caiwu",
+					name: "家乡风貌",
+					icon: "iconfont icon-mianji",
 					go: "/searchBox",
 					type: "money",
 				},
 				{
-					name: "API-example",
-					icon: "iconfont icon-caiwu",
+					name: "最新动态",
+					icon: "iconfont icon-zuixinxunqing",
 					go: "/api-example",
 					type: "api",
 				},
-				// {
-				// 	name: "token-test",
-				// 	icon: "iconfont icon-caiwu",
-				// 	go: "/token-test",
-				// 	type: "token",
-				// },
-				// {
-				// 	name: "TokenManagerExample",
-				// 	icon: "iconfont icon-caiwu",
-				// 	go: "/TokenManagerExample",
-				// 	type: "TokenManagerExample",
-				// },
+				{
+					name: "家族关系",
+					icon: "iconfont icon-ygqsxxgl",
+					go: "/token-test",
+					type: "token",
+				},
+
 
 			])
 
@@ -191,9 +193,11 @@
 			// 路由跳转
 			const router = useRouter()
 
+
 			function goPage(path) {
 				router.push(path)
 			}
+
 
 			function activeItemFn(item) {
 				openPageList.forEach(x => {
@@ -202,6 +206,9 @@
 				item.active = true;
 				console.log('openPageList--', openPageList)
 			}
+
+
+
 			// 在 return 之前调用 onMounted
 			onMounted(() => {
 				calculateHeight();
@@ -213,6 +220,8 @@
 			});
 
 			return {
+				route, // 可以在模板中直接访问
+
 				tradeManageNavs,
 				openPageList,
 				adHeight,
@@ -221,6 +230,8 @@
 				goPage,
 				calculateHeight,
 				activeItemFn,
+
+
 
 			}
 
@@ -233,7 +244,7 @@
 
 <style lang="scss" scoped>
 	nav.menu {
-		width: 300px;
+		width: 100px;
 		height: 100%;
 		background: #f0f7ff;
 		text-align: center;
@@ -254,28 +265,26 @@
 
 		ul.nav-ul {
 			list-style: none;
-			width: 300px;
+			width: 100px;
 			padding-bottom: 10px;
-			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+			// border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
 			li.nav-li {
 				box-sizing: border-box;
-				display: flex;
-				align-items: center;
 				cursor: pointer;
 				border-radius: 16px;
 				// transitioxn: background 0.2s;
-				width: calc(100% - 20px);
-				height: 35px;
-				padding: 0 0 0 25px;
-				margin: 5px 10px;
+				width: 100px;
+				height: 100px;
 
 				&.active {
 					background: #2d70f3;
 
 					.nav-icon {
+
 						i {
 							color: #fff;
+
 						}
 					}
 
@@ -286,11 +295,11 @@
 				}
 
 				&.pos-buttom {
-					width: 270px;
+					width: 100px;
+					height: 100px;
 					position: absolute;
-					left: 10px;
+					left: 0;
 					bottom: 30px;
-					margin-left: 4px;
 				}
 
 				.nav-space {
@@ -299,10 +308,12 @@
 				}
 
 				.nav-icon {
-					margin-right: 10px;
+
+					margin: 0 10px;
+					padding: 20px 0 5px 0;
 
 					i {
-						font-size: 20px;
+						font-size: 30px;
 						color: #7d889c;
 					}
 				}
@@ -324,7 +335,7 @@
 			font-size: 14px;
 			padding: 10px 0 30px;
 			text-align: left;
-			
+
 			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
 			.open-title {
@@ -345,20 +356,20 @@
 				border-radius: 4px;
 				padding-top: 10px;
 				margin: 0 20px;
-				background:rgba(0, 0, 0, 0.03);
+				background: rgba(0, 0, 0, 0.03);
 
 				.open-item {
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
 					padding: 5px 10px;
-					margin:0 15px;
+					margin: 0 15px;
 					color: rgba(0, 0, 0, 0.6);
 					border-radius: 4px;
 					box-sizing: border-box;
-				
-					.open-item--name{
-						width:100%;
+
+					.open-item--name {
+						width: 100%;
 						white-space: nowrap;
 						overflow: hidden;
 						text-overflow: ellipsis;
@@ -380,7 +391,7 @@
 
 						.icon-chacha {
 							display: block;
-							cursor:pointer;
+							cursor: pointer;
 						}
 					}
 				}
