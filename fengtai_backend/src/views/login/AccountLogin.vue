@@ -86,7 +86,7 @@
 							const userInfo = await userApi.getUserInfo();
 							console.log('userInfo', userInfo)
 							getUserInfo(userInfo);
-							router.push('/table');
+							router.push('/home');
 						}
 						// responseData.value = JSON.stringify(result, null, 2)
 						ElMessage.success('登录成功，Token 已自动保存！')

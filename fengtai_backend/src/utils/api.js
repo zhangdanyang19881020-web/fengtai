@@ -6,9 +6,10 @@ import {
 } from './request'
 
 // 测试
-var _ServiceUrl = 'https://www.gihoo.work'; //ok
+// var _ServiceUrl = 'https://www.gihoo.work'; //ok
+// var _commonApiUrl = "https://api.x.gihoo.work";
+var _ServiceUrl = 'http://192.168.0.17:8080'; //ok
 var _commonApiUrl = "https://api.x.gihoo.work";
-
 
 // 用户相关接口
 export const userApi = {
@@ -18,14 +19,14 @@ export const userApi = {
 		let headers = {}
 		
 		// 构建登录数据
-		requestData = `grant_type=password&username=${data.username}&password=${data.password}`;
+		requestData = `username=${data.username}&password=${data.password}`;
 		
 		headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
 		
 		// 添加 Basic 认证头（登录接口特有的）
 		headers['Authorization'] = `Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW`
 
-		return post(_ServiceUrl + '/cas/OAuth/Token', requestData, {
+		return post(_ServiceUrl + '/auth/login/', requestData, {
 			headers
 		})
 	},
