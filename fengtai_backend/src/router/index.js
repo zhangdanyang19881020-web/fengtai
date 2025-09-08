@@ -12,6 +12,15 @@ const routes = [
 		meta: {
 			public: true
 		}
+	},{
+		path: '/main',
+		name: 'main',
+		component: () => import('@/views/main/home.vue'),
+		children: [{
+			path: '/about',
+			name: 'about',
+			component: () => import('@/views/about/about.vue')
+		}]
 	},
 	{
 		path: '/home',

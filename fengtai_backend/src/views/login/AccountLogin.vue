@@ -83,7 +83,7 @@
 						const result = await userApi.login(form)
 						console.log('result--', result)
 						if (result.code==200) {
-							router.push('/home');
+							router.push('/main');
 						}
 						// responseData.value = JSON.stringify(result, null, 2)
 						ElMessage.success('登录成功，Token 已自动保存！')
