@@ -36,6 +36,7 @@
 	  height:45px;
     }
   }
+  
 
   .el-table__row {
     background-color: #fafafa;
@@ -43,5 +44,8 @@
     &:hover {
       background-color: #e6f7ff;
     }
+	td.el-table__cell{
+		background: #fff;
+	}
   }
 }

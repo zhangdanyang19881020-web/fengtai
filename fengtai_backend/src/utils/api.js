@@ -67,7 +67,7 @@ export const dataApi = {
 	// 获取数据列表
 	// 账户公司列表【账户管理】--ok
 
-	getDataList: (params) => get(_commonApiUrl + '/fund-manage/fund-account/find-vo-list-by-query-v2', params),
+	getDataList: (params) => post(_ServiceUrl + '/api/visit/userList/', params),
 	// 获取数据详情
 	getDataDetail: (id) => get(`/data/detail/${id}`),
 	// 创建数据

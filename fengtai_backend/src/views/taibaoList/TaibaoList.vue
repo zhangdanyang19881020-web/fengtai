@@ -2,18 +2,19 @@
 	<div class="container">
 		<div class="header">
 			<el-input v-model="searchQuery" placeholder="输入名字搜索" :suffix-icon="Search" class="search-box" />
-			<el-button type="primary"  class="new-button">新增</el-button>
+			<el-button type="primary" class="new-button">新增</el-button>
 		</div>
 
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
 			<el-table-column label="头像" width="100">
 				<template #default="scope">
-					<el-avatar :src="scope.row.avatar" size="small"></el-avatar>
+					<el-avatar v-if="scope.row.headImg" :src="scope.row.headImg" size="small"></el-avatar>
+					<el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" size="small"></el-avatar>
 				</template>
 			</el-table-column>
-			<el-table-column label="名字" prop="name"></el-table-column>
-			<el-table-column label="生日" prop="birthdate"></el-table-column>
-			<el-table-column label="祖籍" prop="hometown"></el-table-column>
+			<el-table-column label="名字" prop="userName"></el-table-column>
+			<el-table-column label="生日" prop="birthMonth"></el-table-column>
+			<el-table-column label="祖籍" prop="address"></el-table-column>
 			<el-table-column label="操作">
 				<template #default="scope">
 					<el-button link @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
@@ -24,18 +25,20 @@
 
 		<div class="pagination-box">
 			<el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-				:page-sizes="[100, 200, 300, 400]" :background="background"
-				layout="total, sizes, prev, pager, next, jumper" :total="filteredData.length"
-				@size-change="handleSizeChange" @current-change="handleCurrentChange" />
+				:page-sizes="[10, 20, 30, 40]" :background="background"
+				layout="total, sizes, prev, pager, next, jumper" :total="filteredTotal" @size-change="handleSizeChange"
+				@current-change="handleCurrentChange" />
 		</div>
-
 	</div>
 </template>
 
 <script>
 	import {
 		ref,
-		computed
+		reactive,
+		computed,
+		watch,
+		onMounted
 	} from 'vue'
 	import {
 		ElInput,
@@ -48,6 +51,9 @@
 	import {
 		Search
 	} from '@element-plus/icons-vue'
+	import {
+		dataApi
+	} from '@/utils/api.js'
 
 	export default {
 		name: 'UserTable',
@@ -64,82 +70,79 @@
 			const searchQuery = ref('')
 			const currentPage = ref(1)
 			const pageSize = ref(5)
-			const size = ref('default')
-			const background = ref(false)
+			const background = ref(true)
+			const total = ref(0)
 
-			// 模拟的数据
-			const data = ref([{
-					avatar: 'https://via.placeholder.com/40',
-					name: '张维攻',
-					birthdate: '1952.8',
-					hometown: '春化深口二村'
-				},
-				{
-					avatar: 'https://via.placeholder.com/40',
-					name: '张维攻',
-					birthdate: '1952.8',
-					hometown: '春化深口二村'
-				},
-				{
-					avatar: 'https://via.placeholder.com/40',
-					name: '张维攻',
-					birthdate: '1952.8',
-					hometown: '春化深口二村'
-				},
-				{
-					avatar: 'https://via.placeholder.com/40',
-					name: '张维攻',
-					birthdate: '1952.8',
-					hometown: '春化深口二村'
-				},
-				{
-					avatar: 'https://via.placeholder.com/40',
-					name: '张维攻',
-					birthdate: '1952.8',
-					hometown: '春化深口二村'
-				},
-				// 更多模拟数据
-			])
+			// params object to track page info and search query
+			const params = computed(() => ({
+				userName: searchQuery.value,
+				pageSize: pageSize.value,
+				pageIndex: currentPage.value,
+			}))
 
-			// 搜索数据
+			// Simulated data
+			const data = ref([])
+
+			// Filtered data based on search query
 			const filteredData = computed(() => {
-				return data.value.filter(item => item.name.includes(searchQuery.value))
+				return data.value;
+			})
+			const filteredTotal= computed(() => {
+				return total.value;
 			})
 
-			// 页码变化处理
+			// Handle pagination size change
 			const handleSizeChange = (val) => {
 				pageSize.value = val
+				getListFn()
 			}
 
+			// Handle page change
 			const handleCurrentChange = (val) => {
 				currentPage.value = val
+				getListFn()
 			}
 
-			// 编辑功能（模拟）
-			const editRow = (row) => {
-				console.log('编辑行:', row)
-			}
-
-			// 删除功能（模拟）
-			const deleteRow = (row) => {
-				const index = data.value.indexOf(row)
-				if (index !== -1) {
-					data.value.splice(index, 1)
+			// Fetch list from API
+			const getListFn = async () => {
+				try {
+					const result = await dataApi.getDataList(params.value)
+					console.log('result', result)
+					data.value = result.data.pageData; // assuming result.data is the data
+					total.value = result.data.totalPage;
+				} catch (error) {
+					console.error('Failed to fetch data:', error)
 				}
 			}
+
+			// Search query watcher
+			watch(searchQuery, () => {
+				currentPage.value = 1 // Reset to page 1 on search change
+				getListFn() // Trigger API call with new search query
+			})
+
+			// Mounted lifecycle hook to fetch initial data
+			onMounted(() => {
+				getListFn()
+			})
 
 			return {
 				searchQuery,
 				currentPage,
 				pageSize,
-				size,
 				background,
 				filteredData,
+				filteredTotal,
 				handleSizeChange,
 				handleCurrentChange,
-				editRow,
-				deleteRow,
-				Search, // 注册图标
+				editRow: (row) => console.log('编辑行:', row),
+				deleteRow: (row) => {
+					const index = data.value.indexOf(row)
+					if (index !== -1) {
+						data.value.splice(index, 1)
+					}
+				},
+				Search,
 			}
 		}
 	}
@@ -157,17 +160,20 @@
 		align-items: center;
 		margin-bottom: 30px;
 		position: relative;
-		.search-box{
-			width:400px;
+
+		.search-box {
+			width: 400px;
 		}
-		.new-button{
+
+		.new-button {
 			position: absolute;
-			right:0;
+			right: 0;
 		}
 	}
-	.pagination-box{
+
+	.pagination-box {
 		display: flex;
 		justify-content: flex-end;
-		margin-top:20px;
+		margin-top: 20px;
 	}
 </style>
