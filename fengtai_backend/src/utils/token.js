@@ -95,12 +95,13 @@ class TokenManager {
 	}
 
 	/**
-	 * 清除所有 Token
+	 * 清除所有 Token 和 用户信息
 	 */
 	clearTokens() {
 		localStorage.removeItem(TOKEN_KEY)
 		localStorage.removeItem(REFRESH_TOKEN_KEY)
 		localStorage.removeItem(TOKEN_EXPIRY_KEY)
+		localStorage.removeItem(USER_INFO)
 		console.log('所有 Token 已清除')
 	}
 

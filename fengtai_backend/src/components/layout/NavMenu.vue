@@ -113,11 +113,11 @@
 			// 在 return 之前调用 onMounted
 			onMounted(() => {
 			
-				window.addEventListener('resize', handleResize);
+				// window.addEventListener('resize', handleResize);
 			});
 
 			onUnmounted(() => {
-				window.removeEventListener('resize', handleResize);
+				// window.removeEventListener('resize', handleResize);
 			});
 
 			return {

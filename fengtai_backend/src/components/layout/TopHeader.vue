@@ -2,28 +2,26 @@
 	<div class="top-header">
 		<div class="header-actions">
 			<el-space size="large">
-<!-- 				<el-link type="info" @click="onHelp">帮助</el-link>
-				<el-link type="info" @click="onFeedback">意见收集</el-link> -->
-				<el-dropdown trigger="click" @command="onCommand">
-					<span class="user-entry">
-						<el-avatar :size="28" :src="avatarUrl">{{ userInitial }}</el-avatar>
-					</span>
-					<template #dropdown>
-						<el-dropdown-menu>
-							<el-dropdown-item disabled>
-								<div class="user-brief">
-									<div class="user-name">{{ userName }}</div>
-									<div class="user-phone">{{ phone }}</div>
-								</div>
-							</el-dropdown-item>
-							<el-dropdown-item divided command="profile">个人设置</el-dropdown-item>
-							<el-dropdown-item command="company">公司名称：{{ companyName }}</el-dropdown-item>
-							<el-dropdown-item divided command="logout">
-								退出登录
-							</el-dropdown-item>
-						</el-dropdown-menu>
-					</template>
-				</el-dropdown>
+				<template #default>
+					<el-dropdown popper-class="z-dropdown" trigger="click"  @command="onCommand">
+						<span class="user-entry">
+							<el-avatar :size="28" :src="avatarUrl">{{ userInitial }}</el-avatar>
+						</span>
+						<template #dropdown>
+							<el-dropdown-menu>
+								<el-dropdown-item disabled>
+									<div class="user-brief">
+										<div class="user-name">{{ UserInfo.username }}</div>
+										<div class="user-phone">{{ phone }}</div>
+									</div>
+								</el-dropdown-item>								
+								<el-dropdown-item divided command="logout">
+									退出登录
+								</el-dropdown-item>
+							</el-dropdown-menu>
+						</template>
+					</el-dropdown>
+				</template>
 			</el-space>
 		</div>
 	</div>
@@ -32,40 +30,42 @@
 
 <script>
 	import {
+		getUserInfo,
+		clearTokens
+	} from '@/utils/token'
+	import {
 		defineComponent,
-		ref
+		ref,
+		reactive,
 	} from 'vue'
 	import {
 		ElMessageBox,
 		ElMessage
 	} from 'element-plus'
+	import {
+		useRouter,
+		useRoute
+	} from 'vue-router'
 	export default defineComponent({
 		name: 'TopHeader',
 		setup() {
-			const userName = ref('张三')
-			const phone = ref('138****0000')
-			const companyName = ref('演示科技有限公司')
-			const avatarUrl = ref('')
+			const UserInfo = reactive(getUserInfo());
+			console.log('UserInfo', UserInfo);
+
+			const userName = ref(UserInfo.username);
+
+
+			const phone = ref(UserInfo.phone)
+			
+
+
+			const avatarUrl = ref(UserInfo.avatarUrl || '')
+
 			const userInitial = ref(userName.value.charAt(0))
 
-			const onHelp = () => {
-				ElMessage.info('打开帮助中心')
-			}
 
-			const onFeedback = () => {
-				ElMessageBox.prompt('请填写您的意见或建议：', '意见收集', {
-						confirmButtonText: '提交',
-						cancelButtonText: '取消',
-						inputType: 'textarea',
-					})
-					.then(({
-						value
-					}) => {
-						ElMessage.success('感谢反馈！')
-						console.log('feedback:', value)
-					})
-					.catch(() => {})
-			}
+
+
 
 			const onCommand = (cmd) => {
 				switch (cmd) {
@@ -81,21 +81,25 @@
 							cancelButtonText: '取消',
 							type: 'warning'
 						}).then(() => {
+
+
 							ElMessage.success('已退出登录')
 							// TODO: 在此处执行实际登出逻辑，如清理 Token、跳转登录页
+
+							clearTokens(); //清除所有token
+							useRouter.push('/login') // 跳转到登录页面
 						}).catch(() => {})
 						break
 				}
 			}
 
 			return {
+				UserInfo,
 				userName,
 				phone,
-				companyName,
 				avatarUrl,
 				userInitial,
-				onHelp,
-				onFeedback,
+
 				onCommand
 			}
 		},
@@ -103,6 +107,7 @@
 </script>
 
 <style lang="scss" scoped>
+
 	.top-header {
 		display: flex;
 		align-items: center;
@@ -111,7 +116,7 @@
 		height: 100%;
 		box-sizing: border-box;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-		
+
 	}
 
 	.header-actions {
