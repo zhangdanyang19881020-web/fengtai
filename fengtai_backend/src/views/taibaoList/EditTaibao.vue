@@ -2,7 +2,7 @@
 	<div class="form-container">
 		<el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="100px">
 			<!-- 头像 -->
-			<el-form-item label="头像" class="required-label" prop="avatar">
+			<el-form-item label="头像" class="required-label">
 				<div class="avatar-uploader">
 					<img v-if="form.avatar" :src="form.avatar" class="avatar" alt="头像">
 					<img v-else :src="defaultAvatar" class="avatar" alt="默认头像">
@@ -17,22 +17,10 @@
 			<el-form-item label="名字" prop="name">
 				<el-input v-model="form.name" placeholder="请输入" />
 			</el-form-item>
-			<el-form-item label="性别" prop="sex">
-				<el-radio-group v-model="form.sex">
-					<el-radio value="male">男</el-radio>
-					<el-radio value="female">女</el-radio>
-				</el-radio-group>
-			</el-form-item>
-			<el-form-item label="生日" prop="birthday">
-				<el-date-picker v-model="form.birthday" type="date" placeholder="请选择生日" />
-			</el-form-item>
 
 			<!-- 籍贯 -->
 			<el-form-item label="籍贯" prop="address">
-				<div class="city-label">
-					<el-tag type="success" size="large">奉化区</el-tag>
-				</div>
-				
+				<div class="city-label">奉化区</div>
 				<!-- 	<el-select v-model="form.city" placeholder="请选择街道" style="width: 150px; margin-left: 10px;">
 					<el-option label="锦屏街道" value="锦屏街道" />
 				</el-select>
@@ -64,7 +52,7 @@
 						<el-option v-for="item in filteredYearOptions" :key="item.value" :label="item.label"
 							:value="item.value" />
 					</el-select>
-					<el-button type="success" @click="addYear" style="margin-left: 10px;">添加</el-button>
+					<el-button type="success" @click="addYear" style="margin-left: 10px;">添加到访年份</el-button>
 				</div>
 			</el-form-item>
 
@@ -132,36 +120,24 @@
 	const form = ref({
 		avatar: "",
 		name: "",
-		sex: 'male',
-		birthday:'',
 		address: [],
 		community: "",
 		info: "",
 		visitYears: [],
-		familyTable: [],
+		familyTable: [
+			// {
+			// 	relation: "爷爷",
+			// 	name: "蒋生挺"
+			// }
+		],
 	})
 	const ruleFormRef = ref();
 
 	const rules = reactive({
-		avatar: [{
-			required: true,
-			message: '请上传头像',
-			trigger: 'change'
-		}],
 		name: [{
 			required: true,
 			message: '请输入名字',
 			trigger: 'blur'
-		}],
-		sex: [{
-			required: true,
-			message: '请选择性别',
-			trigger: 'change'
-		}],
-		birthday:[{
-			required: true,
-			message: '请选择生日',
-			trigger: 'change'
 		}],
 		address: [{
 			required: true,
@@ -183,37 +159,6 @@
 				console.log('error submit!', fields)
 			}
 		})
-	}
-	const addMemberFn = async () => {
-
-		// const form = ref({
-		// 	avatar: "",
-		// 	name: "",
-		// 	sex:'male',
-		// 	address: [],
-		// 	community: "",
-		// 	info: "",
-		// 	visitYears: [],
-		// 	familyTable: [],
-		// })
-		const params = {
-			"id": null,
-			"gender": form.sex,
-			"birthDate": form.birthday,
-			"headImgId": headerImgOb.value.id,
-			"name": "1111",
-			"regionId": 2,
-			"villageId": 3,
-			"info": "333333",
-			"contact": "1",
-			"contactPhone": "2",
-			"yearList": [2018],
-			"relationshipList": [{
-				"relationshipId": 1,
-				"relationshipName": "3333"
-			}]
-		}
-		const result = await dataApi.addMember(params)
 	}
 
 	//家族关系
@@ -270,7 +215,6 @@
 		if (familyRelation.value && familyName.value) {
 			var relationName = familyRelationOption.value.find(x => x.value == familyRelation.value).label;
 			form.value.familyTable.push({
-				id: familyRelation.value,
 				relation: relationName,
 				name: familyName.value,
 			})
@@ -350,7 +294,6 @@
 			uploadApiFn(file);
 		}
 	};
-	const headerImgOb=reactive({});
 	const uploadApiFn = async (file) => {
 		try {
 			// console.log('file',file)
@@ -362,8 +305,6 @@
 			const result = await uploadApi.uploadFile(formData)
 			console.log('result', result)
 			if (result?.data.access_path) {
-				headerImgOb.value=result.data;
-				// console.log('headerImgOb',headerImgOb)
 				form.value.avatar = result.data.access_path; // 更新为服务器地址
 				// 上传完后清空
 				fileInput.value.value = "";
@@ -432,6 +373,7 @@
 		}
 
 		.city-label {
+			color: #409eff;
 			margin-right: 10px;
 		}
 	}
