@@ -1,6 +1,6 @@
 <template>
 	<div class="form-container">
-		<el-form :model="form" label-width="100px">
+		<el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="100px">
 			<!-- 头像 -->
 			<el-form-item label="头像" class="required-label">
 				<div class="avatar-uploader">
@@ -14,7 +14,7 @@
 				</div>
 				<!-- <div class="hint-text">支持JPG、PNG格式，大小不超过2MB</div> -->
 			</el-form-item>
-			<el-form-item label="名字" required>
+			<el-form-item label="名字" prop="name">
 				<el-input v-model="form.name" placeholder="请输入" />
 			</el-form-item>
 
@@ -46,8 +46,8 @@
 							{{ year }}
 						</el-tag>
 					</div>
-					<el-input v-model="yearInput" placeholder="请输入1949-2025之间的年份数字"
-						style="width: 250px; margin-left: 10px;" @keyup.enter="addYear" />
+					<el-input v-model="yearInput" placeholder="请输入1949-2025之间的年份数字" class="year-input"
+						@keyup.enter="addYear" />
 					<el-button type="success" @click="addYear" style="margin-left: 10px;">添加到访年份</el-button>
 				</div>
 			</el-form-item>
@@ -75,10 +75,10 @@
 					<el-button type="success" @click="addFamily" style="margin-left: 10px;">添加</el-button>
 				</div>
 			</el-form-item>
-
+			<el-divider />
 			<!-- 提交按钮 -->
 			<el-form-item>
-				<el-button type="primary" size="large">添加台胞</el-button>
+				<el-button type="primary" size="large" @click="submitForm(ruleFormRef)">添加台胞</el-button>
 			</el-form-item>
 		</el-form>
 	</div>
@@ -86,7 +86,8 @@
 
 <script setup>
 	import {
-		ref
+		ref,
+		reactive
 	} from "vue"
 	import {
 		Picture,
@@ -131,6 +132,25 @@
 			},
 		],
 	})
+	const ruleFormRef = ref();
+
+	const rules = reactive({
+		name: [{
+			required: true,
+			message: '请输入名字',
+			trigger: 'blur'
+		}],
+	})
+	const submitForm = async (formEl) => {
+		if (!formEl) return
+		await formEl.validate((valid, fields) => {
+			if (valid) {
+				console.log('submit!')
+			} else {
+				console.log('error submit!', fields)
+			}
+		})
+	}
 
 	// 转换成 el-cascader 需要的格式
 	const addressOptions = rawData.subdivisions.map(sub => ({
@@ -257,6 +277,11 @@
 					margin-right: 5px;
 				}
 			}
+
+			.year-input {
+				width: 250px;
+				margin-top: 5px;
+			}
 		}
 
 		.icon-chacha {
@@ -271,7 +296,7 @@
 
 		.city-label {
 			color: #409eff;
-			margin-right:10px;
+			margin-right: 10px;
 		}
 	}
 </style>
