@@ -32,21 +32,20 @@
 				<div class="city-label">
 					<el-tag type="success" size="large">奉化区</el-tag>
 				</div>
-
-				<!-- 	<el-select v-model="form.city" placeholder="请选择街道" style="width: 150px; margin-left: 10px;">
-					<el-option label="锦屏街道" value="锦屏街道" />
-				</el-select>
-				<el-select v-model="form.community" placeholder="请选择社区" style="width: 150px; margin-left: 10px;">
-					<el-option label="奉中社区" value="奉中社区" />
-				</el-select> -->
 				<el-cascader v-model="form.address" :props="addressProp" :options="addressOptions"
 					placeholder="请选择街道/镇和村" clearable style="width: 350px" />
 			</el-form-item>
 
+			<el-form-item label="联系人" prop="contact">
+				<el-input v-model="form.contact" placeholder="请输入联系人" />
+			</el-form-item>
+			<el-form-item label="联系人电话" prop="contactPhone">
+				<el-input v-model="form.contactPhone" placeholder="请输入联系人电话" />
+			</el-form-item>
 
 			<!-- 个人信息 -->
 			<el-form-item label="个人信息" prop="info">
-				<el-input type="textarea" v-model="form.info" placeholder="请输入内容" />
+				<el-input type="textarea" v-model="form.info" placeholder="请输入个人信息" />
 			</el-form-item>
 
 			<!-- 到访年份 -->
@@ -69,7 +68,7 @@
 			</el-form-item>
 
 			<!-- 家族关系 -->
-			<el-form-item label="家族关系" required>
+			<el-form-item label="家族关系">
 				<el-table class="z-table" :data="form.familyTable">
 					<el-table-column prop="relation" label="关系" width="120" />
 					<el-table-column prop="name" label="名字" />
@@ -107,6 +106,11 @@
 		onMounted,
 	} from "vue"
 	import {
+		useRouter,
+		useRoute
+	} from 'vue-router'
+
+	import {
 		Picture,
 		Close,
 
@@ -129,6 +133,8 @@
 		getFamilyData();
 		regionListFn();
 	})
+
+	const router = useRouter()
 	const addressProp = reactive({
 		value: 'id',
 		label: 'name',
@@ -144,6 +150,8 @@
 		info: "",
 		visitYears: [],
 		familyTable: [],
+		contact: '',
+		contactPhone: ''
 	})
 	const ruleFormRef = ref();
 
@@ -156,6 +164,20 @@
 		name: [{
 			required: true,
 			message: '请输入名字',
+			trigger: 'blur'
+		}],
+		contact: [{
+			required: true,
+			message: '请输入联系人',
+			trigger: 'blur'
+		}],
+		contactPhone: [{
+			required: true,
+			message: '请输入联系人电话',
+			trigger: 'blur'
+		}, {
+			pattern: /^(\d+(-\d+)?)$/,
+			message: '电话格式不正确，只能是纯数字或数字中间带“-”',
 			trigger: 'blur'
 		}],
 		sex: [{
@@ -183,7 +205,8 @@
 		if (!formEl) return
 		await formEl.validate((valid, fields) => {
 			if (valid) {
-				console.log('submit!')
+				// console.log('submit!')
+				addMemberFn()
 			} else {
 				console.log('error submit!', fields)
 			}
@@ -218,35 +241,46 @@
 
 
 	const addMemberFn = async () => {
+		// console.log('form.address', form.value.address)
+		if (form.value.address.length > 0) {
+			var regionArr = reactive(form.value.address);
+		} else {
+			regionArr = [null, null]
+		}
 
-		// const form = ref({
-		// 	avatar: "",
-		// 	name: "",
-		// 	sex:'male',
-		// 	address: [],
-		// 	community: "",
-		// 	info: "",
-		// 	visitYears: [],
-		// 	familyTable: [],
-		// })
+		var tableData = form.value.familyTable.map(x => {
+			return {
+				"relationshipId": x.id,
+				"relationshipName": x.name
+			}
+		})
+		// 时间格式化函数
+		function formatDate(dateStr) {
+			const date = new Date(dateStr); // 解析 ISO 字符串
+			const y = date.getFullYear();
+			const m = String(date.getMonth() + 1).padStart(2, '0');
+			const d = String(date.getDate()).padStart(2, '0');
+			return `${y}-${m}-${d}`;
+		}
 		const params = {
 			"id": null,
-			"gender": form.sex,
-			"birthDate": form.birthday,
+			"gender": form.value.sex,
+			"birthDate": formatDate(form.value.birthday),
 			"headImgId": headerImgOb.value.id,
-			"name": form.name,
-			"regionId": 2,
-			"villageId": 3,
-			"info": "333333",
-			"contact": "1",
-			"contactPhone": "2",
-			"yearList": [2018],
-			"relationshipList": [{
-				"relationshipId": 1,
-				"relationshipName": "3333"
-			}]
+			"name": form.value.name,
+			"regionId": regionArr[0],
+			"villageId": regionArr[1],
+			"info": form.value.info,
+			"contact": form.value.contact,
+			"contactPhone": form.value.contactPhone,
+			"yearList": form.value.visitYears.map(y => Number(y)),
+			"relationshipList": tableData
 		}
 		const result = await dataApi.addMember(params)
+		if (result.code == 200) {
+			ElMessage.success(result.message);
+			router.push('/taibaoList')
+		}
 	}
 
 	//家族关系
