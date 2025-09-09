@@ -39,8 +39,8 @@
 				<el-select v-model="form.community" placeholder="请选择社区" style="width: 150px; margin-left: 10px;">
 					<el-option label="奉中社区" value="奉中社区" />
 				</el-select> -->
-				<el-cascader v-model="form.address" :options="addressOptions" placeholder="请选择街道/镇和村" clearable
-					style="width: 350px" />
+				<el-cascader v-model="form.address" :props="addressProp" :options="addressOptions"
+					placeholder="请选择街道/镇和村" clearable style="width: 350px" />
 			</el-form-item>
 
 
@@ -129,7 +129,11 @@
 		getFamilyData();
 		regionListFn();
 	})
-
+	const addressProp = reactive({
+		value: 'id',
+		label: 'name',
+		children: 'children'
+	})
 	const form = ref({
 		avatar: "",
 		name: "",
@@ -185,10 +189,31 @@
 			}
 		})
 	}
+	const addressOptions = reactive([])
+	// // 转换成 el-cascader 需要的格式
+	// const addressOptions = rawData.subdivisions.map(sub => ({
+	// 	value: sub.name,
+	// 	label: sub.name,
+	// 	children: sub.villages.map(v => ({
+	// 		value: v,
+	// 		label: v
+	// 	}))
+	// }))
+	// const convertToCascaderData = (nodes) => {
+	// 	return nodes.map(node => ({
+	// 		value: node.id,
+	// 		label: node.name,
+	// 		children: node.children && node.children.length > 0 ? convertToCascaderData(node
+	// 			.children) : []
+	// 	}))
+	// }
 
 	// 村街道
 	const regionListFn = async () => {
-		const result = dataApi.regionList()
+		const result = await dataApi.regionList();
+		if (result.code === 200 && result.data) {
+			addressOptions.splice(0, addressOptions.length, ...result.data);
+		}
 	}
 
 
@@ -329,15 +354,6 @@
 		form.value.visitYears.sort((a, b) => Number(a) - Number(b));
 	};
 
-	// 转换成 el-cascader 需要的格式
-	const addressOptions = rawData.subdivisions.map(sub => ({
-		value: sub.name,
-		label: sub.name,
-		children: sub.villages.map(v => ({
-			value: v,
-			label: v
-		}))
-	}))
 
 
 
