@@ -32,7 +32,7 @@
 				<div class="city-label">
 					<el-tag type="success" size="large">奉化区</el-tag>
 				</div>
-				
+
 				<!-- 	<el-select v-model="form.city" placeholder="请选择街道" style="width: 150px; margin-left: 10px;">
 					<el-option label="锦屏街道" value="锦屏街道" />
 				</el-select>
@@ -126,14 +126,15 @@
 	import rawData from '@/datas/fenghua.json'
 
 	onMounted(() => {
-		getFamilyData()
+		getFamilyData();
+		regionListFn();
 	})
 
 	const form = ref({
 		avatar: "",
 		name: "",
 		sex: 'male',
-		birthday:'',
+		birthday: '',
 		address: [],
 		community: "",
 		info: "",
@@ -158,7 +159,7 @@
 			message: '请选择性别',
 			trigger: 'change'
 		}],
-		birthday:[{
+		birthday: [{
 			required: true,
 			message: '请选择生日',
 			trigger: 'change'
@@ -184,6 +185,13 @@
 			}
 		})
 	}
+
+	// 村街道
+	const regionListFn = async () => {
+		const result = dataApi.regionList()
+	}
+
+
 	const addMemberFn = async () => {
 
 		// const form = ref({
@@ -201,7 +209,7 @@
 			"gender": form.sex,
 			"birthDate": form.birthday,
 			"headImgId": headerImgOb.value.id,
-			"name": "1111",
+			"name": form.name,
 			"regionId": 2,
 			"villageId": 3,
 			"info": "333333",
@@ -228,12 +236,12 @@
 		nodes.forEach(node => {
 			// 构造完整路径
 			const path = parentPath ? `${parentPath} > ${node.relationshipName}` : node.relationshipName;
-			console.log("path", path)
+			// console.log("path", path)
 			// 添加到结果数组
 			// 只有没有 children 或 children 为空数组才加入
 			var arr = path.split('>');
 			var leaf = arr[arr.length - 1];
-			console.log('leaf', leaf)
+			// console.log('leaf', leaf)
 
 			result.push({
 				value: node.relationshipId,
@@ -350,7 +358,7 @@
 			uploadApiFn(file);
 		}
 	};
-	const headerImgOb=reactive({});
+	const headerImgOb = reactive({});
 	const uploadApiFn = async (file) => {
 		try {
 			// console.log('file',file)
@@ -362,7 +370,7 @@
 			const result = await uploadApi.uploadFile(formData)
 			console.log('result', result)
 			if (result?.data.access_path) {
-				headerImgOb.value=result.data;
+				headerImgOb.value = result.data;
 				// console.log('headerImgOb',headerImgOb)
 				form.value.avatar = result.data.access_path; // 更新为服务器地址
 				// 上传完后清空

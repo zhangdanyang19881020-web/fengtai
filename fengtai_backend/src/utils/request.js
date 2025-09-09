@@ -4,6 +4,7 @@ import {
 } from 'element-plus'
 import config from './config'
 import {
+	getTokenType,
 	setTokenType,
 	getAccessToken,
 	isTokenExpired,
@@ -15,7 +16,7 @@ const service = axios.create({
 	baseURL: config.baseURL, // 基础URL
 	timeout: config.timeout, // 请求超时时间
 	headers: {
-		'Content-Type': 'application/json;charset=UTF-8'
+		'Content-Type': 'application/json;charset=UTF-8',
 	}
 })
 
@@ -40,6 +41,12 @@ service.interceptors.request.use(
 				console.warn('Token 已过期，已自动清除')
 			}
 		}
+		
+		if (getAccessToken()) {
+		    config.headers = {
+		        Authorization: `${getTokenType()} ${getAccessToken()}`,
+		    }
+		}
 
 		// 添加时间戳防止缓存
 		if (config.method === 'get') {
@@ -49,7 +56,7 @@ service.interceptors.request.use(
 			}
 		}
 
-		console.log('请求拦截器:', config)
+		// console.log('请求拦截器:', config)
 		return config
 	},
 	error => {
