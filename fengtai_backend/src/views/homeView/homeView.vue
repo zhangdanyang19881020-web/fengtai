@@ -19,14 +19,12 @@
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
 			<el-table-column label="图片" width="100">
 				<template #default="scope">
-					<el-avatar v-if="scope.row.headImg" :src="scope.row.headImg" size="small"></el-avatar>
+					<el-avatar v-if="scope.row.imgUrl" :src="scope.row.imgUrl" size="small"></el-avatar>
 					<el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
 						size="small"></el-avatar>
 				</template>
 			</el-table-column>
-			<el-table-column label="名字" prop="userName"></el-table-column>
-			<el-table-column label="生日" prop="birthMonth"></el-table-column>
-			<el-table-column label="祖籍" prop="address"></el-table-column>
+			<el-table-column label="名称" :formatter="emptyFormatter" prop="title"></el-table-column>
 			<el-table-column label="操作">
 				<template #default="scope">
 					<el-button link @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
@@ -105,6 +103,11 @@
 			} = toRefs(state)
 
 			const router = useRouter();
+
+			const emptyFormatter = (row, column, cellValue) => {
+				console.log('emptyFormatter',row, column, cellValue)
+				return cellValue ?? '--'
+			}
 
 			// params object to track page info and search query
 			const params = computed(() => ({
@@ -215,7 +218,7 @@
 				streetOptions,
 				searchData,
 				searchFn,
-
+				emptyFormatter,
 				currentPage,
 				pageSize,
 				background,
