@@ -24,7 +24,7 @@
 						size="small"></el-avatar>
 				</template>
 			</el-table-column>
-			<el-table-column label="名称" :formatter="emptyFormatter" prop="title"></el-table-column>
+			<el-table-column label="名称" :formatter="emptyFormatter" :show-overflow-tooltip="true"  prop="title"></el-table-column>
 			<el-table-column label="操作">
 				<template #default="scope">
 					<el-button link @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
@@ -104,10 +104,30 @@
 
 			const router = useRouter();
 
-			const emptyFormatter = (row, column, cellValue) => {
-				console.log('emptyFormatter',row, column, cellValue)
-				return cellValue ?? '--'
+			const emptyFormatter = (_row, _column, cellValue) => {
+				// null / undefined
+				if (cellValue == null) return '--'
+
+				// 字符串：去掉空白后为空
+				if (typeof cellValue === 'string') {
+					const v = cellValue.trim()
+					return v ? v : '--'
+				}
+
+				// 数组：空数组
+				if (Array.isArray(cellValue)) {
+					return cellValue.length ? cellValue.join(', ') : '--'
+				}
+
+				// 数字：NaN
+				if (typeof cellValue === 'number' && Number.isNaN(cellValue)) {
+					return '--'
+				}
+
+				// 其它类型（对象/布尔等）按需定制，这里统一转成字符串
+				return String(cellValue)
 			}
+
 
 			// params object to track page info and search query
 			const params = computed(() => ({
@@ -144,12 +164,12 @@
 						label: x.name,
 						value: x.id
 					}))
-					state.searchData.street = state.streetOptions[0].value;
-					console.log('state.searchData.street', state.searchData.street);
-					getListFn()
-					// streetOptions.splice(0, streetOptions.length, ...streetOptions.value);
-					// console.log('addressOptions', state.addressOptions)
-					// console.log('streetOptions', state.streetOptions)
+					if (!state.searchData.street && state.streetOptions.length) {
+						state.searchData.street = state.streetOptions[0].value
+						// 这里不需要额外 watch 触发的话，直接拉一次
+						getListFn()
+					}
+
 				}
 			}
 
@@ -206,7 +226,7 @@
 				}
 			}
 
-			watch(searchData.street, () => {
+			watch(state.searchData.street, () => {
 				// debouncedGetList()
 				currentPage.value = 1
 				getListFn()
