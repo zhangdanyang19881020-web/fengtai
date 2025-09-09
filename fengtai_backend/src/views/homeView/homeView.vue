@@ -84,7 +84,7 @@
 			Search, // 注册图标
 		},
 		setup() {
-			const searchQuery = ref('')
+
 			const currentPage = ref(1)
 			const pageSize = ref(10)
 			const background = ref(true)
@@ -203,7 +203,7 @@
 				}
 			}
 
-			watch(searchQuery, () => {
+			watch(searchData.street, () => {
 				// debouncedGetList()
 				currentPage.value = 1
 				getListFn()
@@ -215,7 +215,7 @@
 				streetOptions,
 				searchData,
 				searchFn,
-				searchQuery,
+
 				currentPage,
 				pageSize,
 				background,
