@@ -19,7 +19,7 @@
 			</el-form-item>
 
 			<!-- 籍贯 -->
-			<el-form-item label="籍贯" required>
+			<el-form-item label="籍贯" prop="address">
 				<div class="city-label">奉化区</div>
 				<!-- 	<el-select v-model="form.city" placeholder="请选择街道" style="width: 150px; margin-left: 10px;">
 					<el-option label="锦屏街道" value="锦屏街道" />
@@ -33,7 +33,7 @@
 
 
 			<!-- 个人信息 -->
-			<el-form-item label="个人信息" required>
+			<el-form-item label="个人信息" prop="info">
 				<el-input type="textarea" v-model="form.info" placeholder="请输入内容" />
 			</el-form-item>
 
@@ -46,8 +46,12 @@
 							{{ year }}
 						</el-tag>
 					</div>
-					<el-input v-model="yearInput" placeholder="请输入1949-2025之间的年份数字" class="year-input"
-						@keyup.enter="addYear" />
+					<!-- 		<el-input v-model="yearInput" placeholder="请输入1949-2025之间的年份数字" class="year-input"
+						@keyup.enter="addYear" /> -->
+					<el-select v-model="yearInput" placeholder="请选择年份" style="width: 240px">
+						<el-option v-for="item in filteredYearOptions" :key="item.value" :label="item.label"
+							:value="item.value" />
+					</el-select>
 					<el-button type="success" @click="addYear" style="margin-left: 10px;">添加到访年份</el-button>
 				</div>
 			</el-form-item>
@@ -87,7 +91,8 @@
 <script setup>
 	import {
 		ref,
-		reactive
+		reactive,
+		computed
 	} from "vue"
 	import {
 		Picture,
@@ -110,7 +115,7 @@
 	const form = ref({
 		avatar: "",
 		name: "",
-		address: "",
+		address: [],
 		community: "",
 		info: "",
 		visitYears: ["2008", "2021"],
@@ -140,6 +145,16 @@
 			message: '请输入名字',
 			trigger: 'blur'
 		}],
+		address: [{
+			required: true,
+			message: '请选择街道/镇和村',
+			trigger: 'change'
+		}],
+		info: [{
+			required: true,
+			message: '请输入个人信息',
+			trigger: 'blur'
+		}],
 	})
 	const submitForm = async (formEl) => {
 		if (!formEl) return
@@ -151,6 +166,33 @@
 			}
 		})
 	}
+	// 年份
+	const yearArr = Array.from({
+		length: 2025 - 1949 + 1
+	}, (_, index) => 1949 + index)
+
+	// 动态过滤已选年份
+	const filteredYearOptions = computed(() =>
+		yearArr
+		.filter(y => !form.value.visitYears.includes(String(y))) // 都转成字符串比较
+		.map(y => ({
+			label: y,
+			value: y
+		}))
+	);
+
+
+	const yearInput = ref(null)
+
+	const addYear = () => {
+		if (yearInput.value) {
+			const yearStr = String(yearInput.value); // 转成字符串
+			if (!form.value.visitYears.includes(yearStr)) {
+				form.value.visitYears.push(yearStr);
+			}
+			yearInput.value = null; // 清空选择
+		}
+	};
 
 	// 转换成 el-cascader 需要的格式
 	const addressOptions = rawData.subdivisions.map(sub => ({
@@ -161,6 +203,8 @@
 			label: v
 		}))
 	}))
+
+
 
 	// 头像上传
 	// Avatar upload action URL
@@ -211,17 +255,10 @@
 	}
 
 
-	const yearInput = ref("")
+
 	const familyRelation = ref("")
 	const familyName = ref("")
 
-	const addYear = () => {
-		const year = yearInput.value.trim()
-		if (year && /^\d{4}$/.test(year)) {
-			form.value.visitYears.push(year)
-			yearInput.value = ""
-		}
-	}
 
 	const removeYear = (index) => {
 		form.value.visitYears.splice(index, 1)
