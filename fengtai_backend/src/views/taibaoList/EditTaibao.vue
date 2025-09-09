@@ -2,7 +2,7 @@
 	<div class="form-container">
 		<el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="100px">
 			<!-- 头像 -->
-			<el-form-item label="头像" class="required-label">
+			<el-form-item label="头像" class="required-label" prop="avatar">
 				<div class="avatar-uploader">
 					<img v-if="form.avatar" :src="form.avatar" class="avatar" alt="头像">
 					<img v-else :src="defaultAvatar" class="avatar" alt="默认头像">
@@ -17,24 +17,35 @@
 			<el-form-item label="名字" prop="name">
 				<el-input v-model="form.name" placeholder="请输入" />
 			</el-form-item>
+			<el-form-item label="性别" prop="sex">
+				<el-radio-group v-model="form.sex">
+					<el-radio value="male">男</el-radio>
+					<el-radio value="female">女</el-radio>
+				</el-radio-group>
+			</el-form-item>
+			<el-form-item label="生日" prop="birthday">
+				<el-date-picker v-model="form.birthday" type="date" placeholder="请选择生日" />
+			</el-form-item>
 
 			<!-- 籍贯 -->
 			<el-form-item label="籍贯" prop="address">
-				<div class="city-label">奉化区</div>
-				<!-- 	<el-select v-model="form.city" placeholder="请选择街道" style="width: 150px; margin-left: 10px;">
-					<el-option label="锦屏街道" value="锦屏街道" />
-				</el-select>
-				<el-select v-model="form.community" placeholder="请选择社区" style="width: 150px; margin-left: 10px;">
-					<el-option label="奉中社区" value="奉中社区" />
-				</el-select> -->
-				<el-cascader v-model="form.address" :options="addressOptions" placeholder="请选择街道/镇和村" clearable
-					style="width: 350px" />
+				<div class="city-label">
+					<el-tag type="success" size="large">奉化区</el-tag>
+				</div>
+				<el-cascader v-model="form.address" :props="addressProp" :options="addressOptions"
+					placeholder="请选择街道/镇和村" clearable style="width: 350px" />
 			</el-form-item>
 
+			<el-form-item label="联系人" prop="contact">
+				<el-input v-model="form.contact" placeholder="请输入联系人" />
+			</el-form-item>
+			<el-form-item label="联系人电话" prop="contactPhone">
+				<el-input v-model="form.contactPhone" placeholder="请输入联系人电话" />
+			</el-form-item>
 
 			<!-- 个人信息 -->
 			<el-form-item label="个人信息" prop="info">
-				<el-input type="textarea" v-model="form.info" placeholder="请输入内容" />
+				<el-input type="textarea" v-model="form.info" placeholder="请输入个人信息" />
 			</el-form-item>
 
 			<!-- 到访年份 -->
@@ -52,12 +63,12 @@
 						<el-option v-for="item in filteredYearOptions" :key="item.value" :label="item.label"
 							:value="item.value" />
 					</el-select>
-					<el-button type="success" @click="addYear" style="margin-left: 10px;">添加到访年份</el-button>
+					<el-button type="success" @click="addYear" style="margin-left: 10px;">添加</el-button>
 				</div>
 			</el-form-item>
 
 			<!-- 家族关系 -->
-			<el-form-item label="家族关系" required>
+			<el-form-item label="家族关系">
 				<el-table class="z-table" :data="form.familyTable">
 					<el-table-column prop="relation" label="关系" width="120" />
 					<el-table-column prop="name" label="名字" />
@@ -95,6 +106,11 @@
 		onMounted,
 	} from "vue"
 	import {
+		useRouter,
+		useRoute
+	} from 'vue-router'
+
+	import {
 		Picture,
 		Close,
 
@@ -114,30 +130,65 @@
 	import rawData from '@/datas/fenghua.json'
 
 	onMounted(() => {
-		getFamilyData()
+		getFamilyData();
+		regionListFn();
 	})
 
+	const router = useRouter()
+	const addressProp = reactive({
+		value: 'id',
+		label: 'name',
+		children: 'children'
+	})
 	const form = ref({
 		avatar: "",
 		name: "",
+		sex: 'male',
+		birthday: '',
 		address: [],
 		community: "",
 		info: "",
 		visitYears: [],
-		familyTable: [
-			// {
-			// 	relation: "爷爷",
-			// 	name: "蒋生挺"
-			// }
-		],
+		familyTable: [],
+		contact: '',
+		contactPhone: ''
 	})
 	const ruleFormRef = ref();
 
 	const rules = reactive({
+		avatar: [{
+			required: true,
+			message: '请上传头像',
+			trigger: 'change'
+		}],
 		name: [{
 			required: true,
 			message: '请输入名字',
 			trigger: 'blur'
+		}],
+		contact: [{
+			required: true,
+			message: '请输入联系人',
+			trigger: 'blur'
+		}],
+		contactPhone: [{
+			required: true,
+			message: '请输入联系人电话',
+			trigger: 'blur'
+		}, {
+			pattern: /^(\d+(-\d+)?)$/,
+			message: '电话格式不正确，只能是纯数字或数字中间带“-”',
+			trigger: 'blur'
+		}],
+		sex: [{
+			required: true,
+			message: '请选择性别',
+			trigger: 'change'
+		}],
+		birthday: [{
+			required: true,
+			message: '请选择生日',
+			trigger: 'change'
 		}],
 		address: [{
 			required: true,
@@ -154,11 +205,82 @@
 		if (!formEl) return
 		await formEl.validate((valid, fields) => {
 			if (valid) {
-				console.log('submit!')
+				// console.log('submit!')
+				addMemberFn()
 			} else {
 				console.log('error submit!', fields)
 			}
 		})
+	}
+	const addressOptions = reactive([])
+	// // 转换成 el-cascader 需要的格式
+	// const addressOptions = rawData.subdivisions.map(sub => ({
+	// 	value: sub.name,
+	// 	label: sub.name,
+	// 	children: sub.villages.map(v => ({
+	// 		value: v,
+	// 		label: v
+	// 	}))
+	// }))
+	// const convertToCascaderData = (nodes) => {
+	// 	return nodes.map(node => ({
+	// 		value: node.id,
+	// 		label: node.name,
+	// 		children: node.children && node.children.length > 0 ? convertToCascaderData(node
+	// 			.children) : []
+	// 	}))
+	// }
+
+	// 村街道
+	const regionListFn = async () => {
+		const result = await dataApi.regionList();
+		if (result.code === 200 && result.data) {
+			addressOptions.splice(0, addressOptions.length, ...result.data);
+		}
+	}
+
+
+	const addMemberFn = async () => {
+		// console.log('form.address', form.value.address)
+		if (form.value.address.length > 0) {
+			var regionArr = reactive(form.value.address);
+		} else {
+			regionArr = [null, null]
+		}
+
+		var tableData = form.value.familyTable.map(x => {
+			return {
+				"relationshipId": x.id,
+				"relationshipName": x.name
+			}
+		})
+		// 时间格式化函数
+		function formatDate(dateStr) {
+			const date = new Date(dateStr); // 解析 ISO 字符串
+			const y = date.getFullYear();
+			const m = String(date.getMonth() + 1).padStart(2, '0');
+			const d = String(date.getDate()).padStart(2, '0');
+			return `${y}-${m}-${d}`;
+		}
+		const params = {
+			"id": null,
+			"gender": form.value.sex,
+			"birthDate": formatDate(form.value.birthday),
+			"headImgId": headerImgOb.value.id,
+			"name": form.value.name,
+			"regionId": regionArr[0],
+			"villageId": regionArr[1],
+			"info": form.value.info,
+			"contact": form.value.contact,
+			"contactPhone": form.value.contactPhone,
+			"yearList": form.value.visitYears.map(y => Number(y)),
+			"relationshipList": tableData
+		}
+		const result = await dataApi.addMember(params)
+		if (result.code == 200) {
+			ElMessage.success(result.message);
+			router.push('/taibaoList')
+		}
 	}
 
 	//家族关系
@@ -173,12 +295,12 @@
 		nodes.forEach(node => {
 			// 构造完整路径
 			const path = parentPath ? `${parentPath} > ${node.relationshipName}` : node.relationshipName;
-			console.log("path", path)
+			// console.log("path", path)
 			// 添加到结果数组
 			// 只有没有 children 或 children 为空数组才加入
 			var arr = path.split('>');
 			var leaf = arr[arr.length - 1];
-			console.log('leaf', leaf)
+			// console.log('leaf', leaf)
 
 			result.push({
 				value: node.relationshipId,
@@ -215,6 +337,7 @@
 		if (familyRelation.value && familyName.value) {
 			var relationName = familyRelationOption.value.find(x => x.value == familyRelation.value).label;
 			form.value.familyTable.push({
+				id: familyRelation.value,
 				relation: relationName,
 				name: familyName.value,
 			})
@@ -265,15 +388,6 @@
 		form.value.visitYears.sort((a, b) => Number(a) - Number(b));
 	};
 
-	// 转换成 el-cascader 需要的格式
-	const addressOptions = rawData.subdivisions.map(sub => ({
-		value: sub.name,
-		label: sub.name,
-		children: sub.villages.map(v => ({
-			value: v,
-			label: v
-		}))
-	}))
 
 
 
@@ -294,6 +408,7 @@
 			uploadApiFn(file);
 		}
 	};
+	const headerImgOb = reactive({});
 	const uploadApiFn = async (file) => {
 		try {
 			// console.log('file',file)
@@ -305,6 +420,8 @@
 			const result = await uploadApi.uploadFile(formData)
 			console.log('result', result)
 			if (result?.data.access_path) {
+				headerImgOb.value = result.data;
+				// console.log('headerImgOb',headerImgOb)
 				form.value.avatar = result.data.access_path; // 更新为服务器地址
 				// 上传完后清空
 				fileInput.value.value = "";
@@ -373,7 +490,6 @@
 		}
 
 		.city-label {
-			color: #409eff;
 			margin-right: 10px;
 		}
 	}

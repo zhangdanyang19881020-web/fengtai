@@ -36,7 +36,18 @@ const routes = [{
 				meta: {
 					name: '奉台家缘',
 					type: 'taibaoList',
-					title: '台胞人员列表'
+					title: '新建'
+				}
+			},
+			{
+				path: '/editTaibao/:userId',
+				name: 'editTaibao',
+				component: () => import('@/views/taibaoList/EditTaibao.vue'),
+				props: true,
+				meta: {
+					name: '奉台家缘',
+					type: 'taibaoList',
+					title: '编辑'
 				}
 			}
 		]

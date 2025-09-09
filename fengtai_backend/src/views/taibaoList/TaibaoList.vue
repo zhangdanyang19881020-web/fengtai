@@ -18,8 +18,8 @@
 			<el-table-column label="祖籍" prop="address"></el-table-column>
 			<el-table-column label="操作">
 				<template #default="scope">
-					<el-button link @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
-					<el-button link @click="deleteRow(scope.row)" size="small" type="danger">删除</el-button>
+					<el-button link @click.native="editRow(scope.row)" size="small" type="primary">编辑</el-button>
+					<el-button link @click.native="deleteRow(scope.row)" size="small" type="danger">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -58,6 +58,11 @@
 	import {
 		dataApi
 	} from '@/utils/api.js'
+
+	import {
+		debounce
+	} from 'lodash-es'
+
 
 	export default {
 		name: 'UserTable',
@@ -125,10 +130,17 @@
 			}
 
 			// Search query watcher
+			const debouncedGetList = debounce(() => {
+				currentPage.value = 1
+				getListFn()
+			}, 500) // 500ms 内只触发一次
+
 			watch(searchQuery, () => {
-				currentPage.value = 1 // Reset to page 1 on search change
-				getListFn() // Trigger API call with new search query
+				// debouncedGetList()
+				currentPage.value = 1
+				getListFn()
 			})
+
 
 			// Mounted lifecycle hook to fetch initial data
 			onMounted(() => {
@@ -144,7 +156,15 @@
 				filteredTotal,
 				handleSizeChange,
 				handleCurrentChange,
-				editRow: (row) => console.log('编辑行:', row),
+				editRow: (row) => {
+					router.push({
+						name: 'editTaibao',
+						params: {
+							userId: row.userId
+
+						}
+					})
+				},
 				deleteRow: (row) => {
 					const index = data.value.indexOf(row)
 					if (index !== -1) {
