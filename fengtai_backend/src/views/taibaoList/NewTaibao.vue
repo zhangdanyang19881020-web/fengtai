@@ -20,16 +20,17 @@
 
 			<!-- 籍贯 -->
 			<el-form-item label="籍贯" required>
-				<el-select v-model="form.province" placeholder="请选择省份" style="width: 150px;">
-					<el-option label="奉化市" value="奉化市" />
-				</el-select>
-				<el-select v-model="form.city" placeholder="请选择街道" style="width: 150px; margin-left: 10px;">
+				<div class="city-label">奉化区</div>
+				<!-- 	<el-select v-model="form.city" placeholder="请选择街道" style="width: 150px; margin-left: 10px;">
 					<el-option label="锦屏街道" value="锦屏街道" />
 				</el-select>
 				<el-select v-model="form.community" placeholder="请选择社区" style="width: 150px; margin-left: 10px;">
 					<el-option label="奉中社区" value="奉中社区" />
-				</el-select>
+				</el-select> -->
+				<el-cascader v-model="form.address" :options="addressOptions" placeholder="请选择街道/镇和村" clearable
+					style="width: 350px" />
 			</el-form-item>
+
 
 			<!-- 个人信息 -->
 			<el-form-item label="个人信息" required>
@@ -37,7 +38,7 @@
 			</el-form-item>
 
 			<!-- 到访年份 -->
-			<el-form-item label="到访年份" >
+			<el-form-item label="到访年份">
 				<div class="come-year--box">
 					<div class="year-tag-box">
 						<el-tag v-for="(year, index) in form.visitYears" :key="index" closable
@@ -103,12 +104,12 @@
 		getAccessToken,
 		clearTokens
 	} from '@/utils/token'
+	import rawData from '@/datas/fenghua.json'
 
 	const form = ref({
 		avatar: "",
 		name: "",
-		province: "",
-		city: "",
+		address: "",
 		community: "",
 		info: "",
 		visitYears: ["2008", "2021"],
@@ -130,6 +131,16 @@
 			},
 		],
 	})
+
+	// 转换成 el-cascader 需要的格式
+	const addressOptions = rawData.subdivisions.map(sub => ({
+		value: sub.name,
+		label: sub.name,
+		children: sub.villages.map(v => ({
+			value: v,
+			label: v
+		}))
+	}))
 
 	// 头像上传
 	// Avatar upload action URL
@@ -256,6 +267,11 @@
 			&:hover {
 				font-size: 16px;
 			}
+		}
+
+		.city-label {
+			color: #409eff;
+			margin-right:10px;
 		}
 	}
 </style>
