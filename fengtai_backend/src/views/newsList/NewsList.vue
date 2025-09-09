@@ -1,8 +1,16 @@
 <template>
 	<div class="container">
-		<div class="header">
-			<el-input v-model="searchQuery" placeholder="输入名字搜索" :suffix-icon="Search" class="search-box" />
-			<el-button type="primary" class="new-button" @click="goNewFn">新建</el-button>
+		<div class="search-box--container">
+			<div class="search-box--left">
+				<div class="search-box--item">
+					<label>活动名称:</label>
+					<el-input v-model="searchData.newsTitle" placeholder="输入活动名称搜索" :suffix-icon="Search"
+						class="search-box--input" />
+				</div>
+			</div>
+			<div class="search-box--right">
+				<el-button type="primary" class="new-button" @click="goNewFn">新建</el-button>
+			</div>
 		</div>
 
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
@@ -77,14 +85,21 @@
 			const pageSize = ref(10)
 			const background = ref(true)
 			const total = ref(0)
+			const searchData=reactive({
+				newsTitle:'',
+			})
 
 			const router = useRouter();
 
 			// params object to track page info and search query
 			const params = computed(() => ({
-				userName: searchQuery.value,
-				pageSize: pageSize.value,
-				pageIndex: currentPage.value,
+				"title": "",
+				"startTime": "",
+				"endTime": "",
+				"pageSize": pageSize.value,
+				"pageIndex": currentPage.value,
+				"year": "",
+				"userId": ""
 			}))
 
 			// Simulated data
@@ -113,7 +128,7 @@
 			// Fetch list from API
 			const getListFn = async () => {
 				try {
-					const result = await dataApi.getDataList(params.value)
+					const result = await dataApi.newsList(params.value)
 					console.log('result', result)
 					data.value = result.data.pageData; // assuming result.data is the data
 					total.value = result.data.totalPage;
@@ -177,15 +192,16 @@
 					})
 				},
 				deleteRow: (row) => {
-					ElMessageBox.alert(`确认删除 <span class="el-tag el-tag--danger el-tag--light">${row.userName}</span>`, '提示', {
-						// if you want to disable its autofocus
-						// autofocus: false,
-						dangerouslyUseHTMLString: true,
-						confirmButtonText: 'OK',
-						callback: (action) => {
-							delMemberFn(row)
-						},
-					})
+					ElMessageBox.alert(`确认删除 <span class="el-tag el-tag--danger el-tag--light">${row.userName}</span>`,
+						'提示', {
+							// if you want to disable its autofocus
+							// autofocus: false,
+							dangerouslyUseHTMLString: true,
+							confirmButtonText: 'OK',
+							callback: (action) => {
+								delMemberFn(row)
+							},
+						})
 
 				},
 				Search,
@@ -201,7 +217,7 @@
 		padding: 20px;
 	}
 
-	.header {
+	.search-box {
 		display: flex;
 		justify-content: center;
 		align-items: center;

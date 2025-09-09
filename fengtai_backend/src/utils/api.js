@@ -83,6 +83,9 @@ export const dataApi = {
 	regionList: () => get(_ServiceUrl + '/api/region/list/'),
 	// 获取数据详情
 	getMemberDetail: (params) => get(_ServiceUrl + `/api/visit/userInfo/`, params),
+	// 活动列表
+	newsList: (params) => post(_ServiceUrl + '/api/view/activityList/', params),
+	
 	// 创建数据
 	createData: (data) => post('/data/create', data),
 	// 更新数据

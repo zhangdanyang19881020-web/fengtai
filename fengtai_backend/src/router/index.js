@@ -51,7 +51,7 @@ const routes = [{
 				}
 			},
 			{
-				
+
 				path: '/homeView',
 				name: 'homeView',
 				component: () => import('@/views/homeView/homeView.vue'),
@@ -61,8 +61,20 @@ const routes = [{
 					type: 'homeView',
 					title: '家乡风貌'
 				}
+			},
+			{
+
+				path: '/newsList',
+				name: 'newsList',
+				component: () => import('@/views/newsList/NewsList.vue'),
+				props: true,
+				meta: {
+					name: '奉台家缘',
+					type: 'newsList',
+					title: '最新动态'
+				}
 			}
-			
+
 		]
 	},
 	{

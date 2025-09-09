@@ -76,8 +76,8 @@
 				{
 					name: "最新动态",
 					icon: "iconfont icon-zuixinxunqing",
-					go: "/api-example",
-					type: "api",
+					go: "/newsList",
+					type: "newsList",
 				},
 				{
 					name: "家族关系",

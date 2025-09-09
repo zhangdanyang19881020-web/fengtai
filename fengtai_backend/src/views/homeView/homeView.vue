@@ -1,131 +1,242 @@
 <template>
-  <div>
-    <!-- Search Form -->
-    <div>
-      <select v-model="selectedCity">
-        <option value="奉化市">奉化市</option>
-        <option value="其他市">其他市</option>
-      </select>
-      <select v-model="selectedRoad">
-        <option value="武陵西路">武陵西路</option>
-        <option value="其他路">其他路</option>
-      </select>
-      <button @click="search">搜索</button>
-    </div>
+	<div class="container">
+		<div class="search-box--container">
+			<div class="search-box--left">
+				<div class="search-box--item">
+					<el-tag class="search-box--tag" type="primary" size="large">奉化市</el-tag>
+					<el-select v-model="searchData.street" placeholder="Select" style="width: 240px">
+						<el-option v-for="item in streetOptions" :key="item.value" :label="item.label"
+							:value="item.value" />
+					</el-select>
+				</div>
+			</div>
+			<div class="search-box--right">
+				<el-button type="primary" class="new-button" @click="goNewFn">新建</el-button>
+			</div>
+		</div>
 
-    <!-- Table -->
-    <table>
-      <thead>
-        <tr>
-          <th>图片</th>
-          <th>名称</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in data" :key="index">
-          <td><img :src="item.imageUrl" alt="Image" width="50" height="50" /></td>
-          <td>{{ item.name }}</td>
-          <td>
-            <button @click="editItem(index)">编辑</button>
-            <button @click="deleteItem(index)">删除</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+		<el-table class="z-table" :data="filteredData" style="width: 100%">
+			<el-table-column label="图片" width="100">
+				<template #default="scope">
+					<el-avatar v-if="scope.row.headImg" :src="scope.row.headImg" size="small"></el-avatar>
+					<el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+						size="small"></el-avatar>
+				</template>
+			</el-table-column>
+			<el-table-column label="名字" prop="userName"></el-table-column>
+			<el-table-column label="生日" prop="birthMonth"></el-table-column>
+			<el-table-column label="祖籍" prop="address"></el-table-column>
+			<el-table-column label="操作">
+				<template #default="scope">
+					<el-button link @click.native="editRow(scope.row)" size="small" type="primary">编辑</el-button>
+					<el-button link @click.native="deleteRow(scope.row)" size="small" type="danger">删除</el-button>
+				</template>
+			</el-table-column>
+		</el-table>
 
-    <!-- Pagination -->
-    <div>
-      <span>共 {{ total }} 条</span>
-      <button @click="prevPage" :disabled="currentPage === 1">前一页</button>
-      <button @click="nextPage" :disabled="currentPage === totalPages">下一页</button>
-    </div>
-
-    <!-- Add Button -->
-    <button @click="addItem">添加</button>
-  </div>
+		<div class="pagination-box">
+			<el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
+				:page-sizes="[10, 20, 30, 40]" :background="background" size="default"
+				layout="sizes, prev, pager, next, jumper" :total="filteredTotal" @size-change="handleSizeChange"
+				@current-change="handleCurrentChange" />
+		</div>
+	</div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      selectedCity: '奉化市',
-      selectedRoad: '武陵西路',
-      currentPage: 1,
-      pageSize: 5,
-      total: 206, // Total items
-      data: [], // The data for the table
-    };
-  },
-  computed: {
-    totalPages() {
-      return Math.ceil(this.total / this.pageSize);
-    },
-  },
-  methods: {
-    search() {
-      // Implement search functionality
-      console.log('Searching with city:', this.selectedCity, 'and road:', this.selectedRoad);
-      this.fetchData();
-    },
-    fetchData() {
-      // Simulating fetching data for the current page
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = startIndex + this.pageSize;
-      this.data = Array.from({ length: this.pageSize }, (_, index) => ({
-        imageUrl: 'https://via.placeholder.com/50',
-        name: `将氏故居 ${startIndex + index + 1}`,
-      }));
-    },
-    editItem(index) {
-      console.log('Editing item at index:', index);
-    },
-    deleteItem(index) {
-      console.log('Deleting item at index:', index);
-      this.data.splice(index, 1);
-    },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.fetchData();
-      }
-    },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-        this.fetchData();
-      }
-    },
-    addItem() {
-      console.log('Adding new item');
-    },
-  },
-  mounted() {
-    this.fetchData();
-  },
-};
+	import {
+		ref,
+		reactive,
+		computed,
+		watch,
+		onMounted
+	} from 'vue'
+	import {
+		useRouter
+	} from 'vue-router'
+	import {
+		ElInput,
+		ElTable,
+		ElTableColumn,
+		ElButton,
+		ElAvatar,
+		ElPagination,
+		ElMessageBox,
+		ElMessage
+	} from 'element-plus'
+	import {
+		Search
+	} from '@element-plus/icons-vue'
+	import {
+		dataApi
+	} from '@/utils/api.js'
+
+	import {
+		debounce
+	} from 'lodash-es'
+
+
+	export default {
+		name: 'UserTable',
+		components: {
+			Search, // 注册图标
+		},
+		setup() {
+			const searchQuery = ref('')
+			const currentPage = ref(1)
+			const pageSize = ref(10)
+			const background = ref(true)
+			const total = ref(0)
+			const searchData = reactive({
+				street: ''
+			})
+			const streetOptions=reactive([])
+
+			const router = useRouter();
+
+			// params object to track page info and search query
+			const params = computed(() => ({
+				userName: searchQuery.value,
+				pageSize: pageSize.value,
+				pageIndex: currentPage.value,
+			}))
+
+			// Simulated data
+			const data = ref([])
+
+			// Filtered data based on search query
+			const filteredData = computed(() => {
+				return data.value;
+			})
+			const filteredTotal = computed(() => {
+				return total.value;
+			})
+
+			// Handle pagination size change
+			const handleSizeChange = (val) => {
+				pageSize.value = val
+				getListFn()
+			}
+
+			// Handle page change
+			const handleCurrentChange = (val) => {
+				currentPage.value = val
+				getListFn()
+			}
+
+			// Fetch list from API
+			const getListFn = async () => {
+				try {
+					const result = await dataApi.getDataList(params.value)
+					console.log('result', result)
+					data.value = result.data.pageData; // assuming result.data is the data
+					total.value = result.data.totalPage;
+				} catch (error) {
+					console.error('Failed to fetch data:', error)
+				}
+			}
+			const goNewFn = () => {
+				router.push('/newTaibao')
+			}
+
+			// Search query watcher
+			const debouncedGetList = debounce(() => {
+				currentPage.value = 1
+				getListFn()
+			}, 500) // 500ms 内只触发一次
+
+			const delMemberFn = async (row) => {
+				let params = {
+					userId: row.userId
+				}
+				const result = await dataApi.delMember(params);
+				if (result.code == 200) {
+					ElMessage({
+						type: 'success',
+						message: result.message,
+					});
+					currentPage.value = 1
+					getListFn()
+				}
+			}
+
+			watch(searchQuery, () => {
+				// debouncedGetList()
+				currentPage.value = 1
+				getListFn()
+			})
+
+
+			// Mounted lifecycle hook to fetch initial data
+			onMounted(() => {
+				getListFn()
+			})
+
+			return {
+				searchData,
+				searchQuery,
+				currentPage,
+				pageSize,
+				background,
+				filteredData,
+				filteredTotal,
+				handleSizeChange,
+				handleCurrentChange,
+				editRow: (row) => {
+					router.push({
+						name: 'editTaibao',
+						params: {
+							userId: row.userId
+
+						}
+					})
+				},
+				deleteRow: (row) => {
+					ElMessageBox.alert(
+						`确认删除 <span class="el-tag el-tag--danger el-tag--light">${row.userName}</span>`, '提示', {
+							// if you want to disable its autofocus
+							// autofocus: false,
+							dangerouslyUseHTMLString: true,
+							confirmButtonText: 'OK',
+							callback: (action) => {
+								delMemberFn(row)
+							},
+						})
+
+				},
+				Search,
+				goNewFn
+			}
+		}
+	}
 </script>
 
-<style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+<style lang="scss" scoped>
+	.container {
+		width: 100%;
+		padding: 20px;
+	}
 
-table th, table td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: center;
-}
+	.header {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 30px;
+		position: relative;
 
-button {
-  margin: 5px;
-  padding: 5px 10px;
-}
+		.search-box {
+			width: 400px;
+		}
 
-button:disabled {
-  background-color: #f1f1f1;
-  cursor: not-allowed;
-}
+		.new-button {
+			position: absolute;
+			right: 0;
+		}
+	}
+
+	.pagination-box {
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 20px;
+	}
 </style>
