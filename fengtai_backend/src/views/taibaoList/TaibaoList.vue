@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="header">
 			<el-input v-model="searchQuery" placeholder="输入名字搜索" :suffix-icon="Search" class="search-box" />
-			<el-button type="primary" class="new-button" @click="goNewFn">新增</el-button>
+			<el-button type="primary" class="new-button" @click="goNewFn">新建</el-button>
 		</div>
 
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
@@ -27,7 +27,7 @@
 		<div class="pagination-box">
 			<el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
 				:page-sizes="[10, 20, 30, 40]" :background="background" size="default"
-				layout="total, sizes, prev, pager, next, jumper" :total="filteredTotal" @size-change="handleSizeChange"
+				layout="sizes, prev, pager, next, jumper" :total="filteredTotal" @size-change="handleSizeChange"
 				@current-change="handleCurrentChange" />
 		</div>
 	</div>
@@ -50,7 +50,9 @@
 		ElTableColumn,
 		ElButton,
 		ElAvatar,
-		ElPagination
+		ElPagination,
+		ElMessageBox,
+		ElMessage
 	} from 'element-plus'
 	import {
 		Search
@@ -67,18 +69,12 @@
 	export default {
 		name: 'UserTable',
 		components: {
-			ElInput,
-			ElTable,
-			ElTableColumn,
-			ElButton,
-			ElAvatar,
-			ElPagination,
 			Search, // 注册图标
 		},
 		setup() {
 			const searchQuery = ref('')
 			const currentPage = ref(1)
-			const pageSize = ref(5)
+			const pageSize = ref(10)
 			const background = ref(true)
 			const total = ref(0)
 
@@ -135,6 +131,21 @@
 				getListFn()
 			}, 500) // 500ms 内只触发一次
 
+			const delMemberFn = async (row) => {
+				let params = {
+					userId: row.userId
+				}
+				const result = await dataApi.delMember(params);
+				if (result.code == 200) {
+					ElMessage({
+						type: 'success',
+						message: result.message,
+					});
+					currentPage.value = 1
+					getListFn()
+				}
+			}
+
 			watch(searchQuery, () => {
 				// debouncedGetList()
 				currentPage.value = 1
@@ -166,10 +177,16 @@
 					})
 				},
 				deleteRow: (row) => {
-					const index = data.value.indexOf(row)
-					if (index !== -1) {
-						data.value.splice(index, 1)
-					}
+
+					ElMessageBox.alert(`确认删除「${row.userName}」`, '提示', {
+						// if you want to disable its autofocus
+						// autofocus: false,
+						confirmButtonText: 'OK',
+						callback: (action) => {
+							delMemberFn(row)
+						},
+					})
+
 				},
 				Search,
 				goNewFn

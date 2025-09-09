@@ -49,7 +49,20 @@ const routes = [{
 					type: 'taibaoList',
 					title: '编辑'
 				}
+			},
+			{
+				
+				path: '/homeView',
+				name: 'homeView',
+				component: () => import('@/views/homeView/homeView.vue'),
+				props: true,
+				meta: {
+					name: '奉台家缘',
+					type: 'homeView',
+					title: '家乡风貌'
+				}
 			}
+			
 		]
 	},
 	{

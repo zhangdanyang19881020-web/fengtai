@@ -11,7 +11,7 @@
 				</div>
 				<span class="nav-name">{{ item.name }}</span>
 			</li>
-<!-- 			<li class="nav-li pos-buttom">
+			<!-- 			<li class="nav-li pos-buttom">
 				<div class="nav-icon">
 					<i class="iconfont icon-anli"></i>
 				</div>
@@ -70,8 +70,8 @@
 				{
 					name: "家乡风貌",
 					icon: "iconfont icon-mianji",
-					go: "/searchBox",
-					type: "money",
+					go: "/homeView",
+					type: "homeView",
 				},
 				{
 					name: "最新动态",
@@ -89,7 +89,7 @@
 
 			])
 
-	
+
 
 			// 路由跳转
 			const router = useRouter()
@@ -112,7 +112,7 @@
 
 			// 在 return 之前调用 onMounted
 			onMounted(() => {
-			
+
 				// window.addEventListener('resize', handleResize);
 			});
 

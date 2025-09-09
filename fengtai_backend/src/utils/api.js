@@ -77,6 +77,8 @@ export const dataApi = {
 	getFamilyList: () => get(_ServiceUrl + '/api/famil/relationship/'),
 	// 人员添加
 	addMember: (params) => post(_ServiceUrl + '/api/visit/user/', params),
+	// 删除用户
+	delMember: (params) => post(_ServiceUrl + '/api/visit/delete_user/', params),
 	// 地区列表
 	regionList: () => get(_ServiceUrl + '/api/region/list/'),
 	// 获取数据详情

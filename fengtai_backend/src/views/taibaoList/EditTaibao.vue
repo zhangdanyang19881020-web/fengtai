@@ -133,7 +133,7 @@
 		getMemberDetail();
 		getFamilyData();
 		regionListFn();
-		
+
 	})
 
 	const router = useRouter()
@@ -205,12 +205,41 @@
 			trigger: 'blur'
 		}],
 	})
-
+	const headerImgOb = reactive({});
+	const memberDetailOb = reactive({})
 	const getMemberDetail = async () => {
 		let params = {
 			userId: route.params.userId
 		}
-		await dataApi.getMemberDetail(params)
+		const result = await dataApi.getMemberDetail(params)
+		if (result.code == 200) {
+			memberDetailOb.value = result.data;
+			form.value.avatar = memberDetailOb.value.headImgUrl;
+			form.value.name = memberDetailOb.value.name;
+			form.value.sex = memberDetailOb.value.gender;
+			form.value.birthday = memberDetailOb.value.birthday;
+			var arr = []
+			arr.push(memberDetailOb.value.regionId);
+			arr.push(memberDetailOb.value.villageId);
+			form.value.address = arr;
+			form.value.contact = memberDetailOb.value.cantact;
+			form.value.contactPhone = memberDetailOb.value.contactPhone;
+			form.value.info = memberDetailOb.value.info;
+
+			form.value.visitYears = memberDetailOb.value.yearList.map(y => String(y)),
+
+				form.value.familyTable = memberDetailOb.value.relationshipList.map(x => {
+					return {
+						relation: x.relationshipName,
+						name: x.relationshipPersonName,
+						id: x.relationshipId
+					}
+				})
+			var ob = {}
+			ob.id = memberDetailOb.value.headImgUrlId;
+			headerImgOb.value = ob;
+		}
+
 	}
 
 	const submitForm = async (formEl) => {
@@ -263,7 +292,8 @@
 		var tableData = form.value.familyTable.map(x => {
 			return {
 				"relationshipId": x.id,
-				"relationshipName": x.name
+				"relationshipName": x.relation,
+				'relationshipPersonName':x.name
 			}
 		})
 		// 时间格式化函数
@@ -275,7 +305,7 @@
 			return `${y}-${m}-${d}`;
 		}
 		const params = {
-			"id": null,
+			"id": Number(route.params.userId),
 			"gender": form.value.sex,
 			"birthDate": formatDate(form.value.birthday),
 			"headImgId": headerImgOb.value.id,
@@ -420,7 +450,7 @@
 			uploadApiFn(file);
 		}
 	};
-	const headerImgOb = reactive({});
+
 	const uploadApiFn = async (file) => {
 		try {
 			// console.log('file',file)
