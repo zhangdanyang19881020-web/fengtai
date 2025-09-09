@@ -39,7 +39,7 @@
 	import {
 		ElMessage
 	} from 'element-plus'
-	
+
 	import {
 		getUserInfo
 	} from '@/utils/token'
@@ -78,12 +78,14 @@
 						// TODO: 调用实际登录接口
 						// await new Promise(r => setTimeout(r, 600))	
 						// router.replace('/')
-						console.log('form.value', form)
+						// console.log('form.value', form)
 						// 登录接口会自动保存 token
 						const result = await userApi.login(form)
-						console.log('result--', result)
-						if (result.code==200) {
-							router.push('/main');
+						// console.log('result--', result)
+						if (result.code == 200) {
+							setTimeout(() => {
+								router.push('/taibaoList');
+							}, 500)
 						}
 						// responseData.value = JSON.stringify(result, null, 2)
 						ElMessage.success('登录成功，Token 已自动保存！')

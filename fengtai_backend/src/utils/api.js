@@ -4,6 +4,12 @@ import {
 	put,
 	del
 } from './request'
+import {
+	getTokenType,
+	getUserInfo,
+	getAccessToken,
+	clearTokens
+} from '@/utils/token'
 
 // 测试
 // var _ServiceUrl = 'https://www.gihoo.work'; //ok
@@ -84,14 +90,15 @@ export const dataApi = {
 
 // 文件上传相关接口
 export const uploadApi = {
-	// 单文件上传
-	uploadFile: (file, onProgress) => {
-		const formData = new FormData()
-		formData.append('file', file)
+	// 单文件上传 上传图片
+	uploadFile: (formData, onProgress) => {
+		// const formData = new FormData()
+		// formData.append('file', file)
 
-		return post('/upload/file', formData, {
+		return post(_ServiceUrl + '/api/img/upload/', formData, {
 			headers: {
-				'Content-Type': 'multipart/form-data'
+				'Content-Type': 'multipart/form-data',
+				'authorization':`${getTokenType()} ${getAccessToken()}}`,
 			},
 			onUploadProgress: onProgress
 		})
@@ -126,6 +133,7 @@ export const systemApi = {
 
 // 导出所有 API
 export default {
+	_ServiceUrl,
 	user: userApi,
 	data: dataApi,
 	upload: uploadApi,

@@ -4,6 +4,7 @@
 const TOKEN_KEY = 'access_token'
 const REFRESH_TOKEN_KEY = 'refresh_token'
 const TOKEN_EXPIRY_KEY = 'token_expiry'
+const TOKEN_TYPE = "token_type"
 
 //用户信息 存储
 const USER_INFO = 'user'
@@ -11,11 +12,23 @@ const USER_INFO = 'user'
  * Token 管理类
  */
 class TokenManager {
+	setTokenType(tokenType) {
+		if (tokenType) {
+			localStorage.setItem(TOKEN_TYPE, tokenType)
+		}
+	}
+
+	getTokenType() {
+		return localStorage.getItem(TOKEN_TYPE)
+	}
+
 	/**
 	 * 设置访问 Token
 	 * @param {string} token 访问 Token
 	 * @param {number} expiresIn 过期时间（秒）
 	 */
+
+
 	setAccessToken(token, expiresIn = 3600) {
 		if (token) {
 			localStorage.setItem(TOKEN_KEY, token)
@@ -174,6 +187,9 @@ export {
 }
 
 // 导出便捷函数 - 绑定正确的 this 上下文
+export const setTokenType = tokenManager.setTokenType.bind(tokenManager)
+export const getTokenType = tokenManager.getTokenType.bind(tokenManager)
+
 export const setAccessToken = tokenManager.setAccessToken.bind(tokenManager)
 export const getAccessToken = tokenManager.getAccessToken.bind(tokenManager)
 export const setRefreshToken = tokenManager.setRefreshToken.bind(tokenManager)

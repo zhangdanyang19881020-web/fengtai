@@ -4,6 +4,7 @@ import {
 } from 'element-plus'
 import config from './config'
 import {
+	setTokenType,
 	getAccessToken,
 	isTokenExpired,
 	clearTokens
@@ -25,9 +26,7 @@ service.interceptors.request.use(
 
 		// 检查是否是登录接口，如果是则不添加 token
 		const isLoginRequest = config.url && (
-			config.url.includes('/cas/OAuth/Token') ||
-			config.url.includes('/login') ||
-			config.url.includes('/auth')
+			config.url.includes('/login')
 		)
 
 		// 如果不是登录接口，则添加 token
@@ -77,12 +76,10 @@ service.interceptors.response.use(
 
 		console.log('status', status)
 		// 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
-		if (status === 200) {
+		if (status === 200 || status == 201) {
 			// 检查是否是登录接口的响应，如果是则自动保存 token
 			const isLoginResponse = config.url && (
 				config.url.includes('/api/auth/login/')
-				// config.url.includes('/login') ||
-				// config.url.includes('/auth')
 			)
 			console.log('isLoginResponse--', isLoginResponse);
 
@@ -90,11 +87,15 @@ service.interceptors.response.use(
 				// 自动保存登录返回的 token
 				var loginResOb = data.data;
 				import('./token').then(({
+					setTokenType,
 					setAccessToken,
 					setRefreshToken,
 					setUserInfo
 				}) => {
 					setAccessToken(loginResOb.access_token, loginResOb.expires_in || 3600)
+					if (loginResOb.token_type) {
+						setTokenType(loginResOb.token_type)
+					}
 					if (loginResOb.refresh_token) {
 						setRefreshToken(loginResOb.refresh_token)
 					}
@@ -103,10 +104,12 @@ service.interceptors.response.use(
 					}
 					console.log('登录成功，Token 已自动保存')
 				})
+			} else {
+				console.log('others--', config)
 			}
 
 			// 这里可以根据后端的响应结构进行调整
-			console.log('data--', data)
+			// console.log('data--', data)
 			if (data.code == 200) {
 				return data
 			} else {
