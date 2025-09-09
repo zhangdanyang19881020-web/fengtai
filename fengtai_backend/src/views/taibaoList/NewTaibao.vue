@@ -37,13 +37,18 @@
 			</el-form-item>
 
 			<!-- 到访年份 -->
-			<el-form-item label="到访年份" required>
-				<el-tag v-for="(year, index) in form.visitYears" :key="index" closable @close="removeYear(index)">
-					{{ year }}
-				</el-tag>
-				<el-input v-model="yearInput" placeholder="请输入1949-2025之间的年份数字" style="width: 250px; margin-left: 10px;"
-					@keyup.enter="addYear" />
-				<el-button type="success" @click="addYear" style="margin-left: 10px;">添加到访年份</el-button>
+			<el-form-item label="到访年份" >
+				<div class="come-year--box">
+					<div class="year-tag-box">
+						<el-tag v-for="(year, index) in form.visitYears" :key="index" closable
+							@close="removeYear(index)">
+							{{ year }}
+						</el-tag>
+					</div>
+					<el-input v-model="yearInput" placeholder="请输入1949-2025之间的年份数字"
+						style="width: 250px; margin-left: 10px;" @keyup.enter="addYear" />
+					<el-button type="success" @click="addYear" style="margin-left: 10px;">添加到访年份</el-button>
+				</div>
 			</el-form-item>
 
 			<!-- 家族关系 -->
@@ -53,7 +58,7 @@
 					<el-table-column prop="name" label="名字" width="180" />
 					<el-table-column label="操作" width="80">
 						<template #default="{ $index }">
-							<el-button type="danger" circle icon="Close" @click="removeFamily($index)" />
+							<i class="iconfont icon-chacha" @click="removeFamily($index)"></i>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -99,7 +104,6 @@
 		clearTokens
 	} from '@/utils/token'
 
-	const squareUrl = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
 	const form = ref({
 		avatar: "",
 		name: "",
@@ -133,9 +137,7 @@
 	const defaultAvatar = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');
 	const uploadUrl = ref('http://8.136.3.28:8000/api/img/upload/');
 	const uploadData = ref({}); // Additional data that may be needed for the upload (e.g., user ID or session token)
-	const uploadHeaders = ref({
-		Authorization: `Bearer ${getAccessToken()}`, // Add authorization token or other headers if needed
-	});
+
 	// Handle the file selection manually (if you want to use manual file uploads)
 	const triggerUpload = () => {
 		fileInput.value.click();
@@ -225,6 +227,8 @@
 				border-radius: 50%;
 				margin-right: 10px;
 				border: 1px solid rgba(0, 0, 0, 0.08);
+				background: rgba(0, 0, 0, 0.03);
+				color: rgba(0, 0, 0, 0.3);
 			}
 
 			.avatar-uploader--btn {
@@ -233,6 +237,24 @@
 				.iconfont {
 					margin-right: 5px;
 				}
+			}
+		}
+
+		.come-year--box {
+			.year-tag-box {
+				.el-tag {
+					margin-right: 5px;
+				}
+			}
+		}
+
+		.icon-chacha {
+			font-size: 14px;
+			color: #f00000;
+			cursor: pointer;
+
+			&:hover {
+				font-size: 16px;
 			}
 		}
 	}
