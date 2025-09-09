@@ -11,12 +11,12 @@
 				</div>
 				<span class="nav-name">{{ item.name }}</span>
 			</li>
-			<li class="nav-li pos-buttom">
+<!-- 			<li class="nav-li pos-buttom">
 				<div class="nav-icon">
 					<i class="iconfont icon-anli"></i>
 				</div>
 				<span class="nav-name">应用</span>
-			</li>
+			</li> -->
 		</ul>
 
 		<!-- 	<div class="open-page--box">
@@ -148,7 +148,7 @@
 
 		.menu-title {
 			font-size: 18px;
-			padding: 40px 0;
+			padding: 45px 0 55px 0;
 			color: #2d70f3;
 			font-weight: bold;
 

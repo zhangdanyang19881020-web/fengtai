@@ -80,7 +80,7 @@ export const dataApi = {
 	// 地区列表
 	regionList: () => get(_ServiceUrl + '/api/region/list/'),
 	// 获取数据详情
-	getDataDetail: (id) => get(`/data/detail/${id}`),
+	getMemberDetail: (params) => get(_ServiceUrl + `/api/visit/userInfo/`, params),
 	// 创建数据
 	createData: (data) => post('/data/create', data),
 	// 更新数据
@@ -103,7 +103,7 @@ export const uploadApi = {
 		return post(_ServiceUrl + '/api/img/upload/', formData, {
 			headers: {
 				'Content-Type': 'multipart/form-data',
-				'authorization':`${getTokenType()} ${getAccessToken()}}`,
+				'authorization': `${getTokenType()} ${getAccessToken()}}`,
 			},
 			onUploadProgress: onProgress
 		})

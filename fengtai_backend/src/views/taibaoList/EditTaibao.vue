@@ -130,11 +130,15 @@
 	import rawData from '@/datas/fenghua.json'
 
 	onMounted(() => {
+		getMemberDetail();
 		getFamilyData();
 		regionListFn();
+		
 	})
 
 	const router = useRouter()
+	const route = useRoute()
+
 	const addressProp = reactive({
 		value: 'id',
 		label: 'name',
@@ -201,6 +205,14 @@
 			trigger: 'blur'
 		}],
 	})
+
+	const getMemberDetail = async () => {
+		let params = {
+			userId: route.params.userId
+		}
+		await dataApi.getMemberDetail(params)
+	}
+
 	const submitForm = async (formEl) => {
 		if (!formEl) return
 		await formEl.validate((valid, fields) => {
