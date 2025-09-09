@@ -4,7 +4,8 @@
 			<div class="search-box--left">
 				<div class="search-box--item">
 					<el-tag class="search-box--tag" type="primary" size="large">奉化市</el-tag>
-					<el-select v-model="searchData.street" placeholder="Select" style="width: 240px">
+					<el-select v-model="searchData.street" placeholder="选择街道或镇进行筛选" @change="searchFn"
+						style="width: 240px">
 						<el-option v-for="item in streetOptions" :key="item.value" :label="item.label"
 							:value="item.value" />
 					</el-select>
@@ -28,8 +29,8 @@
 			<el-table-column label="祖籍" prop="address"></el-table-column>
 			<el-table-column label="操作">
 				<template #default="scope">
-					<el-button link @click.native="editRow(scope.row)" size="small" type="primary">编辑</el-button>
-					<el-button link @click.native="deleteRow(scope.row)" size="small" type="danger">删除</el-button>
+					<el-button link @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
+					<el-button link @click="deleteRow(scope.row)" size="small" type="danger">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -49,7 +50,8 @@
 		reactive,
 		computed,
 		watch,
-		onMounted
+		onMounted,
+		toRefs
 	} from 'vue'
 	import {
 		useRouter
@@ -87,16 +89,27 @@
 			const pageSize = ref(10)
 			const background = ref(true)
 			const total = ref(0)
-			const searchData = reactive({
-				street: ''
+
+			const state = reactive({
+				addressOptions: [],
+				streetOptions: [],
+				searchData: {
+					street: ''
+				}
 			})
-			const streetOptions=reactive([])
+			// ✅ 同时解构出 searchData
+			const {
+				addressOptions,
+				streetOptions,
+				searchData
+			} = toRefs(state)
 
 			const router = useRouter();
 
 			// params object to track page info and search query
 			const params = computed(() => ({
-				userName: searchQuery.value,
+				"targetId": state.searchData.street,
+				"targetType": 1,
 				pageSize: pageSize.value,
 				pageIndex: currentPage.value,
 			}))
@@ -111,6 +124,36 @@
 			const filteredTotal = computed(() => {
 				return total.value;
 			})
+
+
+			onMounted(() => {
+				regionListFn();
+			})
+
+			// 村街道
+
+			const regionListFn = async () => {
+				const result = await dataApi.regionList();
+				if (result.code === 200 && Array.isArray(result.data)) {
+					// addressOptions.splice(0, addressOptions.length, ...result.data);
+					state.addressOptions = result.data;
+					state.streetOptions = state.addressOptions.map(x => ({
+						label: x.name,
+						value: x.id
+					}))
+					state.searchData.street = state.streetOptions[0].value;
+					console.log('state.searchData.street', state.searchData.street);
+					getListFn()
+					// streetOptions.splice(0, streetOptions.length, ...streetOptions.value);
+					// console.log('addressOptions', state.addressOptions)
+					// console.log('streetOptions', state.streetOptions)
+				}
+			}
+
+			const searchFn = () => {
+				handleCurrentChange(1)
+			}
+
 
 			// Handle pagination size change
 			const handleSizeChange = (val) => {
@@ -127,7 +170,7 @@
 			// Fetch list from API
 			const getListFn = async () => {
 				try {
-					const result = await dataApi.getDataList(params.value)
+					const result = await dataApi.homeViewList(params.value)
 					console.log('result', result)
 					data.value = result.data.pageData; // assuming result.data is the data
 					total.value = result.data.totalPage;
@@ -167,13 +210,11 @@
 			})
 
 
-			// Mounted lifecycle hook to fetch initial data
-			onMounted(() => {
-				getListFn()
-			})
 
 			return {
+				streetOptions,
 				searchData,
+				searchFn,
 				searchQuery,
 				currentPage,
 				pageSize,

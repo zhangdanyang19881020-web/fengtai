@@ -85,7 +85,9 @@ export const dataApi = {
 	getMemberDetail: (params) => get(_ServiceUrl + `/api/visit/userInfo/`, params),
 	// 活动列表
 	newsList: (params) => post(_ServiceUrl + '/api/view/activityList/', params),
-	
+	// 家乡风貌
+	homeViewList: (params) => post(_ServiceUrl + '/api/img/imgList/', params),
+
 	// 创建数据
 	createData: (data) => post('/data/create', data),
 	// 更新数据
