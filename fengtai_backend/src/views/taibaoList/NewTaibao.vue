@@ -58,9 +58,9 @@
 
 			<!-- 家族关系 -->
 			<el-form-item label="家族关系" required>
-				<el-table :data="form.family" border style="width: 500px;">
+				<el-table :data="form.family" border>
 					<el-table-column prop="relation" label="关系" width="120" />
-					<el-table-column prop="name" label="名字" width="180" />
+					<el-table-column prop="name" label="名字" />
 					<el-table-column label="操作" width="80">
 						<template #default="{ $index }">
 							<i class="iconfont icon-chacha" @click="removeFamily($index)"></i>
@@ -70,10 +70,8 @@
 
 				<div style="margin-top: 10px;">
 					<el-select v-model="familyRelation" placeholder="关系" style="width: 120px;">
-						<el-option label="爷爷" value="爷爷" />
-						<el-option label="父亲" value="父亲" />
-						<el-option label="母亲" value="母亲" />
-						<el-option label="姐姐" value="姐姐" />
+						<el-option v-for="item in familyRelationOption" :key="item.value" :label="item.label"
+							:value="item.value" />
 					</el-select>
 					<el-input v-model="familyName" placeholder="请输入姓名" style="width: 180px; margin-left: 10px;" />
 					<el-button type="success" @click="addFamily" style="margin-left: 10px;">添加</el-button>
@@ -92,7 +90,9 @@
 	import {
 		ref,
 		reactive,
-		computed
+		computed,
+
+		onMounted,
 	} from "vue"
 	import {
 		Picture,
@@ -104,6 +104,7 @@
 	} from 'element-plus'
 	import {
 		uploadApi,
+		dataApi,
 	} from '@/utils/api.js'
 	import {
 		getUserInfo,
@@ -111,6 +112,10 @@
 		clearTokens
 	} from '@/utils/token'
 	import rawData from '@/datas/fenghua.json'
+
+	onMounted(() => {
+		getFamilyData()
+	})
 
 	const form = ref({
 		avatar: "",
@@ -166,6 +171,60 @@
 			}
 		})
 	}
+
+	//家族关系
+
+	const familyRelation = ref("")
+	const familyRelationOption = ref([])
+
+	const familyName = ref("")
+	// 扁平化函数
+	const flattenFamilyTree = (nodes, parentPath = "") => {
+		let result = [];
+		nodes.forEach(node => {
+			// 构造完整路径
+			const path = parentPath ? `${parentPath} > ${node.relationshipName}` : node.relationshipName;
+			console.log("path", path)
+			// 添加到结果数组
+			// 只有没有 children 或 children 为空数组才加入
+			var arr = path.split('>');
+			var leaf = arr[arr.length - 1];
+			console.log('leaf', leaf)
+
+			result.push({
+				value: node.relationshipId,
+				label: leaf
+			})
+
+
+			// 递归子节点
+			if (node.children && node.children.length > 0) {
+				result = result.concat(flattenFamilyTree(node.children, path));
+			}
+		});
+		return result;
+	}
+
+
+
+	const getFamilyData = async () => {
+		try {
+			const result = await dataApi.getFamilyList();
+			console.log('fa-', result)
+			// 扁平化后的数组
+			if (result.code == 200 && result.data) {
+				const flatArray = flattenFamilyTree(result.data)
+				const uniqueArray = Array.from(new Map(flatArray.map(item => [item.value, item])).values())
+				familyRelationOption.value = uniqueArray
+			}
+		} catch (error) {
+			return []
+		}
+	}
+
+
+
+
 	// 年份
 	const yearArr = Array.from({
 		length: 2025 - 1949 + 1
@@ -189,9 +248,18 @@
 			const yearStr = String(yearInput.value); // 转成字符串
 			if (!form.value.visitYears.includes(yearStr)) {
 				form.value.visitYears.push(yearStr);
+				// 排序
+				form.value.visitYears.sort((a, b) => Number(a) - Number(b));
 			}
 			yearInput.value = null; // 清空选择
 		}
+	};
+
+
+	const removeYear = (index) => {
+		form.value.visitYears.splice(index, 1);
+		// 删除后也可以排序，保持一致（可选）
+		form.value.visitYears.sort((a, b) => Number(a) - Number(b));
 	};
 
 	// 转换成 el-cascader 需要的格式
@@ -220,12 +288,7 @@
 	const handleAvatarUpload = (event) => {
 		const file = event.target.files[0];
 		if (file) {
-			// if (file.size > 10 * 1024 * 1024) {
-			// 	ElMessage.error('头像图片大小不能超过2MB');
-			// 	return;
-			// }
 			uploadApiFn(file);
-
 		}
 	};
 	const uploadApiFn = async (file) => {
@@ -256,13 +319,9 @@
 
 
 
-	const familyRelation = ref("")
-	const familyName = ref("")
 
 
-	const removeYear = (index) => {
-		form.value.visitYears.splice(index, 1)
-	}
+
 
 	const addFamily = () => {
 		if (familyRelation.value && familyName.value) {

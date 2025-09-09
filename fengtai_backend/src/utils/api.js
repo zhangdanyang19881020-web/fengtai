@@ -71,9 +71,11 @@ export const userApi = {
 // 数据相关接口
 export const dataApi = {
 	// 获取数据列表
-	// 账户公司列表【账户管理】--ok
-
+	// 账户人员列表
 	getDataList: (params) => post(_ServiceUrl + '/api/visit/userList/', params),
+	// 获取所有家族关系
+	getFamilyList: () => get(_ServiceUrl + '/api/famil/relationship/'),
+	
 	// 获取数据详情
 	getDataDetail: (id) => get(`/data/detail/${id}`),
 	// 创建数据
