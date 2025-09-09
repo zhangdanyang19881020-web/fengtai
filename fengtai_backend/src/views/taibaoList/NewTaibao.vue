@@ -58,7 +58,7 @@
 
 			<!-- 家族关系 -->
 			<el-form-item label="家族关系" required>
-				<el-table :data="form.family" border>
+				<el-table class="z-table" :data="form.familyTable">
 					<el-table-column prop="relation" label="关系" width="120" />
 					<el-table-column prop="name" label="名字" />
 					<el-table-column label="操作" width="80">
@@ -124,22 +124,11 @@
 		community: "",
 		info: "",
 		visitYears: ["2008", "2021"],
-		family: [{
-				relation: "爷爷",
-				name: "蒋生挺"
-			},
-			{
-				relation: "父亲",
-				name: "蒋孝天"
-			},
-			{
-				relation: "母亲",
-				name: "王慧菊"
-			},
-			{
-				relation: "姐姐",
-				name: "蒋音甄"
-			},
+		familyTable: [
+			// {
+			// 	relation: "爷爷",
+			// 	name: "蒋生挺"
+			// }
 		],
 	})
 	const ruleFormRef = ref();
@@ -222,7 +211,21 @@
 		}
 	}
 
+	const addFamily = () => {
+		if (familyRelation.value && familyName.value) {
+			var relationName = familyRelationOption.value.find(x => x.value == familyRelation.value).label;
+			form.value.familyTable.push({
+				relation: relationName,
+				name: familyName.value,
+			})
+			familyRelation.value = ""
+			familyName.value = ""
+		}
+	}
 
+	const removeFamily = (index) => {
+		form.value.familyTable.splice(index, 1)
+	}
 
 
 	// 年份
@@ -315,27 +318,6 @@
 		} catch (error) {
 			console.error('Failed to fetch data:', error)
 		}
-	}
-
-
-
-
-
-
-
-	const addFamily = () => {
-		if (familyRelation.value && familyName.value) {
-			form.value.family.push({
-				relation: familyRelation.value,
-				name: familyName.value,
-			})
-			familyRelation.value = ""
-			familyName.value = ""
-		}
-	}
-
-	const removeFamily = (index) => {
-		form.value.family.splice(index, 1)
 	}
 </script>
 
