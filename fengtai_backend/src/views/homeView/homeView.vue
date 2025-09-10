@@ -41,7 +41,7 @@
 				layout="sizes, prev, pager, next, jumper" @size-change="getListFn" @current-change="getListFn" />
 		</div>
 
-		<NewHomeViewDlg ref="newHomeViewDlgRef"></NewHomeViewDlg>
+		<NewHomeViewDlg ref="newHomeViewDlgRef" @refresh="searchFn"></NewHomeViewDlg>
 	</div>
 </template>
 
@@ -181,7 +181,7 @@
 			}
 
 			const searchFn = () => {
-				pageSize.value = 1
+				currentPage.value = 1
 				getListFn()
 			}
 

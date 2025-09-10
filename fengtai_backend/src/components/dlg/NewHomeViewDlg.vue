@@ -6,7 +6,7 @@
 			</div> -->
 			<div>
 				<el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-					<el-form-item label="祖籍" required>
+					<el-form-item label="祖籍">
 						<el-tag class="address-tag" type="primary" size="large">奉化市 /
 							{{dadData.value.searchData.streetStr}}</el-tag>
 					</el-form-item>
@@ -17,22 +17,30 @@
 
 					<!-- 图片上传 -->
 					<el-form-item label="景点图片" prop="imgUrl">
-						<el-upload class="avatar-uploader" :action="uploadUrl" :data="uploadData"
-							:headers="uploadHeaders" :show-file-list="false" :on-success="handleUploadSuccess"
-							:before-upload="beforeUpload">
+						<el-upload class="avatar-uploader" :on-change="handleFileChange" :show-file-list="false"
+							:auto-upload="false">
 							<img v-if="form.imgUrl" :src="form.imgUrl" class="uploaded-img" />
 							<i v-else class="el-icon-plus avatar-uploader-icon">+</i>
 						</el-upload>
 					</el-form-item>
 
+
 					<!-- 按钮 -->
 					<el-form-item>
 						<el-button type="primary" @click="submitForm">提交</el-button>
-						<el-button @click="resetForm">重置</el-button>
+						<el-button @click="resetForm">取消</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 		</div>
+		<!-- 		<template #footer>
+			<div class="dialog-footer">
+				<el-button @click="resetForm">取消</el-button>
+				<el-button type="primary" @click="submitForm">
+					确定
+				</el-button>
+			</div>
+		</template> -->
 	</el-dialog>
 </template>
 
@@ -49,18 +57,25 @@
 		getAccessToken,
 	} from '@/utils/token'
 	import {
-		ElMessage,
-		ElButton
-	} from 'element-plus'
-	import {
 		uploadApi,
 		dataApi,
 	} from '@/utils/api.js'
+	import {
+		ElInput,
+		ElTable,
+		ElTableColumn,
+		ElButton,
+		ElAvatar,
+		ElPagination,
+		ElMessageBox,
+		ElMessage
+	} from 'element-plus'
 	export default {
 		name: 'NewHomeViewDlg',
 		components: {},
 		setup(props, {
-			expose
+			expose,
+			emit
 		}) {
 			// ✅ props 就是父组件传过来的参数
 
@@ -90,7 +105,7 @@
 				dadData.value = getData;
 				state.value = Object.assign(getData, patch)
 				console.log('dadData=', dadData)
-				
+
 				// uploadData.value.targetId = getData.searchData.stree;
 				state.newHomeViewDlgShow = true
 			}
@@ -121,45 +136,99 @@
 				}]
 			}
 
-			// 上传前校验（限制大小、类型）
-			const beforeUpload = (file) => {
-				const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
+			// const customUpload = async ({
+			// 	file
+			// }) => {
+			// 	const formData = new FormData()
+			// 	formData.append('file', file)
+			// 	formData.append('type', 1)
+			// 	formData.append('targetId', dadData.value.searchData.stree)
+			// 	formData.append('title', form.title)
+
+			// 	try {
+			// 		const data = await uploadApi.uploadFile(formData) // axios 封装
+			// 		handleUploadSuccess(data, file)
+			// 	} catch (err) {
+			// 		ElMessage.error('上传失败')
+			// 	}
+			// }
+
+
+			const selectedFile = ref(null)
+
+			const handleFileChange = (uploadFile) => {
+				const file = uploadFile.raw
+				const isImage = file.type === 'image/jpeg' || file.type === 'image/png'
 				const isLt2M = file.size / 1024 / 1024 < 2
 
-				if (!isJPG) {
+				if (!isImage) {
 					ElMessage.error('只能上传 JPG/PNG 格式的图片!')
+					return
 				}
 				if (!isLt2M) {
 					ElMessage.error('上传图片大小不能超过 2MB!')
+					return
 				}
-				console.log('file', file);
-				uploadData.value.file=file;
-				return isJPG && isLt2M
+
+				selectedFile.value = file
+				form.imgUrl = URL.createObjectURL(file) // ✅ 本地预览
 			}
 
 			// 上传成功回调
 			const handleUploadSuccess = (response, file) => {
 				form.imgUrl = URL.createObjectURL(file.raw) // 本地预览
-				// 实际业务里要用 response 里的 url
 			}
 
+
 			// 提交表单
-			const submitForm = () => {
-				formRef.value.validate((valid) => {
-					if (valid) {
-						ElMessage.success('提交成功')
-						console.log('表单数据:', form)
-					} else {
+			const submitForm = async () => {
+				if (!formRef.value) {
+					ElMessage.error('表单未渲染')
+					return
+				}
+				try {
+					const valid = await formRef.value.validate()
+					if (!valid) {
 						ElMessage.error('请完善表单信息')
-						return false
+						return
 					}
-				})
+
+					if (!selectedFile.value) {
+						ElMessage.error('请先选择图片')
+						return
+					}
+
+					const formData = new FormData()
+					formData.append('file', selectedFile.value)
+					formData.append('title', form.title)
+					formData.append('type', 1)
+					formData.append('targetId', dadData.value?.searchData?.street || '')
+
+					const res = await uploadApi.uploadFile(formData)
+					if (res.code === 200) {
+						form.imgUrl = res.data.access_path;
+
+						ElMessage.success(res.message);
+
+						emit('refresh')
+						close();
+
+					} else {
+						ElMessage.error(res.message || '上传失败')
+					}
+				} catch (err) {
+					console.error(err)
+					ElMessage.error('提交时发生异常')
+				}
 			}
+
+
 
 			// 重置表单
 			const resetForm = () => {
 				formRef.value.resetFields()
-				form.imgUrl = ''
+				form.imgUrl = '';
+				close()
 			}
 			//form ⬆️
 			// 暴露给父组件可调用/可读
@@ -169,6 +238,8 @@
 				close
 			})
 			return {
+				formRef,
+				selectedFile,
 				state,
 				dadData,
 				open,
@@ -177,8 +248,9 @@
 				rules,
 				resetForm,
 				submitForm,
-				beforeUpload,
 				handleUploadSuccess,
+				handleFileChange,
+				// customUpload,
 				uploadUrl,
 				uploadData,
 				uploadHeaders
@@ -190,6 +262,7 @@
 <style lang="scss" scoped>
 	.new-home--main {
 		width: calc(100% - 100px);
+		margin-top: 10px;
 
 		.new-home--title {
 			.address-tag {}
