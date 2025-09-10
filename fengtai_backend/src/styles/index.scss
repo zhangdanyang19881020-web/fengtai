@@ -34,10 +34,14 @@
 			display:flex;
 			justify-content: flex-start;
 			align-items: center;
+			margin-right:10px;
 			label{
 				width:100px;
 				font-size:14px;
 				color: rgba(0,0,0,0.6);
+			}
+			label.item-title{
+				width:50px;
 			}
 			.search-box--tag{
 				margin-right:10px;

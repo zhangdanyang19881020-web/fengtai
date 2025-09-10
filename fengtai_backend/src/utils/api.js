@@ -90,6 +90,8 @@ export const dataApi = {
 	// 删除家乡风貌
 	delHometown: (params) => get(_ServiceUrl + '/api/img/delete/', params),
 
+
+
 	// 创建数据
 	createData: (data) => post('/data/create', data),
 	// 更新数据

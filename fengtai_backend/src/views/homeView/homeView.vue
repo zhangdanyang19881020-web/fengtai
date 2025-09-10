@@ -23,11 +23,7 @@
 					<el-image v-if="scope.row.imgUrl" :preview-src-list="[scope.row.imgUrl]" hide-on-click-modal
 						class="row-img" :lazy="true" :src="scope.row.imgUrl" fit="scale-down"
 						:preview-teleported="true" />
-					<el-image v-else class="row-img"
-						src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" fit="scale-down" />
-					<!-- <el-avatar v-if="scope.row.imgUrl" :src="scope.row.imgUrl" size="small"></el-avatar>
-					<el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-						size="small"></el-avatar> -->
+					<el-image v-else class="row-img" src="./images/no-img2.png" fit="scale-down" />
 				</template>
 			</el-table-column>
 			<el-table-column label="名称" :formatter="emptyFormatter" :show-overflow-tooltip="true"
@@ -229,7 +225,9 @@
 				console.log('editHomeViewDlgRef:', editHomeViewDlgRef)
 				if (editHomeViewDlgRef.value) {
 					editHomeViewDlgRef.value.open({
-						row:{...row},
+						row: {
+							...row
+						},
 						...state
 					})
 				} else {
