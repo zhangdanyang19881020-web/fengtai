@@ -87,6 +87,8 @@ export const dataApi = {
 	newsList: (params) => post(_ServiceUrl + '/api/view/activityList/', params),
 	// 家乡风貌
 	homeViewList: (params) => post(_ServiceUrl + '/api/img/imgList/', params),
+	// 删除家乡风貌
+	delHometown: (params) => get(_ServiceUrl + '/api/img/delete/', params),
 
 	// 创建数据
 	createData: (data) => post('/data/create', data),

@@ -18,16 +18,18 @@
 		</div>
 
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
-			<el-table-column label="图片" width="100">
+			<el-table-column label="图片" width="150">
 				<template #default="scope">
-					<el-avatar v-if="scope.row.imgUrl" :src="scope.row.imgUrl" size="small"></el-avatar>
+					<el-image v-if="scope.row.imgUrl" class="row-img" :src="scope.row.imgUrl" fit="scale-down" />
+					<el-image v-else class="row-img" :src="scope.row.imgUrl" fit="scale-down" />
+					<!-- <el-avatar v-if="scope.row.imgUrl" :src="scope.row.imgUrl" size="small"></el-avatar>
 					<el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-						size="small"></el-avatar>
+						size="small"></el-avatar> -->
 				</template>
 			</el-table-column>
 			<el-table-column label="名称" :formatter="emptyFormatter" :show-overflow-tooltip="true"
 				prop="title"></el-table-column>
-			<el-table-column label="操作">
+			<el-table-column label="操作" width='120'>
 				<template #default="scope">
 					<el-button link @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
 					<el-button link @click="deleteRow(scope.row)" size="small" type="danger">删除</el-button>
@@ -37,11 +39,16 @@
 
 		<div class="pagination-box">
 			<el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-				:page-sizes="[10, 20, 30, 40]" :background="background" size="default"
+				:page-sizes="[10, 20, 30, 40]" :background="background" size="default"   :total="total"
 				layout="sizes, prev, pager, next, jumper" @size-change="getListFn" @current-change="getListFn" />
 		</div>
 
-		<NewHomeViewDlg ref="newHomeViewDlgRef" @refresh="searchFn"></NewHomeViewDlg>
+
+		<new-home-view-dlg ref="newHomeViewDlgRef" @refresh="searchFn"></new-home-view-dlg>
+
+		<edit-home-view-dlg ref="MMeditHomeViewDlgRef" @refresh="searchFn"></edit-home-view-dlg>
+
+
 	</div>
 </template>
 
@@ -53,7 +60,8 @@
 		watch,
 		onMounted,
 		toRefs,
-		defineAsyncComponent
+		defineAsyncComponent,
+		nextTick
 	} from 'vue'
 	import {
 		useRouter
@@ -80,14 +88,17 @@
 		debounce
 	} from 'lodash-es'
 
+	import EditHomeViewDlg from '@/components/dlg/EditHomeViewDlg.vue'
 
 	export default {
 		name: 'UserTable',
 		components: {
 			Search, // 注册图标
 			NewHomeViewDlg: defineAsyncComponent(() => import('@/components/dlg/NewHomeViewDlg.vue')),
+			EditHomeViewDlg,
 		},
 		setup() {
+
 			const currentPage = ref(1)
 			const pageSize = ref(10)
 			const background = ref(true)
@@ -203,7 +214,7 @@
 			//新建弹窗
 			const newHomeViewDlgRef = ref(null)
 			const goNewFn = () => {
-				// console.log('newHomeViewDlgRef', newHomeViewDlgRef)
+				console.log('newHomeViewDlgRef', newHomeViewDlgRef)
 				if (newHomeViewDlgRef.value) {
 					// console.log('state--', state)
 					newHomeViewDlgRef.value.open(state);
@@ -212,17 +223,31 @@
 					console.warn('newHomeViewDlgRef is not ready')
 				}
 			}
+			//编辑弹窗
+			const isEditDlgVisible = ref(false);
+			const MMeditHomeViewDlgRef = ref(null)
+			const handleEditRow = (row) => {
+				nextTick(() => {
+					isEditDlgVisible.value = true;
+					if (MMeditHomeViewDlgRef.value) {
+						MMeditHomeViewDlgRef.value.open(row)
+					} else {
+						console.warn('MMeditHomeViewDlgRef is not ready')
+					}
+				})
+			}
+
 			// Search query watcher
 			const debouncedGetList = debounce(() => {
 				currentPage.value = 1
 				getListFn()
 			}, 500) // 500ms 内只触发一次
 
-			const delMemberFn = async (row) => {
+			const delHometownFn = async (row) => {
 				let params = {
-					userId: row.userId
+					id: row.id
 				}
-				const result = await dataApi.delMember(params);
+				const result = await dataApi.delHometown(params);
 				if (result.code == 200) {
 					ElMessage({
 						type: 'success',
@@ -232,7 +257,25 @@
 					getListFn()
 				}
 			}
-
+			const handleDeleteRow = (row) => {
+				const target = {
+					...row
+				} // 浅拷贝，避免后续响应式丢失
+				// console.log('准备删除的行数据:', target)
+				ElMessageBox.confirm(
+					`确认删除 <span class="el-tag el-tag--danger el-tag--light">${target.title||'--'}</span> ?`,
+					'提示', {
+						dangerouslyUseHTMLString: true,
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning',
+					}
+				).then(() => {
+					delHometownFn(target)
+				}).catch(() => {
+					ElMessage.info('已取消删除')
+				})
+			}
 			// watch(() => state.searchData.street, () => {
 			// 	// debouncedGetList()
 			// 	currentPage.value = 1
@@ -251,37 +294,11 @@
 				filteredData,
 				filteredTotal,
 				getListFn,
-				editRow: (row) => {
-					router.push({
-						name: 'editTaibao',
-						params: {
-							userId: row.userId
-
-						}
-					})
-				},
-				deleteRow: (row) => {
-					deleteRow: (row) => {
-						ElMessageBox.confirm(
-							`确认删除 <span class="el-tag el-tag--danger el-tag--light">${row.userName}</span>?`,
-							'提示', {
-								dangerouslyUseHTMLString: true,
-								confirmButtonText: '确定',
-								cancelButtonText: '取消',
-								type: 'warning',
-							}
-						).then(() => {
-							delMemberFn(row)
-						}).catch(() => {
-							ElMessage.info('已取消删除')
-						})
-					}
-
-
-
-				},
+				editRow: handleEditRow,
+				deleteRow: handleDeleteRow,
 				Search,
-				goNewFn
+				goNewFn,
+				total
 			}
 		}
 	}
@@ -291,6 +308,19 @@
 	.container {
 		width: 100%;
 		padding: 20px;
+
+		.row-img {
+			width: 50px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background: rgba(0, 0, 0, 0.05);
+			border-radius: 4px;
+
+			.el-image__error {
+				font-size: 12px;
+			}
+		}
 	}
 
 	.header {
