@@ -40,6 +40,7 @@
 				:page-sizes="[10, 20, 30, 40]" :background="background" size="default"
 				layout="sizes, prev, pager, next, jumper" @size-change="getListFn" @current-change="getListFn" />
 		</div>
+
 		<NewHomeViewDlg ref="newHomeViewDlgRef"></NewHomeViewDlg>
 	</div>
 </template>
@@ -87,8 +88,6 @@
 			NewHomeViewDlg: defineAsyncComponent(() => import('@/components/dlg/NewHomeViewDlg.vue')),
 		},
 		setup() {
-
-
 			const currentPage = ref(1)
 			const pageSize = ref(10)
 			const background = ref(true)
@@ -98,7 +97,8 @@
 				addressOptions: [],
 				streetOptions: [],
 				searchData: {
-					street: ''
+					street: '',
+					streetStr: ''
 				}
 			})
 			// ✅ 同时解构出 searchData
@@ -171,7 +171,8 @@
 						value: x.id
 					}))
 					if (!state.searchData.street && state.streetOptions.length) {
-						state.searchData.street = state.streetOptions[0].value
+						state.searchData.street = state.streetOptions[0].value;
+						state.searchData.streetStr = state.streetOptions[0].label;
 						// 这里不需要额外 watch 触发的话，直接拉一次
 						getListFn()
 					}
@@ -202,9 +203,11 @@
 			//新建弹窗
 			const newHomeViewDlgRef = ref(null)
 			const goNewFn = () => {
-				console.log('newHomeViewDlgRef', newHomeViewDlgRef)
+				// console.log('newHomeViewDlgRef', newHomeViewDlgRef)
 				if (newHomeViewDlgRef.value) {
-					newHomeViewDlgRef.value.open()
+					console.log('state--', state)
+					newHomeViewDlgRef.value.open(state);
+
 				} else {
 					console.warn('newHomeViewDlgRef is not ready')
 				}
