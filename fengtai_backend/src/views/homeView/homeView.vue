@@ -20,8 +20,11 @@
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
 			<el-table-column label="图片" width="150">
 				<template #default="scope">
-					<el-image v-if="scope.row.imgUrl" class="row-img" :src="scope.row.imgUrl" fit="scale-down" />
-					<el-image v-else class="row-img" :src="scope.row.imgUrl" fit="scale-down" />
+					<el-image v-if="scope.row.imgUrl" :preview-src-list="[scope.row.imgUrl]" hide-on-click-modal
+						class="row-img" :lazy="true" :src="scope.row.imgUrl" fit="scale-down"
+						:preview-teleported="true" />
+					<el-image v-else class="row-img"
+						src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" fit="scale-down" />
 					<!-- <el-avatar v-if="scope.row.imgUrl" :src="scope.row.imgUrl" size="small"></el-avatar>
 					<el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
 						size="small"></el-avatar> -->
@@ -39,14 +42,14 @@
 
 		<div class="pagination-box">
 			<el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-				:page-sizes="[10, 20, 30, 40]" :background="background" size="default"   :total="total"
+				:page-sizes="[10, 20, 30, 40]" :background="background" size="default" :total="total"
 				layout="sizes, prev, pager, next, jumper" @size-change="getListFn" @current-change="getListFn" />
 		</div>
 
 
 		<new-home-view-dlg ref="newHomeViewDlgRef" @refresh="searchFn"></new-home-view-dlg>
 
-		<edit-home-view-dlg ref="MMeditHomeViewDlgRef" @refresh="searchFn"></edit-home-view-dlg>
+		<edit-home-view-dlg ref="editHomeViewDlgRef" @refresh="searchFn"></edit-home-view-dlg>
 
 
 	</div>
@@ -67,12 +70,6 @@
 		useRouter
 	} from 'vue-router'
 	import {
-		ElInput,
-		ElTable,
-		ElTableColumn,
-		ElButton,
-		ElAvatar,
-		ElPagination,
 		ElMessageBox,
 		ElMessage
 	} from 'element-plus'
@@ -91,11 +88,11 @@
 	import EditHomeViewDlg from '@/components/dlg/EditHomeViewDlg.vue'
 
 	export default {
-		name: 'UserTable',
+		name: 'HomeView',
 		components: {
 			Search, // 注册图标
 			NewHomeViewDlg: defineAsyncComponent(() => import('@/components/dlg/NewHomeViewDlg.vue')),
-			EditHomeViewDlg,
+			EditHomeViewDlg: defineAsyncComponent(() => import('@/components/dlg/EditHomeViewDlg.vue')),
 		},
 		setup() {
 
@@ -225,16 +222,20 @@
 			}
 			//编辑弹窗
 			const isEditDlgVisible = ref(false);
-			const MMeditHomeViewDlgRef = ref(null)
-			const handleEditRow = (row) => {
-				nextTick(() => {
-					isEditDlgVisible.value = true;
-					if (MMeditHomeViewDlgRef.value) {
-						MMeditHomeViewDlgRef.value.open(row)
-					} else {
-						console.warn('MMeditHomeViewDlgRef is not ready')
-					}
-				})
+			const editHomeViewDlgRef = ref(null)
+			// 编辑行数据 - 修复方法名
+			const editRow = (row) => {
+				// console.log('编辑行数据:', row)
+				console.log('editHomeViewDlgRef:', editHomeViewDlgRef)
+				if (editHomeViewDlgRef.value) {
+					editHomeViewDlgRef.value.open({
+						row:{...row},
+						...state
+					})
+				} else {
+					console.error('编辑弹窗组件未正确加载或缺少 open 方法')
+					ElMessage.error('编辑功能暂时不可用')
+				}
 			}
 
 			// Search query watcher
@@ -276,6 +277,11 @@
 					ElMessage.info('已取消删除')
 				})
 			}
+
+			// 删除行数据 - 保持原名
+			const deleteRow = (row) => {
+				handleDeleteRow(row)
+			}
 			// watch(() => state.searchData.street, () => {
 			// 	// debouncedGetList()
 			// 	currentPage.value = 1
@@ -284,6 +290,7 @@
 
 			return {
 				newHomeViewDlgRef,
+				editHomeViewDlgRef,
 				streetOptions,
 				searchData,
 				searchFn,
@@ -294,8 +301,8 @@
 				filteredData,
 				filteredTotal,
 				getListFn,
-				editRow: handleEditRow,
-				deleteRow: handleDeleteRow,
+				editRow,
+				deleteRow,
 				Search,
 				goNewFn,
 				total

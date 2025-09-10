@@ -1,9 +1,6 @@
 <template>
 	<el-dialog v-model="state.newHomeViewDlgShow" title="编辑" width="800">
 		<div class="new-home--main">
-			<!-- 	<div class="new-home--title">
-				<el-tag class="address-tag" type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>
-			</div> -->
 			<div>
 				<el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
 					<el-form-item label="祖籍">
@@ -102,12 +99,15 @@
 			})
 
 			function open(getData, patch = {}) {
+				console.log('getData--edit--', getData);
 				dadData.value = getData;
 				state.value = Object.assign(getData, patch)
 				console.log('dadData=', dadData)
 
 				// uploadData.value.targetId = getData.searchData.stree;
 				state.newHomeViewDlgShow = true
+
+				console.log('state----', state)
 			}
 
 			function close() {
