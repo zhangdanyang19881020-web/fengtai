@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="state.newHomeViewDlgShow" title="新建动态" width="800">
+	<el-dialog v-model="state.newHomeViewDlgShow" title="新建动态" width="70%">
 		<div class="new-home--main">
 			<!-- 	<div class="new-home--title">
 				<el-tag class="address-tag" type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>
@@ -13,6 +13,9 @@
 					<!-- 名称 -->
 					<el-form-item label="活动名称" prop="title">
 						<el-input v-model="form.title" placeholder="请输入活动名称" />
+					</el-form-item>
+					<el-form-item label="活动时间" prop="date">
+						<el-date-picker v-model="form.date" type="date" placeholder="请选择活动时间" />
 					</el-form-item>
 
 					<!-- 图片上传 -->
@@ -38,6 +41,15 @@
 						</div>
 
 
+					</el-form-item>
+					<el-form-item label="活动内容">
+						<div class="rich-text--box">
+							<Toolbar :editor="editorRef" class="rich-text--toolbar" />
+							<!-- 	{{html}}
+							<el-divider></el-divider> -->
+							<Editor v-model="html" :default-config="editorConfig"
+								style="height: 400px; overflow-y: auto;" @onCreated="handleCreated" />
+						</div>
 					</el-form-item>
 
 
@@ -65,8 +77,10 @@
 		reactive,
 		ref,
 		defineProps,
-		onMounted,
 		toRefs,
+		watch,
+		onMounted,
+		onBeforeUnmount,
 	} from 'vue'
 	import {
 		getTokenType,
@@ -86,14 +100,54 @@
 		ElMessageBox,
 		ElMessage
 	} from 'element-plus'
+
+	import {
+		Editor,
+		Toolbar
+	} from "@wangeditor/editor-for-vue"
+	import "@wangeditor/editor/dist/css/style.css"
 	export default {
 		name: 'NewHomeViewDlg',
-		components: {},
+		components: {
+			Editor,
+			Toolbar
+		},
 		setup(props, {
 			expose,
 			emit
 		}) {
+			//富文本
+			const html = ref("<p></p>")
+			const editorRef = ref(null)
+
+			// 配置
+			const editorConfig = {
+				placeholder: "请输入内容...",
+				MENU_CONF: {
+					uploadImage: {
+						async customUpload(file, insertFn) {
+							// 上传逻辑，这里只是演示
+							const url = URL.createObjectURL(file)
+							insertFn(url, file.name, url)
+						}
+					}
+				}
+			}
+
+			const handleCreated = (editor) => {
+				editorRef.value = editor
+			}
+
+			onBeforeUnmount(() => {
+				if (editorRef.value) editorRef.value.destroy()
+			})
+			watch(html, (newVal, oldVal) => {
+				console.log('html', newVal)
+			})
 			// ✅ props 就是父组件传过来的参数
+
+
+			const content = ref("")
 
 			onMounted(() => {
 				console.log('uploadUrl--', uploadApi.uploadUrl)
@@ -135,6 +189,7 @@
 			// 表单数据
 			const form = reactive({
 				title: '',
+				date: '',
 				imgUrl: '',
 				peopleList: [],
 				people: '',
@@ -145,6 +200,7 @@
 				console.log('form', form)
 				if (form.people) {
 					form.peopleList.push(form.people);
+					form.people = "";
 				} else {
 					ElMessage.error('请输入参与台胞名字!')
 				}
@@ -153,7 +209,7 @@
 
 			const handleTagClose = (item, index) => {
 				form.peopleList.splice(index, 1);
-				form.people="";
+				form.people = "";
 			}
 			// 校验规则
 			const rules = {
@@ -161,6 +217,11 @@
 					required: true,
 					message: '请输入景点名称',
 					trigger: 'blur'
+				}],
+				date: [{
+					required: true,
+					message: '请选择活动时间',
+					trigger: 'change'
 				}],
 				imgUrl: [{
 					required: true,
@@ -189,7 +250,7 @@
 
 			const selectedFile = ref(null)
 
-			const handleFileChange = (uploadFile) => {
+			const handleFileChange = async (uploadFile) => {
 				const file = uploadFile.raw
 				const isImage = file.type === 'image/jpeg' || file.type === 'image/png'
 				// const isLt2M = file.size / 1024 / 1024 < 2
@@ -205,6 +266,36 @@
 
 				selectedFile.value = file
 				form.imgUrl = URL.createObjectURL(file) // ✅ 本地预览
+
+				if (!selectedFile.value) {
+					ElMessage.error('请先选择图片')
+					return
+				}
+
+				const formData = new FormData()
+				formData.append('file', selectedFile.value)
+				formData.append('type', 2)
+
+				try {
+					const res = await uploadApi.uploadFile(formData)
+					console.log('File uploaded successfully:', res);
+					if (res.code === 200) {
+						form.imgUrl = res.data.access_path;
+
+						ElMessage.success(res.message);
+
+						emit('refresh')
+						close();
+
+					} else {
+						ElMessage.error(res.message || '上传失败')
+					}
+				} catch (error) {
+					console.error('File upload failed:', error);
+				}
+
+
+
 			}
 
 			// 上传成功回调
@@ -225,30 +316,17 @@
 						ElMessage.error('请完善表单信息')
 						return
 					}
-
-					if (!selectedFile.value) {
-						ElMessage.error('请先选择图片')
-						return
+					let params = {
+						"id": null,
+						"title": form.title,
+						"indexImgId": "1", //上传接口报错 TODO
+						"activityTime": form.date,
+						"userIds": form.peopleList,
+						"text": html.toString()
 					}
+					const result = await dataApi.updateNews(params);
 
-					const formData = new FormData()
-					formData.append('file', selectedFile.value)
-					formData.append('title', form.title)
-					formData.append('type', 1)
-					formData.append('targetId', dadData.value?.searchData?.street || '')
 
-					const res = await uploadApi.uploadFile(formData)
-					if (res.code === 200) {
-						form.imgUrl = res.data.access_path;
-
-						ElMessage.success(res.message);
-
-						emit('refresh')
-						close();
-
-					} else {
-						ElMessage.error(res.message || '上传失败')
-					}
 				} catch (err) {
 					console.error(err)
 					ElMessage.error('提交时发生异常')
@@ -289,7 +367,12 @@
 				uploadHeaders,
 
 				addPeopleFn,
-				handleTagClose
+				handleTagClose,
+
+				editorRef,
+				html,
+				editorConfig,
+				handleCreated,
 			}
 		}
 	}

@@ -73,6 +73,18 @@ const routes = [{
 					type: 'newsList',
 					title: '最新动态'
 				}
+			},
+			{
+			
+				path: '/familyMap',
+				name: 'familyMap',
+				component: () => import('@/views/familyMap/FamilyMap.vue'),
+				props: true,
+				meta: {
+					name: '奉台家缘',
+					type: 'familyMap',
+					title: '家族关系'
+				}
 			}
 
 		]

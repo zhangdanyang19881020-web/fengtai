@@ -36,6 +36,16 @@
 			</el-table-column>
 			<el-table-column label="标题" :formatter="emptyFormatter" :show-overflow-tooltip="true"
 				prop="title"></el-table-column>
+			<el-table-column label="参与台胞" :show-overflow-tooltip="true">
+				<template #default="scope">
+					<div v-if="scope.row.users.length==0">
+						--
+					</div>
+					<div v-else>
+						<el-tag v-for="(item,index) in scope.row.users" :key="index">{{item}}</el-tag>
+					</div>
+				</template>
+			</el-table-column>
 			<el-table-column label="活动时间" :show-overflow-tooltip="true" prop="activityTime"></el-table-column>
 			<el-table-column label="操作" width='120'>
 				<template #default="scope">
@@ -249,11 +259,11 @@
 				getListFn()
 			}, 500) // 500ms 内只触发一次
 
-			const delHometownFn = async (row) => {
+			const delNewsFn = async (row) => {
 				let params = {
-					id: row.id
+					activityId: row.activityId
 				}
-				const result = await dataApi.delHometown(params);
+				const result = await dataApi.delNews(params);
 				if (result.code == 200) {
 					ElMessage({
 						type: 'success',
@@ -277,7 +287,7 @@
 						type: 'warning',
 					}
 				).then(() => {
-					delHometownFn(target)
+					delNewsFn(target)
 				}).catch(() => {
 					ElMessage.info('已取消删除')
 				})

@@ -82,8 +82,8 @@
 				{
 					name: "家族关系",
 					icon: "iconfont icon-ygqsxxgl",
-					go: "/token-test",
-					type: "token",
+					go: "/familyMap",
+					type: "familyMap",
 				},
 
 
