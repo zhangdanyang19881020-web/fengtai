@@ -1,27 +1,43 @@
 <template>
-	<el-dialog v-model="state.newHomeViewDlgShow" title="新建" width="800">
+	<el-dialog v-model="state.newHomeViewDlgShow" title="新建动态" width="800">
 		<div class="new-home--main">
 			<!-- 	<div class="new-home--title">
 				<el-tag class="address-tag" type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>
 			</div> -->
 			<div>
 				<el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-					<el-form-item label="祖籍">
+					<!-- 		<el-form-item label="祖籍">
 						<el-tag class="address-tag" type="primary" size="large">奉化市 /
 							{{dadData.value.searchData.streetStr}}</el-tag>
-					</el-form-item>
+					</el-form-item> -->
 					<!-- 名称 -->
-					<el-form-item label="景点名称" prop="title">
-						<el-input v-model="form.title" placeholder="请输入家乡景点名称" />
+					<el-form-item label="活动名称" prop="title">
+						<el-input v-model="form.title" placeholder="请输入活动名称" />
 					</el-form-item>
 
 					<!-- 图片上传 -->
-					<el-form-item label="景点图片" prop="imgUrl">
+					<el-form-item label="活动图片" prop="imgUrl">
 						<el-upload class="avatar-uploader" :on-change="handleFileChange" :show-file-list="false"
 							:auto-upload="false">
 							<img v-if="form.imgUrl" :src="form.imgUrl" class="uploaded-img" />
 							<i v-else class="el-icon-plus avatar-uploader-icon">+</i>
 						</el-upload>
+					</el-form-item>
+
+					<el-form-item label="参与台胞">
+						<div class="people-in--box">
+							<div class="people-box" v-if="form.peopleList.length>0">
+								<el-tag class="people-box--tag" type="primary" closable
+									@close="handleTagClose(item,index)" v-for="(item,index) in form.peopleList"
+									:key="index">{{item}}</el-tag>
+							</div>
+							<div class="people-add--line">
+								<el-input class="people-add--input" v-model="form.people" placeholder="请输入参与台胞名字" />
+								<el-button class="people-add--btn" @click="addPeopleFn">添加</el-button>
+							</div>
+						</div>
+
+
 					</el-form-item>
 
 
@@ -119,9 +135,26 @@
 			// 表单数据
 			const form = reactive({
 				title: '',
-				imgUrl: ''
+				imgUrl: '',
+				peopleList: [],
+				people: '',
+				content: ''
 			})
+			//添加台胞名字
+			const addPeopleFn = () => {
+				console.log('form', form)
+				if (form.people) {
+					form.peopleList.push(form.people);
+				} else {
+					ElMessage.error('请输入参与台胞名字!')
+				}
 
+			}
+
+			const handleTagClose = (item, index) => {
+				form.peopleList.splice(index, 1);
+				form.people="";
+			}
 			// 校验规则
 			const rules = {
 				title: [{
@@ -253,7 +286,10 @@
 				// customUpload,
 				uploadUrl,
 				uploadData,
-				uploadHeaders
+				uploadHeaders,
+
+				addPeopleFn,
+				handleTagClose
 			}
 		}
 	}

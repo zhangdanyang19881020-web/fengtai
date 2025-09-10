@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="state.newHomeViewDlgShow" title="编辑" width="800">
+	<el-dialog v-model="state.newHomeViewDlgShow" title="编辑家乡风貌" width="800">
 		<div class="new-home--main">
 			<div>
 				<el-form ref="formRef" :model="form" :rules="rules" label-width="100px">

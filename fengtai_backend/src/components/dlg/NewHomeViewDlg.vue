@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="state.newHomeViewDlgShow" title="新建" width="800">
+	<el-dialog v-model="state.newHomeViewDlgShow" title="新建家乡风貌" width="800">
 		<div class="new-home--main">
 			<!-- 	<div class="new-home--title">
 				<el-tag class="address-tag" type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>

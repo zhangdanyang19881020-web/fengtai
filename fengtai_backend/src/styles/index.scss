@@ -54,3 +54,54 @@
 	
 	
 }
+
+
+	
+	.row-img--box{
+	width: 50px;
+	height:50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+	border:1px solid rgba(0,0,0,.08);
+	.row-img {
+		width: 50px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: rgba(0, 0, 0, 0.05);
+		border-radius: 4px;
+	
+		.el-image__error ,.el-image__placeholder{
+			font-size: 10px;
+			color: rgba(0,0,0,0.3);
+		}
+	}
+		.no-img{
+			width:25px;
+		}
+	}
+	
+	
+	//添加动态
+	.people-in--box{
+		.people-box{
+			margin-bottom:10px;
+			.people-box--tag{
+				margin-right:10px;
+			}
+		}
+		.people-add--line{
+			display:flex;
+			align-items:center;
+			.people-add--input{
+				margin-right:10px;
+			}
+			.people-add--btn{
+				
+			}
+		}
+	}
+	

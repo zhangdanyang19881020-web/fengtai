@@ -20,10 +20,12 @@
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
 			<el-table-column label="图片" width="150">
 				<template #default="scope">
-					<el-image v-if="scope.row.imgUrl" :preview-src-list="[scope.row.imgUrl]" hide-on-click-modal
-						class="row-img" :lazy="true" :src="scope.row.imgUrl" fit="scale-down"
-						:preview-teleported="true" />
-					<el-image v-else class="row-img" src="./images/no-img2.png" fit="scale-down" />
+					<div class="row-img--box">
+						<el-image v-if="scope.row.imgUrl" :preview-src-list="[scope.row.imgUrl]" hide-on-click-modal
+							class="row-img" :lazy="true" :src="scope.row.imgUrl" fit="scale-down"
+							:preview-teleported="true" />
+						<el-image v-else class="no-img" src="./images/no-img2.png" fit="scale-down" />
+					</div>
 				</template>
 			</el-table-column>
 			<el-table-column label="名称" :formatter="emptyFormatter" :show-overflow-tooltip="true"
@@ -314,18 +316,7 @@
 		width: 100%;
 		padding: 20px;
 
-		.row-img {
-			width: 50px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			background: rgba(0, 0, 0, 0.05);
-			border-radius: 4px;
 
-			.el-image__error {
-				font-size: 12px;
-			}
-		}
 	}
 
 	.header {

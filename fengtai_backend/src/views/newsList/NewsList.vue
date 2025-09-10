@@ -4,32 +4,31 @@
 			<div class="search-box--left">
 				<div class="search-box--item">
 					<!-- <label class="item-title">标题</label> -->
-					<el-input v-model="searchData.title"  :suffix-icon="Search"  placeholder="请输入标题搜索" ></el-input>
+					<el-input v-model="searchData.title" :suffix-icon="Search" placeholder="请输入标题搜索"></el-input>
 				</div>
-		<!-- 		<div class="search-box--item">
+				<!-- 		<div class="search-box--item">
 					<el-select v-model="searchData.street" placeholder="选择街道或镇进行筛选"
 						style="width: 240px">
 						<el-option v-for="item in streetOptions" :key="item.value" :label="item.label"
 							:value="item.value" />
 					</el-select>
 				</div> -->
-				<el-button type="primary"  class="new-button"
-					@click.native="searchFn">搜索</el-button>
+				<el-button type="primary" class="new-button" @click.native="searchFn">搜索</el-button>
 			</div>
 			<div class="search-box--right">
-				<el-button type="success" v-if="newNewsDlgRef" class="new-button"
-					@click.native="goNewFn">新建</el-button>
+				<el-button type="success" v-if="newNewsDlgRef" class="new-button" @click.native="goNewFn">新建</el-button>
 			</div>
 		</div>
 
 		<el-table class="z-table" :data="filteredData" style="width: 100%">
 			<el-table-column label="图片" width="150">
 				<template #default="scope">
-					<el-image v-if="scope.row.headImg" :preview-src-list="[scope.row.headImg]" hide-on-click-modal
-						class="row-img" :lazy="true" :src="scope.row.headImg" fit="scale-down"
-						:preview-teleported="true" />
-					<el-image v-else class="row-img"
-						src="./images/no-img2.png" fit="scale-down" />
+					<div class="row-img--box">
+						<el-image v-if="scope.row.headImg" :preview-src-list="[scope.row.headImg]" hide-on-click-modal
+							class="row-img" :lazy="true" :src="scope.row.headImg" fit="scale-down"
+							:preview-teleported="true" />
+						<el-image v-else class="no-img" src="./images/no-img2.png" fit="scale-down" />
+					</div>
 					<!-- <el-avatar v-if="scope.row.imgUrl" :src="scope.row.imgUrl" size="small"></el-avatar>
 					<el-avatar v-else src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
 						size="small"></el-avatar> -->
@@ -37,8 +36,7 @@
 			</el-table-column>
 			<el-table-column label="标题" :formatter="emptyFormatter" :show-overflow-tooltip="true"
 				prop="title"></el-table-column>
-			<el-table-column label="活动时间"  :show-overflow-tooltip="true"
-				prop="activityTime"></el-table-column>
+			<el-table-column label="活动时间" :show-overflow-tooltip="true" prop="activityTime"></el-table-column>
 			<el-table-column label="操作" width='120'>
 				<template #default="scope">
 					<el-button link @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
@@ -54,7 +52,7 @@
 		</div>
 
 
-		<new-news-dlg ref="newNewsDlgRef" @refresh="searchFn"></new-news-dlg> 
+		<new-news-dlg ref="newNewsDlgRef" @refresh="searchFn"></new-news-dlg>
 
 		<edit-home-view-dlg ref="editHomeViewDlgRef" @refresh="searchFn"></edit-home-view-dlg>
 
@@ -234,7 +232,9 @@
 				console.log('editHomeViewDlgRef:', editHomeViewDlgRef)
 				if (editHomeViewDlgRef.value) {
 					editHomeViewDlgRef.value.open({
-						row:{...row},
+						row: {
+							...row
+						},
 						...state
 					})
 				} else {
@@ -321,18 +321,7 @@
 		width: 100%;
 		padding: 20px;
 
-		.row-img {
-			width: 50px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			background: rgba(0, 0, 0, 0.05);
-			border-radius: 4px;
 
-			.el-image__error {
-				font-size: 12px;
-			}
-		}
 	}
 
 	.header {
