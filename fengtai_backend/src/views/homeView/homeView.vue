@@ -12,7 +12,8 @@
 				</div>
 			</div>
 			<div class="search-box--right">
-				<el-button type="primary" class="new-button" @click="goNewFn">新建</el-button>
+				<el-button type="primary" v-if="newHomeViewDlgRef" class="new-button"
+					@click.native="goNewFn">新建</el-button>
 			</div>
 		</div>
 
@@ -37,10 +38,9 @@
 		<div class="pagination-box">
 			<el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
 				:page-sizes="[10, 20, 30, 40]" :background="background" size="default"
-				layout="sizes, prev, pager, next, jumper" :total="filteredTotal" @size-change="handleSizeChange"
-				@current-change="handleCurrentChange" />
+				layout="sizes, prev, pager, next, jumper" @size-change="getListFn" @current-change="getListFn" />
 		</div>
-		<new-home-view-dlg ref="newHomeViewDlgRef"></new-home-view-dlg>
+		<NewHomeViewDlg ref="newHomeViewDlgRef"></NewHomeViewDlg>
 	</div>
 </template>
 
@@ -70,6 +70,7 @@
 	import {
 		Search
 	} from '@element-plus/icons-vue'
+
 	import {
 		dataApi
 	} from '@/utils/api.js'
@@ -83,11 +84,10 @@
 		name: 'UserTable',
 		components: {
 			Search, // 注册图标
-
 			NewHomeViewDlg: defineAsyncComponent(() => import('@/components/dlg/NewHomeViewDlg.vue')),
 		},
 		setup() {
-			const newHomeViewDlgRef = ref(null)
+
 
 			const currentPage = ref(1)
 			const pageSize = ref(10)
@@ -180,21 +180,12 @@
 			}
 
 			const searchFn = () => {
-				handleCurrentChange(1)
-			}
-
-
-			// Handle pagination size change
-			const handleSizeChange = (val) => {
-				pageSize.value = val
+				pageSize.value = 1
 				getListFn()
 			}
 
-			// Handle page change
-			const handleCurrentChange = (val) => {
-				currentPage.value = val
-				getListFn()
-			}
+
+
 
 			// Fetch list from API
 			const getListFn = async () => {
@@ -208,8 +199,16 @@
 				}
 			}
 
-			const goNewFn = () => newHomeViewDlgRef.value?.open()
-
+			//新建弹窗
+			const newHomeViewDlgRef = ref(null)
+			const goNewFn = () => {
+				console.log('newHomeViewDlgRef', newHomeViewDlgRef)
+				if (newHomeViewDlgRef.value) {
+					newHomeViewDlgRef.value.open()
+				} else {
+					console.warn('newHomeViewDlgRef is not ready')
+				}
+			}
 			// Search query watcher
 			const debouncedGetList = debounce(() => {
 				currentPage.value = 1
@@ -237,9 +236,8 @@
 			// 	getListFn()
 			// })
 
-
-
 			return {
+				newHomeViewDlgRef,
 				streetOptions,
 				searchData,
 				searchFn,
@@ -249,8 +247,7 @@
 				background,
 				filteredData,
 				filteredTotal,
-				handleSizeChange,
-				handleCurrentChange,
+				getListFn,
 				editRow: (row) => {
 					router.push({
 						name: 'editTaibao',
@@ -261,16 +258,23 @@
 					})
 				},
 				deleteRow: (row) => {
-					ElMessageBox.alert(
-						`确认删除 <span class="el-tag el-tag--danger el-tag--light">${row.userName}</span>`, '提示', {
-							// if you want to disable its autofocus
-							// autofocus: false,
-							dangerouslyUseHTMLString: true,
-							confirmButtonText: 'OK',
-							callback: (action) => {
-								delMemberFn(row)
-							},
+					deleteRow: (row) => {
+						ElMessageBox.confirm(
+							`确认删除 <span class="el-tag el-tag--danger el-tag--light">${row.userName}</span>?`,
+							'提示', {
+								dangerouslyUseHTMLString: true,
+								confirmButtonText: '确定',
+								cancelButtonText: '取消',
+								type: 'warning',
+							}
+						).then(() => {
+							delMemberFn(row)
+						}).catch(() => {
+							ElMessage.info('已取消删除')
 						})
+					}
+
+
 
 				},
 				Search,

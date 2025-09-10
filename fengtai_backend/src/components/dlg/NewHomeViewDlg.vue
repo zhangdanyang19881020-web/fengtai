@@ -1,6 +1,6 @@
 <template>
 	<el-dialog v-model="state.newHomeViewDlgShow" title="新建家乡风貌" width="800">
-		1111
+		<div>新建家乡风貌</div>
 	</el-dialog>
 </template>
 
@@ -13,7 +13,9 @@
 	export default {
 		name: 'NewHomeViewDlg',
 		components: {},
-		setup(props, { expose }) {
+		setup(props, {
+			expose
+		}) {
 			const state = reactive({
 				newHomeViewDlgShow: false,
 			})
@@ -33,7 +35,9 @@
 				close
 			})
 			return {
-				state
+				state,
+				open,
+				close
 			}
 		}
 	}
