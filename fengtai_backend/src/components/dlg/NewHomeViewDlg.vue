@@ -1,13 +1,14 @@
 <template>
 	<el-dialog v-model="state.newHomeViewDlgShow" title="新建家乡风貌" width="800">
 		<div class="new-home--main">
-		<!-- 	<div class="new-home--title">
+			<!-- 	<div class="new-home--title">
 				<el-tag class="address-tag" type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>
 			</div> -->
 			<div>
 				<el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
 					<el-form-item label="祖籍" required>
-						<el-tag class="address-tag" type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>
+						<el-tag class="address-tag" type="primary" size="large">奉化市 /
+							{{dadData.value.searchData.streetStr}}</el-tag>
 					</el-form-item>
 					<!-- 名称 -->
 					<el-form-item label="景点名称" prop="title">
@@ -16,8 +17,9 @@
 
 					<!-- 图片上传 -->
 					<el-form-item label="景点图片" prop="imgUrl">
-						<el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
-							:show-file-list="false" :on-success="handleUploadSuccess" :before-upload="beforeUpload">
+						<el-upload class="avatar-uploader" :action="uploadUrl" :data="uploadData"
+							:headers="uploadHeaders" :show-file-list="false" :on-success="handleUploadSuccess"
+							:before-upload="beforeUpload">
 							<img v-if="form.imgUrl" :src="form.imgUrl" class="uploaded-img" />
 							<i v-else class="el-icon-plus avatar-uploader-icon">+</i>
 						</el-upload>
@@ -34,7 +36,7 @@
 	</el-dialog>
 </template>
 
-<script >
+<script>
 	import {
 		reactive,
 		ref,
@@ -43,8 +45,17 @@
 		toRefs,
 	} from 'vue'
 	import {
-		ElMessage
+		getTokenType,
+		getAccessToken,
+	} from '@/utils/token'
+	import {
+		ElMessage,
+		ElButton
 	} from 'element-plus'
+	import {
+		uploadApi,
+		dataApi,
+	} from '@/utils/api.js'
 	export default {
 		name: 'NewHomeViewDlg',
 		components: {},
@@ -54,20 +65,33 @@
 			// ✅ props 就是父组件传过来的参数
 
 			onMounted(() => {
-				console.log('props-father-', props)
+				console.log('uploadUrl--', uploadApi.uploadUrl)
+			})
+			// 可选：提供命令式方法，父组件可直接调用
+			const dadData = reactive({})
+
+			const uploadUrl = ref(uploadApi.uploadUrl)
+
+			const uploadHeaders = reactive({
+				"Authorization": `${getTokenType()} ${getAccessToken()}`
 			})
 
 			const state = reactive({
 				newHomeViewDlgShow: false,
 			})
-			// 可选：提供命令式方法，父组件可直接调用
-			const dadData = reactive({})
+			const uploadData = reactive({
+				file: '',
+				type: 1,
+				targetId: '',
+				title: ''
+			})
 
 			function open(getData, patch = {}) {
 				dadData.value = getData;
 				state.value = Object.assign(getData, patch)
 				console.log('dadData=', dadData)
-
+				
+				// uploadData.value.targetId = getData.searchData.stree;
 				state.newHomeViewDlgShow = true
 			}
 
@@ -108,6 +132,8 @@
 				if (!isLt2M) {
 					ElMessage.error('上传图片大小不能超过 2MB!')
 				}
+				console.log('file', file);
+				uploadData.value.file=file;
 				return isJPG && isLt2M
 			}
 
@@ -153,6 +179,9 @@
 				submitForm,
 				beforeUpload,
 				handleUploadSuccess,
+				uploadUrl,
+				uploadData,
+				uploadHeaders
 			}
 		}
 	}
@@ -160,12 +189,12 @@
 
 <style lang="scss" scoped>
 	.new-home--main {
-		width:calc(100% - 100px);
-		.new-home--title{
-			.address-tag{
-				
-			}
+		width: calc(100% - 100px);
+
+		.new-home--title {
+			.address-tag {}
 		}
+
 		.avatar-uploader {
 			width: 150px;
 			height: 150px;

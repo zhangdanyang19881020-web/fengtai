@@ -78,7 +78,7 @@ service.interceptors.response.use(
 			config
 		} = response
 
-		console.log('响应拦截器:', response)
+		// console.log('响应拦截器:', response)
 		console.log('config:', config)
 
 		console.log('status', status)

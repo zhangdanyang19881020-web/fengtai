@@ -102,6 +102,7 @@ export const dataApi = {
 
 // 文件上传相关接口
 export const uploadApi = {
+	uploadUrl: _ServiceUrl + '/api/img/upload/',
 	// 单文件上传 上传图片
 	uploadFile: (formData, onProgress) => {
 		// const formData = new FormData()

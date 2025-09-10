@@ -205,7 +205,7 @@
 			const goNewFn = () => {
 				// console.log('newHomeViewDlgRef', newHomeViewDlgRef)
 				if (newHomeViewDlgRef.value) {
-					console.log('state--', state)
+					// console.log('state--', state)
 					newHomeViewDlgRef.value.open(state);
 
 				} else {
