@@ -1,11 +1,14 @@
 <template>
 	<el-dialog v-model="state.newHomeViewDlgShow" title="新建家乡风貌" width="800">
 		<div class="new-home--main">
-			<div class="new-home--title">
-				<el-tag type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>
-			</div>
+		<!-- 	<div class="new-home--title">
+				<el-tag class="address-tag" type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>
+			</div> -->
 			<div>
 				<el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+					<el-form-item label="祖籍" required>
+						<el-tag class="address-tag" type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>
+					</el-form-item>
 					<!-- 名称 -->
 					<el-form-item label="景点名称" prop="title">
 						<el-input v-model="form.title" placeholder="请输入家乡景点名称" />
@@ -31,7 +34,7 @@
 	</el-dialog>
 </template>
 
-<script>
+<script >
 	import {
 		reactive,
 		ref,
@@ -145,6 +148,11 @@
 				open,
 				close,
 				form,
+				rules,
+				resetForm,
+				submitForm,
+				beforeUpload,
+				handleUploadSuccess,
 			}
 		}
 	}
@@ -152,6 +160,12 @@
 
 <style lang="scss" scoped>
 	.new-home--main {
+		width:calc(100% - 100px);
+		.new-home--title{
+			.address-tag{
+				
+			}
+		}
 		.avatar-uploader {
 			width: 150px;
 			height: 150px;
