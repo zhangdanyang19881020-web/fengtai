@@ -24,7 +24,8 @@
 						size="small"></el-avatar>
 				</template>
 			</el-table-column>
-			<el-table-column label="名称" :formatter="emptyFormatter" :show-overflow-tooltip="true"  prop="title"></el-table-column>
+			<el-table-column label="名称" :formatter="emptyFormatter" :show-overflow-tooltip="true"
+				prop="title"></el-table-column>
 			<el-table-column label="操作">
 				<template #default="scope">
 					<el-button link @click="editRow(scope.row)" size="small" type="primary">编辑</el-button>
@@ -39,6 +40,7 @@
 				layout="sizes, prev, pager, next, jumper" :total="filteredTotal" @size-change="handleSizeChange"
 				@current-change="handleCurrentChange" />
 		</div>
+		<new-home-view-dlg ref="newHomeViewDlgRef"></new-home-view-dlg>
 	</div>
 </template>
 
@@ -49,7 +51,8 @@
 		computed,
 		watch,
 		onMounted,
-		toRefs
+		toRefs,
+		defineAsyncComponent
 	} from 'vue'
 	import {
 		useRouter
@@ -80,8 +83,11 @@
 		name: 'UserTable',
 		components: {
 			Search, // 注册图标
+
+			NewHomeViewDlg: defineAsyncComponent(() => import('@/components/dlg/NewHomeViewDlg.vue')),
 		},
 		setup() {
+			const newHomeViewDlgRef = ref(null)
 
 			const currentPage = ref(1)
 			const pageSize = ref(10)
@@ -201,9 +207,8 @@
 					console.error('Failed to fetch data:', error)
 				}
 			}
-			const goNewFn = () => {
-				router.push('/newTaibao')
-			}
+
+			const goNewFn = () => newHomeViewDlgRef.value?.open()
 
 			// Search query watcher
 			const debouncedGetList = debounce(() => {
@@ -226,11 +231,11 @@
 				}
 			}
 
-			watch(state.searchData.street, () => {
-				// debouncedGetList()
-				currentPage.value = 1
-				getListFn()
-			})
+			// watch(() => state.searchData.street, () => {
+			// 	// debouncedGetList()
+			// 	currentPage.value = 1
+			// 	getListFn()
+			// })
 
 
 
