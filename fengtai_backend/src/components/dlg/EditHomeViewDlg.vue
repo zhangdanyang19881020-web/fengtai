@@ -106,8 +106,13 @@
 
 				// uploadData.value.targetId = getData.searchData.stree;
 				state.newHomeViewDlgShow = true
-
+				initData(dadData);
 				console.log('state----', state)
+			}
+
+			function initData(dadData) {
+				form.title = dadData.value.row.title;
+				form.imgUrl = dadData.value.row.imgUrl;
 			}
 
 			function close() {
@@ -136,22 +141,7 @@
 				}]
 			}
 
-			// const customUpload = async ({
-			// 	file
-			// }) => {
-			// 	const formData = new FormData()
-			// 	formData.append('file', file)
-			// 	formData.append('type', 1)
-			// 	formData.append('targetId', dadData.value.searchData.stree)
-			// 	formData.append('title', form.title)
-
-			// 	try {
-			// 		const data = await uploadApi.uploadFile(formData) // axios 封装
-			// 		handleUploadSuccess(data, file)
-			// 	} catch (err) {
-			// 		ElMessage.error('上传失败')
-			// 	}
-			// }
+	
 
 
 			const selectedFile = ref(null)
@@ -199,6 +189,7 @@
 					}
 
 					const formData = new FormData()
+					formData.append('id', dadData.value.row.id)
 					formData.append('file', selectedFile.value)
 					formData.append('title', form.title)
 					formData.append('type', 1)
