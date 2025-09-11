@@ -2,8 +2,8 @@
 	<div class="place-main">
 		<div class="cascader-box">
 			<el-tag class="cascader-box--tag" type="primary" size="large">奉化区</el-tag>
-			<el-cascader-panel class="cascader-box--panel" v-model="ruleForm.street" :props="cascaderProps"
-				:options="streetCascadarOptions" />
+			<el-cascader-panel class="cascader-box--panel" :check-strictly="true" v-model="ruleForm.streetCa"
+				:props="cascaderProps" :options="streetCascadarOptions" @change="streetCaChange" />
 		</div>
 		<el-divider></el-divider>
 
@@ -12,7 +12,7 @@
 				<el-tag type="primary" size="large">奉化区</el-tag>
 			</el-form-item>
 			<el-form-item label="街道/镇" prop="street">
-				<el-select v-model="ruleForm.street" placeholder="请选择街道/镇">
+				<el-select v-model="ruleForm.street" placeholder="请选择街道/镇" @change="streetChange">
 					<el-option v-for="(item,index) in streetOptions" :key="item.value" :label="item.label"
 						:value="item.value" />
 				</el-select>
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { reactive, ref, onMounted } from 'vue'
+	import { reactive, ref, onMounted, nextTick } from 'vue'
 
 	import type { FormInstance, FormRules } from 'element-plus'
 	import { ElMessage } from 'element-plus'
@@ -44,16 +44,10 @@
 	interface RuleForm {
 		name : string
 		region : string
+		streetCa : string[]
 		street : string
 		village : string
-		count : string
-		date1 : string
-		date2 : string
-		delivery : boolean
-		location : string
-		type : string[]
-		resource : string
-		desc : string
+
 	}
 
 	const ruleFormRef = ref<FormInstance>()
@@ -61,15 +55,8 @@
 		name: 'Hello',
 		region: '',
 		street: '',
+		streetCa: [],
 		village: '',
-		count: '',
-		date1: '',
-		date2: '',
-		delivery: false,
-		location: '',
-		type: [],
-		resource: '',
-		desc: '',
 	})
 
 	const streetCascadarOptions = reactive([])
@@ -81,7 +68,6 @@
 		children: 'children'
 	})
 
-	const locationOptions = ['Home', 'Company', 'School']
 
 	const rules = reactive<FormRules<RuleForm>>({
 		name: [
@@ -103,13 +89,26 @@
 			},
 		]
 	})
+	const streetChange = (data : string) => {
+		console.log('streetChange', data);
+		// 更新第一级选择的值
+		ruleForm.streetCa = [data];  // 更新 streetCa 为新的值
+		// 使用 nextTick 确保组件渲染完成后再执行其他逻辑
+		nextTick(() => {
+			// 可能需要做一些后续处理，或者触发额外的更新
+			console.log('Next tick after update');
+		});
+	}
+	const streetCaChange = (data : string[]) => {
+		ruleForm.street = data[0];
+	}
 
 	const getStreetList = async () => {
 		const result = await dataApi.regionList();
 		console.log('result', result)
 		if (result.code == 200) {
 			streetCascadarOptions.splice(0, streetCascadarOptions.length, ...result.data[0].children);
-			console.log('streetCascadarOptions', streetCascadarOptions)
+			// console.log('streetCascadarOptions', streetCascadarOptions)
 			var arr = result.data[0].children.map(x => ({
 				label: x.name,
 				value: x.id
@@ -141,7 +140,7 @@
 				type: 'success',
 				message: result.message,
 			});
-			ruleForm.village="";
+			ruleForm.village = "";
 			getStreetList()
 		}
 	}
