@@ -104,11 +104,11 @@
 
 		}
 	}
-	const editRelationshipFn = async () => {
+	const editRelationshipFn = async (data) => {
 		let params = {
-			"topRelationshipId": editParentNode.relationshipId,
+			"topRelationshipId": null,
 			"currRelationshipId": editParentNode.relationshipId,
-			"currRelationshipName": "444"
+			"currRelationshipName": data.relationshipName,
 		}
 		const result = await dataApi.updateRelationship(params);
 		if (result.code == 200) {
@@ -117,6 +117,7 @@
 				message: result.message,
 			});
 			editParentNode.editing = false;
+			getFamilyList();
 		}
 	}
 
@@ -127,7 +128,9 @@
 			addRelationshipFn(data);
 		} else if (operateType == 'edit') {
 			//编辑接口
+			console.log('editParentNode', editParentNode)
 			editRelationshipFn(data);
+
 		}
 	}
 
