@@ -99,8 +99,8 @@ export const dataApi = {
 	addRelationship: (params) => post(_ServiceUrl + '/api/famil/addRelationship/', params),
 	// 删除家属关系
 	delRelationship: (params) => get(_ServiceUrl + '/api/famil/delRelationship/', params),
-
-
+	// 修改家族关系
+	updateRelationship: (params) => post(_ServiceUrl + '/api/famil/editRelationship/', params),
 
 	// 创建数据 ⬇️原有
 	createData: (data) => post('/data/create', data),

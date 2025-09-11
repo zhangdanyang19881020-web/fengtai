@@ -27,7 +27,8 @@
 	let id = 1000
 
 	let operateType = "";
-	let appendParentNode = {}
+	let appendParentNode = {};
+	let editParentNode = {};
 
 
 
@@ -37,10 +38,11 @@
 		data.children.push(newChild)
 		dataSource.value = [...dataSource.value];
 		operateType = 'append';
-		console.log('append-data--', data)
+		// console.log('append-data--', data)
 		appendParentNode = data;
 
 	}
+
 
 	const remove = async (node : Node, data : Tree) => {
 		const parent = node.parent
@@ -72,7 +74,13 @@
 		console.log('operateType', operateType)
 
 	}
-
+	const edit = (data : Tree) => {
+		data.editing = !data.editing
+		operateType = 'edit';
+		editParentNode = data;
+		console.log('operateType--', operateType);
+		console.log('editParentNode--', editParentNode);
+	}
 	const addRelationshipFn = async () => {
 		let params = {
 			"currPersonId": null,
@@ -84,11 +92,25 @@
 
 		}
 	}
+	const editRelationshipFn = async () => {
+		let params = {
+			"topRelationshipId": editParentNode.relationshipId,
+			"currRelationshipId": editParentNode.relationshipId,
+			"currRelationshipName": "444"
+		}
+		const result = await dataApi.updateRelationship(params);
+		if (result.code == 200) {
+
+		}
+	}
 
 	const save = () => {
 		if (operateType == 'append') {
 			//新增接口
 			addRelationshipFn();
+		} else if (operateType == 'edit') {
+			//编辑接口
+			editRelationshipFn();
 		}
 	}
 
@@ -112,15 +134,15 @@
 						{ type: 'primary', link: true, size: 'small', style: 'margin-left: 4px', onClick: () => append(data) },
 						() => '增加'
 					),
-					h(
-						ElButton,
-						{ type: 'danger', link: true, size: 'small', style: 'margin-left: 4px', onClick: () => remove(node, data) },
-						() => '删除'
-					),
+					// h(
+					// 	ElButton,
+					// 	{ type: 'danger', link: true, size: 'small', style: 'margin-left: 4px', onClick: () => remove(node, data) },
+					// 	() => '删除'
+					// ),
 					!data.editing &&
 					h(
 						ElButton,
-						{ type: 'warning', link: true, size: 'small', style: 'margin-left: 4px', onClick: () => toggleEdit(data) },
+						{ type: 'warning', link: true, size: 'small', style: 'margin-left: 4px', onClick: () => edit(data) },
 						() => '编辑'
 					),
 					data.editing &&

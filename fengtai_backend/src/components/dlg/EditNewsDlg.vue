@@ -418,7 +418,6 @@
 						return
 					}
 
-
 					let params = {
 						"id": dadData.value.row.activityId,
 						"title": form.title,
