@@ -35,6 +35,7 @@
 	import { reactive, ref, onMounted } from 'vue'
 
 	import type { FormInstance, FormRules } from 'element-plus'
+	import { ElMessage } from 'element-plus'
 
 	import {
 		dataApi
@@ -107,9 +108,9 @@
 		const result = await dataApi.regionList();
 		console.log('result', result)
 		if (result.code == 200) {
-			streetCascadarOptions.splice(0, streetCascadarOptions.length, ...result.data);
+			streetCascadarOptions.splice(0, streetCascadarOptions.length, ...result.data[0].children);
 			console.log('streetCascadarOptions', streetCascadarOptions)
-			var arr = result.data.map(x => ({
+			var arr = result.data[0].children.map(x => ({
 				label: x.name,
 				value: x.id
 			}))
@@ -130,11 +131,19 @@
 	}
 	const addVillage = async () => {
 		let params = {
-			"topId": ruleForm.street,
-			"villageId": null,
-			"village": ruleForm.village
+			"parentId": ruleForm.street,
+			"id": null,
+			"name": ruleForm.village,
 		}
 		const result = await dataApi.addVillage(params);
+		if (result.code == 200) {
+			ElMessage({
+				type: 'success',
+				message: result.message,
+			});
+			ruleForm.village="";
+			getStreetList()
+		}
 	}
 
 	const resetForm = (formEl : FormInstance | undefined) => {
