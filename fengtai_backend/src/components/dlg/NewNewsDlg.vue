@@ -264,6 +264,7 @@
 				title: '',
 				date: '',
 				imgUrl: '',
+				imgUrlId: '',
 				peopleList: [],
 				people: '',
 				content: ''
@@ -351,11 +352,11 @@
 					// console.log('File uploaded successfully:', res);
 					if (res.code === 200) {
 						form.imgUrl = res.data.access_path;
-
+						form.imgUrlId = res.data.id;
 						ElMessage.success(res.message);
 
-						emit('refresh')
-						close();
+
+						// close();
 
 					} else {
 						ElMessage.error(res.message || '上传失败')
@@ -393,18 +394,23 @@
 						ElMessage.error('请完善表单信息')
 						return
 					}
+
+
 					let params = {
 						"id": null,
 						"title": form.title,
-						"indexImgId": "1", //上传接口报错 TODO
+						"indexImgId": form.imgUrlId, //上传接口报错 
 						"activityTime": formatDate(form.date),
-						"userIds": form.peopleList,
-						// "userIds": [1],
+						"userIds": form.peopleList.map(item => item.userId),
 						"text": String(html.value)
 					}
 					// console.log('html',html)
 					const result = await dataApi.updateNews(params);
-
+					if (result.code == 200) {
+						ElMessage.success(result.message);
+						emit('refresh')
+						close();
+					}
 
 				} catch (err) {
 					console.error(err)
