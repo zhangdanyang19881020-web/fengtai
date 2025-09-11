@@ -95,7 +95,7 @@ const routes = [{
 				meta: {
 					name: '奉台家缘',
 					type: 'ancestralPlace',
-					title: '祖籍地'
+					title: '添加村'
 				}
 			},
 			

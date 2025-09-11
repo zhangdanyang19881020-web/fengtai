@@ -101,6 +101,8 @@ export const dataApi = {
 	delRelationship: (params) => get(_ServiceUrl + '/api/famil/delRelationship/', params),
 	// 修改家族关系
 	updateRelationship: (params) => post(_ServiceUrl + '/api/famil/editRelationship/', params),
+	// 添加村级地
+	addVillage: (params) => post(_ServiceUrl + '/api/region/addVillage/', params),
 
 	// 创建数据 ⬇️原有
 	createData: (data) => post('/data/create', data),
