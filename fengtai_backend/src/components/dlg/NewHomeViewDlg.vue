@@ -108,6 +108,9 @@
 
 				// uploadData.value.targetId = getData.searchData.stree;
 				state.newHomeViewDlgShow = true
+
+				form.title = "";
+				form.imgUrl = "";
 			}
 
 			function close() {
@@ -158,11 +161,12 @@
 
 			const handleFileChange = (uploadFile) => {
 				const file = uploadFile.raw
-				const isImage = file.type === 'image/jpeg' || file.type === 'image/png'
+				const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type ===
+					'image/webp' || file.type === 'image/gif'
 				// const isLt2M = file.size / 1024 / 1024 < 2
 
 				if (!isImage) {
-					ElMessage.error('只能上传 JPG/PNG 格式的图片!')
+					ElMessage.error('只能上传 JPG/PNG/WEBP 格式的图片!')
 					return
 				}
 				// if (!isLt2M) {

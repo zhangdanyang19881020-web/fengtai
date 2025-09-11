@@ -33,7 +33,7 @@
 					<el-tag type="success" size="large">奉化区</el-tag>
 				</div>
 				<el-cascader v-model="form.address" :props="addressProp" :options="addressOptions"
-					placeholder="请选择街道/镇和村" clearable style="width: 350px" />
+					placeholder="请选择街道/镇/村" clearable style="width: 350px" />
 			</el-form-item>
 
 			<el-form-item label="联系人" prop="contact">
@@ -59,11 +59,11 @@
 					</div>
 					<!-- 		<el-input v-model="yearInput" placeholder="请输入1949-2025之间的年份数字" class="year-input"
 						@keyup.enter="addYear" /> -->
-					<el-select v-model="yearInput" placeholder="请选择年份" style="width: 240px">
+					<el-select v-model="yearInput" placeholder="请选择年份" style="width: 240px" @change="addYear">
 						<el-option v-for="item in filteredYearOptions" :key="item.value" :label="item.label"
 							:value="item.value" />
 					</el-select>
-					<el-button type="success" @click="addYear" style="margin-left: 10px;">添加</el-button>
+					<!-- <el-button type="success" @click="addYear" style="margin-left: 10px;">添加</el-button> -->
 				</div>
 			</el-form-item>
 
@@ -276,7 +276,7 @@
 	const regionListFn = async () => {
 		const result = await dataApi.regionList();
 		if (result.code === 200 && result.data) {
-			addressOptions.splice(0, addressOptions.length, ...result.data);
+			addressOptions.splice(0, addressOptions.length, ...result.data[0].children);
 		}
 	}
 

@@ -171,7 +171,7 @@
 				const result = await dataApi.regionList();
 				if (result.code === 200 && Array.isArray(result.data)) {
 					// addressOptions.splice(0, addressOptions.length, ...result.data);
-					state.addressOptions = result.data;
+					state.addressOptions = result.data[0].children;
 					state.streetOptions = state.addressOptions.map(x => ({
 						label: x.name,
 						value: x.id
