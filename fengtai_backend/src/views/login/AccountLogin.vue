@@ -1,7 +1,7 @@
 <template>
 	<div class="login-page">
 		<div class="login-main">
-			<!-- <img class="brand-logo" src="@/assets/login/login-logo.png" alt="logo" /> -->
+			<img class="brand-logo" src="@/static/images/logo.png" alt="logo" />
 			<div class="login-card">
 				<div class="brand">
 					<h2 class="brand-title">欢迎登录</h2>
@@ -117,10 +117,16 @@
 		background: linear-gradient(135deg, #e6f0ff 0%, #f7faff 100%);
 
 		.login-main {
+			transform: translateY(-100px);
 			.brand-logo {
 				width: 250px;
 				height: 38px;
-				margin-bottom: 30px;
+				display:block;
+				margin: 30px auto;
+				height: auto;
+				/* 高度自动，根据宽度计算 */
+				object-fit: contain;
+				/* 保持原始比例，适应容器 */
 			}
 		}
 	}
