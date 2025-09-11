@@ -26,13 +26,20 @@
 
 	let id = 1000
 
+	let operateType = "";
+	let appendParentNode = {}
+
 
 
 	const append = (data : Tree) => {
 		const newChild = { relationshipId: id++, relationshipName: '新节点', children: [] }
 		if (!data.children) data.children = []
 		data.children.push(newChild)
-		dataSource.value = [...dataSource.value]
+		dataSource.value = [...dataSource.value];
+		operateType = 'append';
+		console.log('append-data--', data)
+		appendParentNode = data;
+
 	}
 
 	const remove = async (node : Node, data : Tree) => {
@@ -55,13 +62,36 @@
 				type: 'success',
 				message: result.message,
 			});
+			getFamilyList();
 		}
 	}
 
 	const toggleEdit = (data : Tree) => {
 		data.editing = !data.editing
 		console.log('toggleEdit', data)
+		console.log('operateType', operateType)
+
 	}
+
+	const addRelationshipFn = async () => {
+		let params = {
+			"currPersonId": null,
+			"relationshipId": appendParentNode.relationshipId,
+			"relationshipName": "444"
+		}
+		const result = await dataApi.addRelationship(params);
+		if (result.code == 200) {
+
+		}
+	}
+
+	const save = () => {
+		if (operateType == 'append') {
+			//新增接口
+			addRelationshipFn();
+		}
+	}
+
 
 	const renderContent : RenderContentFunction = (h, { node, data }) => {
 		return h(
@@ -96,7 +126,7 @@
 					data.editing &&
 					h(
 						ElButton,
-						{ type: 'success', link: true, size: 'small', style: 'margin-left: 4px', onClick: () => toggleEdit(data) },
+						{ type: 'success', link: true, size: 'small', style: 'margin-left: 4px', onClick: () => save(data) },
 						() => '保存'
 					)
 				])
