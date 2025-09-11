@@ -99,21 +99,25 @@
 			})
 
 			function open(getData, patch = {}) {
-				console.log('getData--edit--', getData);
+				// console.log('getData--edit--', getData);
 				dadData.value = getData;
-				state.value = Object.assign(getData, patch)
-				console.log('dadData=', dadData)
+				dadData.value = getData; // 直接给 dadData 赋值
+				state.newHomeViewDlgShow = true; // 弹窗显示
 
-				// uploadData.value.targetId = getData.searchData.stree;
-				state.newHomeViewDlgShow = true
-				initData(dadData);
-				console.log('state----', state)
+				// 调用 initData 初始化数据
+				initData(getData);
 			}
 
-			function initData(dadData) {
-				form.title = dadData.value.row.title;
-				form.imgUrl = dadData.value.row.imgUrl;
-			}
+			// 初始化弹窗时，检查 imgUrl 是否有值
+			const initData = (getData) => {
+				if (getData && getData.row) {
+					form.title = getData.row.title || '';
+					form.imgUrl = getData.row.imgUrl || ''; // 如果有图片，直接赋值
+				} else {
+					console.warn('getData or getData.row is missing');
+				}
+			};
+
 
 			function close() {
 				state.newHomeViewDlgShow = false
@@ -127,7 +131,7 @@
 				imgUrl: ''
 			})
 
-			// 校验规则
+			// 修改验证规则
 			const rules = {
 				title: [{
 					required: true,
@@ -135,13 +139,22 @@
 					trigger: 'blur'
 				}],
 				imgUrl: [{
-					required: true,
+					required: false, // 图片可以为空，不强制验证
 					message: '请上传图片',
-					trigger: 'change'
+					trigger: 'change',
+					validator: (rule, value, callback) => {
+						// 如果没有重新上传图片，跳过验证
+						if (!selectedFile.value && !value) {
+							callback();
+						} else if (!value) {
+							callback(new Error('请上传图片'));
+						} else {
+							callback();
+						}
+					}
 				}]
-			}
+			};
 
-	
 
 
 			const selectedFile = ref(null)
@@ -183,10 +196,10 @@
 						return
 					}
 
-					if (!selectedFile.value) {
-						ElMessage.error('请先选择图片')
-						return
-					}
+					// if (!selectedFile.value) {
+					// 	ElMessage.error('请先选择图片')
+					// 	return
+					// }
 
 					const formData = new FormData()
 					formData.append('id', dadData.value.row.id)
