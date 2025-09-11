@@ -32,11 +32,38 @@
 							<div class="people-box" v-if="form.peopleList.length>0">
 								<el-tag class="people-box--tag" type="primary" closable
 									@close="handleTagClose(item,index)" v-for="(item,index) in form.peopleList"
-									:key="index">{{item}}</el-tag>
+									:key="index">{{item.userName}}</el-tag>
 							</div>
 							<div class="people-add--line">
-								<el-input class="people-add--input" v-model="form.people" placeholder="请输入参与台胞名字" />
-								<el-button class="people-add--btn" @click="addPeopleFn">添加</el-button>
+								<!-- <el-input class="people-add--input" v-model="form.people" placeholder="请输入参与台胞名字" /> -->
+								<el-autocomplete v-model="form.people" :fetch-suggestions="querySearch"
+									class="z-autocomplete" placeholder="请输入台胞名字搜索" @select="handleSelect">
+									<template #suffix>
+										<el-icon class="el-input__icon" @click="handleIconClick">
+											<edit />
+										</el-icon>
+									</template>
+									<template #default="{ item }">
+										<div class="prople-tr--box">
+											<div class="prople-tr">
+												<el-avatar class="prople-tr--avatar" v-if="item.headImg" :size="30"
+													:src="item.headImg" />
+												<el-avatar class="prople-tr--avatar" v-else :size="30"
+													src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" />
+												<div class="value">{{ item.userName }}</div>
+											</div>
+											<div class="prople-tr">
+												<div class="prople-tr--address"><label>祖籍:</label>{{ item.address }}
+												</div>
+												<div class="prople-tr--birthday"><label>生日:</label>{{item.birthMonth}}
+												</div>
+											</div>
+										</div>
+									</template>
+								</el-autocomplete>
+								<!-- 
+								<el-button type="primary" plain class="people-add--btn"
+									@click="addPeopleFn">添加</el-button> -->
 							</div>
 						</div>
 
@@ -100,6 +127,9 @@
 		ElMessageBox,
 		ElMessage
 	} from 'element-plus'
+	import {
+		Edit
+	} from '@element-plus/icons-vue'
 
 	import {
 		Editor,
@@ -116,6 +146,44 @@
 			expose,
 			emit
 		}) {
+
+			//搜索人员
+			const querySearch = async (queryString, cb) => {
+				console.log('')
+				let results = {}
+
+				let params = {
+					"userName": queryString,
+					"pageSize": 100,
+					"pageIndex": 1
+				}
+				results = await dataApi.getDataList(params);
+				console.log('results', results)
+				cb([...results.data.pageData]);
+
+
+			}
+			var selectPeople = {};
+
+
+			const handleSelect = (item) => {
+				console.log(item)
+				form.people = item.userName;
+				selectPeople = item;
+
+				const existingIndex = form.peopleList.findIndex(person => person.userName === item.userName);
+				if (existingIndex === -1) {
+					form.peopleList.push(item);
+				} else {
+					ElMessage.error('重复添加!')
+				}
+				console.log('form.peopleList', form.peopleList)
+				form.people = "";
+			}
+
+			const handleIconClick = (ev) => {
+				console.log(ev)
+			}
 			//富文本
 			const html = ref("<p></p>")
 			const editorRef = ref(null)
@@ -133,6 +201,9 @@
 					}
 				}
 			}
+			// const getMemberList = async (params) => {
+			// 	const result = await dataApi.getDataList(params)
+			// }
 
 			const handleCreated = (editor) => {
 				editorRef.value = editor
@@ -150,7 +221,8 @@
 			const content = ref("")
 
 			onMounted(() => {
-				console.log('uploadUrl--', uploadApi.uploadUrl)
+				// console.log('uploadUrl--', uploadApi.uploadUrl);
+
 			})
 			// 可选：提供命令式方法，父组件可直接调用
 			const dadData = reactive({})
@@ -175,9 +247,10 @@
 				dadData.value = getData;
 				state.value = Object.assign(getData, patch)
 				console.log('dadData=', dadData)
-
+				form.imgUrl = ''; // 如果没有重新上传图片，清空图片路径
 				// uploadData.value.targetId = getData.searchData.stree;
-				state.newHomeViewDlgShow = true
+				state.newHomeViewDlgShow = true;
+				// getMemberList();
 			}
 
 			function close() {
@@ -253,16 +326,13 @@
 			const handleFileChange = async (uploadFile) => {
 				const file = uploadFile.raw
 				const isImage = file.type === 'image/jpeg' || file.type === 'image/png'
-				// const isLt2M = file.size / 1024 / 1024 < 2
+
 
 				if (!isImage) {
 					ElMessage.error('只能上传 JPG/PNG 格式的图片!')
 					return
 				}
-				// if (!isLt2M) {
-				// 	ElMessage.error('上传图片大小不能超过 2MB!')
-				// 	return
-				// }
+
 
 				selectedFile.value = file
 				form.imgUrl = URL.createObjectURL(file) // ✅ 本地预览
@@ -278,7 +348,7 @@
 
 				try {
 					const res = await uploadApi.uploadFile(formData)
-					console.log('File uploaded successfully:', res);
+					// console.log('File uploaded successfully:', res);
 					if (res.code === 200) {
 						form.imgUrl = res.data.access_path;
 
@@ -330,7 +400,7 @@
 						"activityTime": formatDate(form.date),
 						"userIds": form.peopleList,
 						// "userIds": [1],
-						"text":String(html.value)
+						"text": String(html.value)
 					}
 					// console.log('html',html)
 					const result = await dataApi.updateNews(params);
@@ -358,6 +428,9 @@
 				close
 			})
 			return {
+				querySearch,
+				handleIconClick,
+				handleSelect,
 				formRef,
 				selectedFile,
 				state,

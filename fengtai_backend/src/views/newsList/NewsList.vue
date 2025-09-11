@@ -41,8 +41,9 @@
 					<div v-if="scope.row.users.length==0">
 						--
 					</div>
-					<div v-else>
-						<el-tag v-for="(item,index) in scope.row.users" :key="index">{{item}}</el-tag>
+					<div class="list-tag--box" v-else>
+						<el-tag class="list-tag" v-for="(item,index) in scope.row.users"
+							:key="index">{{item.userName}}</el-tag>
 					</div>
 				</template>
 			</el-table-column>
@@ -331,6 +332,11 @@
 		width: 100%;
 		padding: 20px;
 
+		.list-tag--box {
+			.list-tag {
+				margin-right: 5px;
+			}
+		}
 
 	}
 

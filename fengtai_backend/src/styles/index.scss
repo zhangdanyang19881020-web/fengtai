@@ -96,7 +96,10 @@
 		.people-add--line{
 			display:flex;
 			align-items:center;
-			.people-add--input{
+			// .people-add--input{
+			// 	margin-right:10px;
+			// }
+			.z-autocomplete{
 				margin-right:10px;
 			}
 			.people-add--btn{
@@ -104,6 +107,28 @@
 			}
 		}
 	}
+	.prople-tr--box{
+		padding-top:5px;
+		.prople-tr{
+			display:flex;
+			align-items: center;
+			label{
+				color: rgba(0,0,0,0.6);
+			}
+			.prople-tr--avatar{
+				margin-right:5px;
+			}
+		
+			.prople-tr--address{
+					color:rgba(0,0,0,0.4);
+					margin-right:20px;
+			}
+			.prople-tr--birthday{
+				color:rgba(0,0,0,0.4)
+			}
+		}
+	}
+
 	
 	// 富文本
 	.rich-text--box{
