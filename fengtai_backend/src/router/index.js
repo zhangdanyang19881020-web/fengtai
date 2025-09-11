@@ -85,7 +85,20 @@ const routes = [{
 					type: 'familyMap',
 					title: '家族关系'
 				}
-			}
+			},
+			{
+			
+				path: '/ancestralPlace',
+				name: 'ancestralPlace',
+				component: () => import('@/views/ancestralPlace/AncestralPlace.vue'),
+				props: true,
+				meta: {
+					name: '奉台家缘',
+					type: 'ancestralPlace',
+					title: '祖籍地'
+				}
+			},
+			
 
 		]
 	},

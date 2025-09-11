@@ -85,6 +85,12 @@
 					go: "/familyMap",
 					type: "familyMap",
 				},
+				{
+					name: "祖籍地",
+					icon: "iconfont icon-TOWN",
+					go: "/ancestralPlace",
+					type: "ancestralPlace",
+				},
 
 
 			])
