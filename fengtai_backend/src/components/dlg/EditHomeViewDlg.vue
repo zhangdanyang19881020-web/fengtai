@@ -162,12 +162,11 @@
 			const handleFileChange = (uploadFile) => {
 				const file = uploadFile.raw
 				console.log('file', file)
-				const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type ===
-					'image/webp' || file.type === 'image/gif'
+				const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif'
 				// const isLt2M = file.size / 1024 / 1024 < 2
 
 				if (!isImage) {
-					ElMessage.error('只能上传 JPG/PNG/WEBP 格式的图片!')
+					ElMessage.error('只能上传 JPG/PNG/GIF 格式的图片!')
 					return
 				}
 				// if (!isLt2M) {
@@ -224,7 +223,7 @@
 					}
 				} catch (err) {
 					console.error(err)
-					ElMessage.error('提交时发生异常')
+					ElMessage.success(res.message);
 				}
 			}
 

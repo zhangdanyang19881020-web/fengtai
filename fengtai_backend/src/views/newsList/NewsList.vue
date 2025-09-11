@@ -4,7 +4,7 @@
 			<div class="search-box--left">
 				<div class="search-box--item">
 					<!-- <label class="item-title">标题</label> -->
-					<el-input v-model="searchData.title" :suffix-icon="Search" placeholder="请输入标题搜索"></el-input>
+					<el-input v-model="searchData.title" clearable :suffix-icon="Search" placeholder="请输入标题搜索"></el-input>
 				</div>
 				<!-- 		<div class="search-box--item">
 					<el-select v-model="searchData.street" placeholder="选择街道或镇进行筛选"
