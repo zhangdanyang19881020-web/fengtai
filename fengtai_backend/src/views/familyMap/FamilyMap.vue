@@ -29,7 +29,7 @@
 	let operateType = "";
 	let appendParentNode = {};
 	let editParentNode = {};
-	let newChildNode={};
+	let newChildNode = {};
 
 
 
@@ -41,7 +41,7 @@
 		operateType = 'append';
 		// console.log('append-data--', data)
 		appendParentNode = data;
-		newChildNode=newChild;
+		newChildNode = newChild;
 
 
 	}
@@ -73,6 +73,8 @@
 
 	const toggleEdit = (data : Tree) => {
 		data.editing = !data.editing
+		operateType = 'edit';
+		editParentNode = data;
 		console.log('toggleEdit', data)
 		console.log('operateType', operateType)
 
@@ -84,7 +86,7 @@
 		console.log('operateType--', operateType);
 		console.log('editParentNode--', editParentNode);
 	}
-	const addRelationshipFn = async (saveNode:Tree) => {
+	const addRelationshipFn = async (saveNode : Tree) => {
 		let params = {
 			"topRelationshipId": appendParentNode.relationshipId,
 			"currRelationshipId": null,
@@ -92,14 +94,14 @@
 		}
 		const result = await dataApi.updateRelationship(params);
 		if (result.code == 200) {
-			console.log('nnkn',appendParentNode)
-			newChildNode.editing=false;
+			console.log('nnkn', appendParentNode)
+			newChildNode.editing = false;
 			dataSource.value = [...dataSource.value];
 			ElMessage({
 				type: 'success',
 				message: result.message,
 			});
-			
+
 		}
 	}
 	const editRelationshipFn = async () => {
