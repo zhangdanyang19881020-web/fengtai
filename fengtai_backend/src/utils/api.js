@@ -70,7 +70,7 @@ export const userApi = {
 
 // 数据相关接口
 export const dataApi = {
-	// 获取数据列表
+	// 获取数据列表⬇️
 	// 账户人员列表
 	getDataList: (params) => post(_ServiceUrl + '/api/visit/userList/', params),
 	// 获取所有家族关系
@@ -93,8 +93,12 @@ export const dataApi = {
 	updateNews: (params) => post(_ServiceUrl + '/api/view/edit/', params),
 	// 删除活动
 	delNews: (params) => post(_ServiceUrl + '/api/view/delete/', params),
-
-	// 创建数据
+	// 新增家属关系
+	addRelationship: (params) => post(_ServiceUrl + '/api/famil/addRelationship/', params),
+	// 删除家属关系
+	delRelationship: (params) => get(_ServiceUrl + '/api/famil/delRelationship/', params),
+	
+	// 创建数据 ⬇️原有
 	createData: (data) => post('/data/create', data),
 	// 更新数据
 	updateData: (id, data) => put(`/data/update/${id}`, data),

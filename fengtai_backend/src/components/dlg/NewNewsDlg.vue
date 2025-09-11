@@ -303,7 +303,14 @@
 				form.imgUrl = URL.createObjectURL(file.raw) // 本地预览
 			}
 
-
+			// 时间格式化函数
+			function formatDate(dateStr) {
+				const date = new Date(dateStr); // 解析 ISO 字符串
+				const y = date.getFullYear();
+				const m = String(date.getMonth() + 1).padStart(2, '0');
+				const d = String(date.getDate()).padStart(2, '0');
+				return `${y}-${m}-${d}`;
+			}
 			// 提交表单
 			const submitForm = async () => {
 				if (!formRef.value) {
@@ -320,10 +327,12 @@
 						"id": null,
 						"title": form.title,
 						"indexImgId": "1", //上传接口报错 TODO
-						"activityTime": form.date,
+						"activityTime": formatDate(form.date),
 						"userIds": form.peopleList,
-						"text": html.toString()
+						// "userIds": [1],
+						"text":String(html.value)
 					}
+					// console.log('html',html)
 					const result = await dataApi.updateNews(params);
 
 
