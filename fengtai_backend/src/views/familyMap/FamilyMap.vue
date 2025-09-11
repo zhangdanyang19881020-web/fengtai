@@ -29,17 +29,20 @@
 	let operateType = "";
 	let appendParentNode = {};
 	let editParentNode = {};
+	let newChildNode={};
 
 
 
 	const append = (data : Tree) => {
-		const newChild = { relationshipId: id++, relationshipName: '新节点', children: [] }
+		const newChild = { relationshipId: id++, relationshipName: '新节点', children: [], editing: true }
 		if (!data.children) data.children = []
 		data.children.push(newChild)
 		dataSource.value = [...dataSource.value];
 		operateType = 'append';
 		// console.log('append-data--', data)
 		appendParentNode = data;
+		newChildNode=newChild;
+
 
 	}
 
@@ -75,21 +78,28 @@
 
 	}
 	const edit = (data : Tree) => {
-		data.editing = !data.editing
+		data.editing = true;
 		operateType = 'edit';
 		editParentNode = data;
 		console.log('operateType--', operateType);
 		console.log('editParentNode--', editParentNode);
 	}
-	const addRelationshipFn = async () => {
+	const addRelationshipFn = async (saveNode:Tree) => {
 		let params = {
-			"currPersonId": null,
-			"relationshipId": appendParentNode.relationshipId,
-			"relationshipName": "444"
+			"topRelationshipId": appendParentNode.relationshipId,
+			"currRelationshipId": null,
+			"currRelationshipName": saveNode.relationshipName
 		}
-		const result = await dataApi.addRelationship(params);
+		const result = await dataApi.updateRelationship(params);
 		if (result.code == 200) {
-
+			console.log('nnkn',appendParentNode)
+			newChildNode.editing=false;
+			dataSource.value = [...dataSource.value];
+			ElMessage({
+				type: 'success',
+				message: result.message,
+			});
+			
 		}
 	}
 	const editRelationshipFn = async () => {
@@ -100,17 +110,22 @@
 		}
 		const result = await dataApi.updateRelationship(params);
 		if (result.code == 200) {
-
+			ElMessage({
+				type: 'success',
+				message: result.message,
+			});
+			editParentNode.editing = false;
 		}
 	}
 
-	const save = () => {
+	const save = (data : Tree) => {
+		console.log('save', data);
 		if (operateType == 'append') {
 			//新增接口
-			addRelationshipFn();
+			addRelationshipFn(data);
 		} else if (operateType == 'edit') {
 			//编辑接口
-			editRelationshipFn();
+			editRelationshipFn(data);
 		}
 	}
 
