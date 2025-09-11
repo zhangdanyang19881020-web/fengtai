@@ -91,13 +91,17 @@ export const dataApi = {
 	delHometown: (params) => get(_ServiceUrl + '/api/img/delete/', params),
 	// 新增、修改活动
 	updateNews: (params) => post(_ServiceUrl + '/api/view/edit/', params),
+	// 活动详情
+	newsDetail: (params) => get(_ServiceUrl + '/api/view/getInfo/', params),
 	// 删除活动
 	delNews: (params) => post(_ServiceUrl + '/api/view/delete/', params),
 	// 新增家属关系
 	addRelationship: (params) => post(_ServiceUrl + '/api/famil/addRelationship/', params),
 	// 删除家属关系
 	delRelationship: (params) => get(_ServiceUrl + '/api/famil/delRelationship/', params),
-	
+
+
+
 	// 创建数据 ⬇️原有
 	createData: (data) => post('/data/create', data),
 	// 更新数据

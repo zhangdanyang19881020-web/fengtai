@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="state.newHomeViewDlgShow" title="新建动态" width="70%">
+	<el-dialog v-model="state.newHomeViewDlgShow" title="编辑动态" width="70%">
 		<div class="new-home--main">
 			<!-- 	<div class="new-home--title">
 				<el-tag class="address-tag" type="primary" size="large">奉化市 / {{dadData.value.searchData.streetStr}}</el-tag>
@@ -262,19 +262,25 @@
 				// uploadData.value.targetId = getData.searchData.stree;
 				state.newHomeViewDlgShow = true;
 				// getMemberList();
-				initData()
+				initData(getData)
 			}
 
-			function initData() {
-				form.title = "";
-				form.date = "";
-				form.imgUrl = "";
-				form.imgUrlId = "";
-				form.peopleList = [];
-				form.people = "";
-				form.content = "";
-				html.value = "<p></p>";
-				editorRef.value = null;
+			const initData = async (getData) => {
+				console.log('getData', getData)
+				let params = {
+					activityId: getData.row.activityId
+				}
+				const result = await dataApi.newsDetail(params);
+				if (result.code == 200) {
+					form.title = result.data.title;
+					form.date = result.data.createdAt;
+					form.imgUrl = result.data.indexImgUrl;
+					form.imgUrlId = result.data.indexImgId;
+					form.peopleList = result.data.users;
+					form.people = "";
+					html.value = result.data.text;
+				}
+
 
 			}
 
@@ -414,7 +420,7 @@
 
 
 					let params = {
-						"id": null,
+						"id": dadData.value.row.activityId,
 						"title": form.title,
 						"indexImgId": form.imgUrlId, //上传接口报错 
 						"activityTime": formatDate(form.date),

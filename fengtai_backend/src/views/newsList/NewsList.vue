@@ -64,6 +64,7 @@
 
 
 		<new-news-dlg ref="newNewsDlgRef" @refresh="searchFn"></new-news-dlg>
+		<edit-news-dlg ref="editNewsDlgRef" @refresh="searchFn"></edit-news-dlg>
 
 		<edit-home-view-dlg ref="editHomeViewDlgRef" @refresh="searchFn"></edit-home-view-dlg>
 
@@ -108,6 +109,7 @@
 		components: {
 			Search, // 注册图标
 			NewNewsDlg: defineAsyncComponent(() => import('@/components/dlg/NewNewsDlg.vue')),
+			EditNewsDlg: defineAsyncComponent(() => import('@/components/dlg/EditNewsDlg.vue')),
 			EditHomeViewDlg: defineAsyncComponent(() => import('@/components/dlg/EditHomeViewDlg.vue')),
 		},
 		setup() {
@@ -236,20 +238,20 @@
 			}
 			//编辑弹窗
 			const isEditDlgVisible = ref(false);
-			const editHomeViewDlgRef = ref(null)
+			const editNewsDlgRef = ref(null)
 			// 编辑行数据 - 修复方法名
 			const editRow = (row) => {
 				// console.log('编辑行数据:', row)
-				console.log('editHomeViewDlgRef:', editHomeViewDlgRef)
-				if (editHomeViewDlgRef.value) {
-					editHomeViewDlgRef.value.open({
+
+				if (editNewsDlgRef.value) {
+					editNewsDlgRef.value.open({
 						row: {
 							...row
 						},
 						...state
 					})
 				} else {
-					console.error('编辑弹窗组件未正确加载或缺少 open 方法')
+					// console.error('编辑弹窗组件未正确加载或缺少 open 方法')
 					ElMessage.error('编辑功能暂时不可用')
 				}
 			}
@@ -306,7 +308,7 @@
 
 			return {
 				newNewsDlgRef,
-				editHomeViewDlgRef,
+				editNewsDlgRef,
 				streetOptions,
 				searchData,
 				searchFn,
