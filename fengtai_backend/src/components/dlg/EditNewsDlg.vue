@@ -195,8 +195,16 @@
 					uploadImage: {
 						async customUpload(file, insertFn) {
 							// 上传逻辑，这里只是演示
-							const url = URL.createObjectURL(file)
-							insertFn(url, file.name, url)
+							// const url = URL.createObjectURL(file)
+							// insertFn(url, file.name, url)
+							const formData = new FormData()
+							formData.append('file', file)
+							formData.append('type', 2)
+							const result = await uploadApi.uploadFile(formData)
+							console.log('result--', result);
+							if (result.code == 200) {
+								insertFn(result.data.access_path, file.name, result.data.access_path)
+							}
 						}
 					}
 				}
