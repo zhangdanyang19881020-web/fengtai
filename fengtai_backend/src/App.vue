@@ -1,6 +1,7 @@
 <template>
 	<div class="main-box">
-		<div v-if="$route.name !== 'login'" class="home-page">
+		<div v-if="$route.meta.for == 'back'" class="home-page">
+			<!-- 后台管理页面 -->
 			<el-container>
 				<el-aside width="100px">
 					<NavMenu />

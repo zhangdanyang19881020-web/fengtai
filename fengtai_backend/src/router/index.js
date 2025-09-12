@@ -26,7 +26,8 @@ const routes = [{
 				meta: {
 					name: '奉台家缘',
 					type: 'taibaoList',
-					title: '台胞人员列表'
+					title: '台胞人员列表',
+					for: 'back'
 				},
 			},
 			{
@@ -36,7 +37,8 @@ const routes = [{
 				meta: {
 					name: '奉台家缘',
 					type: 'taibaoList',
-					title: '新建'
+					title: '新建',
+					for: 'back'
 				}
 			},
 			{
@@ -47,7 +49,8 @@ const routes = [{
 				meta: {
 					name: '奉台家缘',
 					type: 'taibaoList',
-					title: '编辑'
+					title: '编辑',
+					for: 'back'
 				}
 			},
 			{
@@ -59,7 +62,8 @@ const routes = [{
 				meta: {
 					name: '奉台家缘',
 					type: 'homeView',
-					title: '家乡风貌'
+					title: '家乡风貌',
+					for: 'back'
 				}
 			},
 			{
@@ -71,11 +75,12 @@ const routes = [{
 				meta: {
 					name: '奉台家缘',
 					type: 'newsList',
-					title: '最新动态'
+					title: '最新动态',
+					for: 'back'
 				}
 			},
 			{
-			
+
 				path: '/familyMap',
 				name: 'familyMap',
 				component: () => import('@/views/familyMap/FamilyMap.vue'),
@@ -83,11 +88,12 @@ const routes = [{
 				meta: {
 					name: '奉台家缘',
 					type: 'familyMap',
-					title: '家族关系'
+					title: '家族关系',
+					for: 'back'
 				}
 			},
 			{
-			
+
 				path: '/ancestralPlace',
 				name: 'ancestralPlace',
 				component: () => import('@/views/ancestralPlace/AncestralPlace.vue'),
@@ -95,12 +101,42 @@ const routes = [{
 				meta: {
 					name: '奉台家缘',
 					type: 'ancestralPlace',
-					title: '祖籍地'
+					title: '祖籍地',
+					for: 'back'
 				}
 			},
-			
+			{
+
+				path: '/denglong',
+				name: 'denglong',
+				component: () => import('@/viewFront/denglong/denglong.vue'),
+				props: true,
+				meta: {
+					name: '奉台家缘',
+					type: 'denglong',
+					title: '灯笼',
+					for: 'back'
+				}
+			},
+
 
 		]
+	}, {
+		path: '/front',
+		name: 'front',
+		component: () => import('@/viewFront/index/main/main.vue'),
+		meta: {
+			name: '奉台家缘',
+		},
+		children: [{
+			path: '/index',
+			name: 'index',
+			component: () => import('@/viewFront/index/index.vue'),
+			meta: {
+				name: '奉台家缘',
+			},
+		}]
+
 	},
 	{
 		path: '/home',
