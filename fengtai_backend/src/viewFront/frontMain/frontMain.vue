@@ -1,7 +1,5 @@
 <template>
-	<div class="inner-page">
-		<router-view></router-view>
-	</div>
+	<router-view></router-view>
 </template>
 
 <script>
@@ -19,11 +17,11 @@
 
 			// 生命周期钩子
 			onMounted(() => {
-			
+
 			})
 
 			return {
-				
+
 			}
 		}
 	})

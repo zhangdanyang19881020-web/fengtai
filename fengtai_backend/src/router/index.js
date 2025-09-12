@@ -124,7 +124,7 @@ const routes = [{
 	}, {
 		path: '/front',
 		name: 'front',
-		component: () => import('@/viewFront/index/main/main.vue'),
+		component: () => import('@/viewFront/frontMain/frontMain.vue'),
 		meta: {
 			name: '奉台家缘',
 		},
