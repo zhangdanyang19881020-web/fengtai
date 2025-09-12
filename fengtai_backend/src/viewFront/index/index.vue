@@ -26,7 +26,7 @@
 
 		.moon {
 			position: absolute;
-			background: url('../../static/f-Images/moon.png') 100% 100% no-repeat;
+			background: url('../../static/f-Images/webp/moon-2.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
@@ -53,7 +53,7 @@
 
 		.bototm-left--house {
 			position: absolute;
-			background: url('../../static/f-Images/bottom-left--cloud.png') 100% 100% no-repeat;
+			background: url('../../static/f-Images/webp/bottom-left--cloud.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
@@ -68,7 +68,7 @@
 
 		.bototm-right--house {
 			position: absolute;
-			background: url('../../static/f-Images/right-house-2.png') 100% 100% no-repeat;
+			background: url('../../static/f-Images/webp/right-house-2.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
@@ -83,7 +83,7 @@
 
 		.top-mountain {
 			position: absolute;
-			background: url('../../static/f-Images/top-left--sky2.jpg') no-repeat;
+			background: url('../../static/f-Images/webp/top-left--sky2.webp') no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: left top;
@@ -97,7 +97,7 @@
 
 		.bottom-light {
 			position: absolute;
-			background: url('../../static/f-Images/bototm-light.png') repeat;
+			background: url('../../static/f-Images/webp/bototm-light.webp') repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: left top;
@@ -111,7 +111,7 @@
 
 		.denglong {
 			position: absolute;
-			background: url('../../static/f-Images/denglong-big.png') no-repeat;
+			background: url('../../static/f-Images/webp/denglong-big.webp') no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: left top;
@@ -126,7 +126,7 @@
 
 		.logo {
 			position: absolute;
-			background: url('../../static/f-Images/logo-together.png') no-repeat;
+			background: url('../../static/f-Images/webp/logo-together.webp') no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: center top;
