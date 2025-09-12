@@ -8,11 +8,17 @@
 		<div class="bottom-light"></div>
 		<div class="denglong"></div>
 		<div class="logo"></div>
+		<div class="input-box">
+			<el-input class="z-input" v-model="searchVal"></el-input>
+		</div>
 	</div>
 </template>
 
 <script setup>
-
+	import {
+		ref
+	} from 'vue'
+	const searchVal = ref('');
 </script>
 
 <style lang="scss" scoped>
@@ -23,6 +29,29 @@
 		background-size: contain;
 		position: relative;
 		overflow-x: hidden;
+
+		.input-box {
+			.z-input {
+				width:calc(100% - 40px);
+				margin: 10px 20px;
+				.el-input__wrapper{
+					background: none;
+				}
+			}
+		}
+
+		.input-box {
+			position: absolute;
+			background: url('../../static/f-Images/webp/input-bg.webp') 100% 100% no-repeat;
+			background-size: contain;
+			/* 图片等比缩放，完全包含 */
+			background-position: right bottom;
+			left: 10%;
+			top: 370px;
+			width: 80%;
+			height: 50px;
+			z-index: 11;
+		}
 
 		.moon {
 			position: absolute;
@@ -142,9 +171,10 @@
 
 	@keyframes moveAndDisappear {
 		0% {
-		    transform: translateY(0) rotate(0deg);
-		    opacity: 1;
+			transform: translateY(0) rotate(0deg);
+			opacity: 1;
 		}
+
 		// 25% {
 		//     transform: translateY(-100px) translateX(20px) rotate(5deg);
 		//     opacity: 0.9;
@@ -158,8 +188,8 @@
 		//     opacity: 0.5;
 		// }
 		100% {
-		    transform: translateY(-400px) translateX(300px) rotate(0deg);
-		    opacity: 0;
+			transform: translateY(-400px) translateX(300px) rotate(0deg);
+			opacity: 0;
 		}
 	}
 </style>
