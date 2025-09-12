@@ -4,7 +4,7 @@
 			<div class="search-box--left">
 				<div class="search-box--item">
 					<el-tag class="search-box--tag" type="primary" size="large">奉化市</el-tag>
-					<el-select v-model="searchData.street" placeholder="选择街道或镇进行筛选" @change="searchFn"
+					<el-select v-model="searchData.street" clearable placeholder="选择街道或镇进行筛选" @change="searchFn"
 						style="width: 240px">
 						<el-option v-for="item in streetOptions" :key="item.value" :label="item.label"
 							:value="item.value" />
@@ -83,8 +83,6 @@
 		debounce
 	} from 'lodash-es'
 
-	import EditHomeViewDlg from '@/components/dlg/EditHomeViewDlg.vue'
-
 	export default {
 		name: 'HomeView',
 		components: {
@@ -143,7 +141,7 @@
 
 			// params object to track page info and search query
 			const params = computed(() => ({
-				"targetId": state.searchData.street,
+				"targetId": state.searchData.street?state.searchData.street:null,
 				"targetType": 1,
 				pageSize: pageSize.value,
 				pageIndex: currentPage.value,
@@ -176,12 +174,13 @@
 						label: x.name,
 						value: x.id
 					}))
-					if (!state.searchData.street && state.streetOptions.length) {
-						state.searchData.street = state.streetOptions[0].value;
-						state.searchData.streetStr = state.streetOptions[0].label;
-						// 这里不需要额外 watch 触发的话，直接拉一次
-						getListFn()
-					}
+					getListFn()
+					// if (!state.searchData.street && state.streetOptions.length) {
+					// 	state.searchData.street = state.streetOptions[0].value;
+					// 	state.searchData.streetStr = state.streetOptions[0].label;
+					// 	// 这里不需要额外 watch 触发的话，直接拉一次
+					// 	getListFn()
+					// }
 
 				}
 			}

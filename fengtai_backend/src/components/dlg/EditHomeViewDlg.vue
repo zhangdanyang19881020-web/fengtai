@@ -65,11 +65,13 @@
 		ElAvatar,
 		ElPagination,
 		ElMessageBox,
-		ElMessage
+		ElMessage,
 	} from 'element-plus'
 	export default {
 		name: 'NewHomeViewDlg',
-		components: {},
+		components: {
+	
+		},
 		setup(props, {
 			expose,
 			emit
@@ -162,7 +164,8 @@
 			const handleFileChange = (uploadFile) => {
 				const file = uploadFile.raw
 				console.log('file', file)
-				const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif'|| file.type === 'image/webp'
+				const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' ||
+					file.type === 'image/webp'
 				// const isLt2M = file.size / 1024 / 1024 < 2
 
 				if (!isImage) {
