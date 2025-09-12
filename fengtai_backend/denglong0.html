@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国风首页 - 灯笼动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+            background: #0a1639;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .index-page {
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%230a1639" width="100" height="100"/><path fill="%2315224d" d="M0,0 L100,100"/></svg>');
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 月亮样式 */
+        .moon {
+            position: absolute;
+            right: 5%;
+            top: 5%;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #fff8e5 30%, #ffebaf 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 40px #ffebaf, 0 0 80px rgba(255, 235, 175, 0.6);
+            z-index: 3;
+        }
+        
+        /* 山脉样式 */
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            background: #0c1b42;
+            clip-path: polygon(0% 100%, 10% 70%, 20% 85%, 30% 60%, 40% 80%, 50% 50%, 60% 70%, 70% 40%, 80% 60%, 90% 30%, 100% 100%);
+            z-index: 1;
+        }
+        
+        .top-mountain {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 30%;
+            background: #142652;
+            clip-path: polygon(0% 0%, 20% 30%, 40% 10%, 60% 25%, 80% 5%, 100% 20%, 100% 0%);
+            z-index: 1;
+        }
+        
+        /* 房屋样式 */
+        .house {
+            position: absolute;
+            bottom: 15%;
+            width: 180px;
+            height: 150px;
+            z-index: 2;
+        }
+        
+        .bottom-left-house {
+            left: 10%;
+            background: linear-gradient(to bottom, #3a2b20 70%, #2a1e15 30%);
+            clip-path: polygon(0% 100%, 0% 40%, 20% 20%, 80% 20%, 100% 40%, 100% 100%);
+        }
+        
+        .bottom-right-house {
+            right: 10%;
+            background: linear-gradient(to bottom, #4a3123 70%, #362419 30%);
+            clip-path: polygon(0% 100%, 0% 30%, 30% 10%, 70% 10%, 100% 30%, 100% 100%);
+        }
+        
+        /* 灯笼样式 */
+        .denglong {
+            position: absolute;
+            top: 30%;
+            left: 40%;
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(to bottom, #e20d02 10%, #ff3b30 40%, #ff3b30 60%, #e20d02 90%);
+            border-radius: 40px;
+            box-shadow: 0 0 20px rgba(255, 59, 48, 0.8);
+            z-index: 10;
+            animation: floatUp 15s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+        
+        .denglong::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            width: 20px;
+            height: 15px;
+            background: #d58512;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .denglong::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 35px;
+            width: 10px;
+            height: 15px;
+            background: linear-gradient(to bottom, #ffeb3b, #ff9800);
+            border-radius: 0 0 5px 5px;
+        }
+        
+        /* 灯笼穗子 */
+        .tassel {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(to bottom, #ffeb3b, #ff9800, #ff5722);
+            border-radius: 2px;
+        }
+        
+        /* 底部光效 */
+        .bottom-light {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(to top, rgba(255, 184, 77, 0.2), transparent);
+            z-index: 2;
+        }
+        
+        /* Logo样式 */
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+            z-index: 11;
+            text-align: center;
+            font-family: 'SimSun', serif;
+        }
+        
+        /* 星星效果 */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 4s infinite;
+        }
+        
+        /* 动画定义 */
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(-100px) translateX(20px) rotate(5deg);
+                opacity: 0.9;
+            }
+            50% {
+                transform: translateY(-200px) translateX(-15px) rotate(-3deg);
+                opacity: 0.8;
+            }
+            75% {
+                transform: translateY(-300px) translateX(10px) rotate(2deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-400px) translateX(-5px) rotate(0deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .moon {
+                width: 80px;
+                height: 80px;
+                right: 10%;
+                top: 10%;
+            }
+            
+            .house {
+                width: 120px;
+                height: 100px;
+            }
+            
+            .denglong {
+                width: 60px;
+                height: 90px;
+                left: 35%;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="index-page">
+        <div class="stars" id="stars"></div>
+        <div class="moon"></div>
+        <div class="top-mountain"></div>
+        <div class="mountain"></div>
+        <div class="house bottom-left-house"></div>
+        <div class="house bottom-right-house"></div>
+        <div class="bottom-light"></div>
+        <div class="denglong">
+            <div class="tassel"></div>
+        </div>
+        <div class="logo">福满人间</div>
+    </div>
+
+    <script>
+        // 创建星星背景
+        document.addEventListener('DOMContentLoaded', function() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 150;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机位置和大小
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画延迟
+                star.style.animationDelay = `${Math.random() * 4}s`;
+                
+                starsContainer.appendChild(star);
+            }
+        });
+    </script>
+</body>
+</html>
