@@ -22,6 +22,7 @@
 
 		<!-- 通过 props 传递 searchedPeopleList；也支持通过 ref 调用 -->
 		<PeopleDrawer ref="peopleDrawerRef" v-model:show="peopleDrawerShow" :list="searchedPeopleList" />
+		<PlaceDrawer ref="placeDrawerRef" v-model:show="placeDrawerShow" :list="searchedPlaceList" />
 
 	</div>
 
@@ -39,6 +40,7 @@
 		dataApi
 	} from '@/utils/api.js'
 	import PeopleDrawer from '@/viewFront/index/PeopleDrawer.vue'
+	import PlaceDrawer from '@/viewFront/index/PlaceDrawer.vue'
 
 	// ----------------- state -----------------
 	const searchVal = ref('')
@@ -50,6 +52,11 @@
 	const peopleDrawerRef = ref(null);
 	const peopleDrawerShow = ref(false); // 控制抽屉显示
 	const searchedPeopleList = reactive([]); // 存储搜索结果
+
+
+	const placeDrawerShow = ref(false);
+	const placeDrawerRef = ref(null)
+	const searchedPlaceList = reactive([]);
 
 	const getRegionList = async () => {
 		try {
@@ -78,6 +85,11 @@
 		if (isPlace) {
 			// TODO: 路由到地址详情页或调用地址搜索 API
 			console.log('地址搜索:', val)
+			if (placeDrawerRef.value?.open) {
+				placeDrawerRef.value.open(searchedPeopleList)
+			} else {
+				placeDrawerRef.value = true
+			}
 			return
 		} else {
 			// 人名搜索
