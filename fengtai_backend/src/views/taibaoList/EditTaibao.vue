@@ -293,7 +293,7 @@
 			return {
 				"relationshipId": x.id,
 				"relationshipName": x.relation,
-				'relationshipPersonName':x.name
+				'relationshipPersonName': x.name
 			}
 		})
 		// 时间格式化函数
@@ -447,7 +447,15 @@
 	const handleAvatarUpload = (event) => {
 		const file = event.target.files[0];
 		if (file) {
-			uploadApiFn(file);
+			const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type ===
+				'image/gif' || file.type === 'image/webp'
+			// console.log('isImage',isImage)
+			if (!isImage) {
+				ElMessage.error('只能上传 JPG/PNG/GIF/WEBP 格式的图片!')
+				return
+			} else {
+				uploadApiFn(file);
+			}
 		}
 	};
 

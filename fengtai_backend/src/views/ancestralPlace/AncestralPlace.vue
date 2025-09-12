@@ -5,8 +5,8 @@
 			<el-cascader-panel class="cascader-box--panel" :check-strictly="true" v-model="ruleForm.streetCa"
 				:props="cascaderProps" :options="streetCascadarOptions" @change="streetCaChange" />
 		</div>
-		<el-divider></el-divider>
 
+		<el-divider class="z-divider" content-position="left">添加村<i class="iconfont icon-xiajiantou"></i></el-divider>
 		<el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" :rules="rules" label-width="auto">
 			<el-form-item label=" " prop="">
 				<el-tag type="primary" size="large">奉化区</el-tag>
@@ -174,6 +174,9 @@
 
 			.cascader-box--panel {}
 
+		}
+		.z-divider{
+			margin:60px 0 30px 0;
 		}
 	}
 </style>

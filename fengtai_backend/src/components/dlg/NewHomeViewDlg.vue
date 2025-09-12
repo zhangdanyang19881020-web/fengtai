@@ -161,11 +161,12 @@
 
 			const handleFileChange = (uploadFile) => {
 				const file = uploadFile.raw
-				const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif'
+				const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif' ||
+					file.type === 'image/webp'
 				// const isLt2M = file.size / 1024 / 1024 < 2
 
 				if (!isImage) {
-					ElMessage.error('只能上传 JPG/PNG/GIF 格式的图片!')
+					ElMessage.error('只能上传 JPG/PNG/GIF/WEBP 格式的图片!')
 					return
 				}
 				// if (!isLt2M) {

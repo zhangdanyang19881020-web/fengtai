@@ -404,8 +404,18 @@
 	};
 	const handleAvatarUpload = (event) => {
 		const file = event.target.files[0];
+		// console.log('file--xx--', file)
+		// const isLt2M = file.size / 1024 / 1024 < 2
 		if (file) {
-			uploadApiFn(file);
+			const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type ===
+				'image/gif' || file.type === 'image/webp'
+				// console.log('isImage',isImage)
+			if (!isImage) {
+				ElMessage.error('只能上传 JPG/PNG/GIF/WEBP 格式的图片!')
+				return
+			} else {
+				uploadApiFn(file);
+			}
 		}
 	};
 	const headerImgOb = reactive({});
