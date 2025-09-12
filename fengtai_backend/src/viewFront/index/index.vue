@@ -9,16 +9,106 @@
 		<div class="denglong"></div>
 		<div class="logo"></div>
 		<div class="input-box">
-			<el-input class="z-input" v-model="searchVal"></el-input>
+			<el-input class="z-input" placeholder="请输入您要查询的姓名/地名" v-model="searchVal"></el-input>
 		</div>
+		<!-- 搜索下拉框 -->
+		<!-- 		<div v-show="showDropdown" class="search-dropdown" :style="{ top: dropdownTop + 'px' }">
+			<div class="dropdown-item" v-for="(item, index) in filteredList" :key="index" @click="selectItem(item)">
+				{{ item }}
+			</div>
+		</div> -->
+		<div class="search-btn" @click="searchFn">查询</div>
+		<!-- 通过props传递searchedPeopleList -->
+
+		<!-- 通过 props 传递 searchedPeopleList；也支持通过 ref 调用 -->
+		<PeopleDrawer ref="peopleDrawerRef" v-model:show="peopleDrawerShow" :list="searchedPeopleList" />
+
 	</div>
+
 </template>
 
 <script setup>
 	import {
-		ref
+		ref,
+		reactive,
+		onMounted,
+		onBeforeUnmount,
+		nextTick
 	} from 'vue'
-	const searchVal = ref('');
+	import {
+		dataApi
+	} from '@/utils/api.js'
+	import PeopleDrawer from '@/viewFront/index/PeopleDrawer.vue'
+
+	// ----------------- state -----------------
+	const searchVal = ref('')
+	const showDropdown = ref(false)
+	const filteredList = ref([])
+	const regionStr = ref('');
+
+
+	const peopleDrawerRef = ref(null);
+	const peopleDrawerShow = ref(false); // 控制抽屉显示
+	const searchedPeopleList = reactive([]); // 存储搜索结果
+
+	const getRegionList = async () => {
+		try {
+			const result = await dataApi.regionList();
+			if (result.code === 200 && result.data) {
+				regionStr.value = result.data[0].children.map(x => x.name).join(', '); // 拼接地区名称
+				console.log('regionStr', regionStr.value);
+			} else {
+				regionStr.value = '';
+			}
+		} catch (error) {
+			console.error('获取地区列表失败:', error);
+			regionStr.value = '';
+		}
+	}
+
+
+
+	// ----------------- search action -----------------
+	const searchFn = async () => {
+		const val = searchVal.value.trim()
+		if (!val) return
+
+		// 地址搜索
+		const isPlace = regionStr.value.includes(val)
+		if (isPlace) {
+			// TODO: 路由到地址详情页或调用地址搜索 API
+			console.log('地址搜索:', val)
+			return
+		} else {
+			// 人名搜索
+			const params = {
+				searchType: 0,
+				val
+			}
+			try {
+				const result = await dataApi.indexSearch(params)
+				if (result?.code === 200) {
+					// Update reactive list in-place
+					searchedPeopleList.splice(0, searchedPeopleList.length, ...(result.data || []))
+
+					// Prefer an exposed method if PeopleDrawer provides one
+					if (peopleDrawerRef.value?.open) {
+						peopleDrawerRef.value.open(searchedPeopleList)
+					} else {
+						peopleDrawerShow.value = true
+					}
+				}
+			} catch (e) {
+				console.error('搜索失败:', e)
+			}
+		}
+
+
+	}
+
+	onMounted(() => {
+		getRegionList();
+	})
 </script>
 
 <style lang="scss" scoped>
@@ -30,15 +120,39 @@
 		position: relative;
 		overflow-x: hidden;
 
+		.search-btn {
+			width: 150px;
+			height: 35px;
+			line-height: 35px;
+			border-radius: 4px;
+			color: #fff;
+			position: absolute;
+			top: 460px;
+			left: calc(50% - 75px);
+			z-index: 15;
+			text-align: center;
+			background: #b28850;
+			cursor: pointer;
+
+			&:hover {
+				background: #a67a3f;
+			}
+		}
+
+
 		.input-box {
 			.z-input {
-				width:calc(100% - 40px);
+				width: calc(100% - 40px);
 				margin: 10px 20px;
-				.el-input__wrapper{
+
+				.el-input__wrapper {
 					background: none;
 				}
 			}
 		}
+
+
+
 
 		.input-box {
 			position: absolute;
@@ -150,7 +264,7 @@
 			width: 50%;
 			height: 50%;
 			z-index: 10;
-			animation: moveAndDisappear 15s ease-in-out infinite;
+			animation: moveAndDisappear 40s ease-in-out infinite;
 		}
 
 		.logo {
@@ -175,20 +289,8 @@
 			opacity: 1;
 		}
 
-		// 25% {
-		//     transform: translateY(-100px) translateX(20px) rotate(5deg);
-		//     opacity: 0.9;
-		// }
-		// 50% {
-		//     transform: translateY(-200px) translateX(-15px) rotate(-3deg);
-		//     opacity: 0.8;
-		// }
-		// 75% {
-		//     transform: translateY(-300px) translateX(100px) rotate(2deg);
-		//     opacity: 0.5;
-		// }
 		100% {
-			transform: translateY(-400px) translateX(300px) rotate(0deg);
+			transform: translateY(-400px) translateX(200px) rotate(30deg);
 			opacity: 0;
 		}
 	}

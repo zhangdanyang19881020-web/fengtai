@@ -103,17 +103,16 @@ export const dataApi = {
 	updateRelationship: (params) => post(_ServiceUrl + '/api/famil/editRelationship/', params),
 	// 添加村级地
 	addVillage: (params) => post(_ServiceUrl + '/api/region/addVillage/', params),
+	// ================以下 展示页面接口⬇️=================
+	// 首页搜索查询
+	indexSearch: (params) => post(_ServiceUrl + '/api/visit/indexSearch/', params),
+
 
 	// 创建数据 ⬇️原有
-	createData: (data) => post('/data/create', data),
 	// 更新数据
 	updateData: (id, data) => put(`/data/update/${id}`, data),
 	// 删除数据
 	deleteData: (id) => del(`/data/delete/${id}`),
-	// 批量删除数据
-	batchDeleteData: (ids) => post('/data/batch-delete', {
-		ids
-	})
 }
 
 // 文件上传相关接口
