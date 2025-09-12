@@ -195,8 +195,18 @@
 					uploadImage: {
 						async customUpload(file, insertFn) {
 							// 上传逻辑，这里只是演示
-							const url = URL.createObjectURL(file)
-							insertFn(url, file.name, url)
+							// const url = URL.createObjectURL(file)
+							// insertFn(url, file.name, url)
+							const reader = new FileReader();
+							reader.onloadend = () => {
+								const base64 = reader.result;
+								insertFn(base64, file.name, base64); // 将 Base64 图片插入到编辑器中
+							};
+							reader.onerror = () => {
+								ElMessage.error('图片转换失败');
+							};
+							reader.readAsDataURL(file); // 将图片转为 Base64
+
 						}
 					}
 				}
@@ -213,7 +223,7 @@
 				if (editorRef.value) editorRef.value.destroy()
 			})
 			watch(html, (newVal, oldVal) => {
-				// console.log('html', newVal)
+				console.log('html', newVal)
 			})
 			// ✅ props 就是父组件传过来的参数
 
