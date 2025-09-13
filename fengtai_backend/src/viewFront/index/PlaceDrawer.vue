@@ -8,7 +8,7 @@
 
 			<!-- 亲戚列表 -->
 			<el-scrollbar class="relative-list" :style="{'height':scrollHeight+'px'}">
-				<place-item :placeList="placeList"></place-item>
+				<place-item :level="0" :placeList="placeList"></place-item>
 			</el-scrollbar>
 
 			<!-- 重新查询按钮 -->
@@ -107,7 +107,7 @@
 		placeList.value = regionList.map(x=>{
 			return {
 				...x,
-				childrenShow:false
+				childrenShow:false,
 			}
 		})
 		console.log('placeList',placeList)

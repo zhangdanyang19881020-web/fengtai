@@ -1,8 +1,8 @@
 <template>
 	<div class="street-list">
 		<div class="street-list--item" v-for="(street, sIndex) in placeList" :key="street.id"
-			@click="toggleChildren(street,sIndex)">
-			<div class="relative-item" :class="{'active':street.childrenShow}">
+			>
+			<div class="relative-item" :class="{'active':street.childrenShow}" @click="toggleChildren(street,sIndex)">
 				<label>{{ street.name }}</label>
 				<div v-if="street.children && street.children.length>0">
 					<i class="iconfont icon-jiantouxia" v-if="!street.childrenShow"></i>
@@ -12,7 +12,7 @@
 			<transition name="fade-slide">
 				<div class="children-box" v-if="street.children && street.children.length&&street.childrenShow">
 					<i class="iconfont icon-zelvxuanzefeiyongzhengsanjiaoxingzhichi"></i>
-					<PlaceItem :placeList="street.children"></PlaceItem>
+					<PlaceItem :level="1" :placeList="street.children"></PlaceItem>
 				</div>
 			</transition>
 
@@ -30,17 +30,27 @@
 		placeList: {
 			type: Array, // 明确声明 placeList 是数组
 			required: true // 确保父组件必须传递这个属性
-		}
+		},
+		level: {
+			type: Number,
+			required: true
+		},
 	});
 	// console.log('placeList--in0s--', props.placeList)
 	const toggleChildren = (street, sIndex) => {
 		// 切换当前街道的显示状态，收起其他所有街道
-		props.placeList.forEach(item => {
-			if (item !== street) {
-				item.childrenShow = false; // 关闭其他的子项
-			}
-		});
-		street.childrenShow = !street.childrenShow;
+		console.log('street',street)
+		if (props.level === 0) {
+			//街道层级
+			props.placeList.forEach(item => {
+				if (item !== street) {
+					item.childrenShow = false; // 关闭其他的子项
+				}
+			});
+
+			street.childrenShow = !street.childrenShow;
+		}
+
 	}
 </script>
 
@@ -84,8 +94,8 @@
 			.icon-zelvxuanzefeiyongzhengsanjiaoxingzhichi {
 				color: rgba(139, 69, 19, 0.05);
 				position: absolute;
-				top:-12px;
-				left:35px
+				top: -12px;
+				left: 35px
 			}
 
 		}
