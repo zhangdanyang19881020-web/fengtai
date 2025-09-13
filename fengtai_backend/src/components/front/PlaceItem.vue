@@ -57,10 +57,9 @@
 	// console.log('placeList--in0s--', props.placeList)
 	const toggleChildren = (street, sIndex) => {
 		// 切换当前街道的显示状态，收起其他所有街道
-
-		street.childrenShow = !street.childrenShow;
 		if (props.level === 0) {
 			//街道层级
+			street.childrenShow = !street.childrenShow;
 			props.placeList.forEach(item => {
 				if (item !== street) {
 					item.childrenShow = false; // 关闭其他的子项
