@@ -3,28 +3,35 @@
 		<div class="dialog-content">
 			<!-- 顶部信息 -->
 			<div class="header-info">
-				<span>目前已为您联系到 <span class="highlight">{{ relativeCount }}</span> 位亲戚</span>
+				<span>目前已为您联系到 <span class="highlight">{{ relativeCount }}</span> 位台胞</span>
 			</div>
 
 			<!-- 亲戚列表 -->
-			<el-scrollbar class="relative-list">
+			<el-scrollbar class="relative-list" :style="{'height':scrollHeight+'px'}">
 				<el-row v-for="(relative, index) in relatives" :key="index" class="relative-item">
-					<el-col :span="2" class="relative-avatar">
-						<el-avatar :src="relative.avatar" size="small"></el-avatar>
+					<el-col :span="4" class="relative-avatar">
+						<el-avatar v-if="relative.headImgUrl" :src="relative.headImgUrl" :size="40"></el-avatar>
+						<el-avatar v-else :size="40"
+							src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" />
 					</el-col>
-					<el-col :span="16" class="relative-info">
-						<div>{{ relative.name }}</div>
+					<el-col :span="14" class="relative-info">
+						<div class="name-tr">
+							<label>{{ relative.name }}</label>
+							<el-tag type="danger" v-if="relative.gender=='female'">女</el-tag>
+							<el-tag type="primary" v-else-if="relative.gender=='male'">男</el-tag>
+							<el-tag type="info" v-else>--</el-tag>
+						</div>
 						<div>{{ relative.address }}</div>
 					</el-col>
 					<el-col :span="6" class="relative-year">
-						<div>{{ relative.year }}</div>
+						<div>{{ relative.brithMonth }}</div>
 					</el-col>
 				</el-row>
 			</el-scrollbar>
 
 			<!-- 重新查询按钮 -->
 			<div class="footer">
-				<el-button type="primary" @click="handleRefresh">重新查询</el-button>
+				<div class="search-btn" @click="handleRefresh">重新查询</div>
 			</div>
 		</div>
 	</el-dialog>
@@ -32,7 +39,11 @@
 
 <script setup>
 	import {
-		ref
+		ref,
+		reactive,
+		defineExpose,
+		computed,
+		onMounted
 	} from "vue";
 	import {
 		ElDialog,
@@ -42,34 +53,34 @@
 		ElCol,
 		ElScrollbar
 	} from "element-plus";
+	import {
+		dataApi
+	} from "@/utils/api";
 
 	// 弹窗状态
 	const dialogVisible = ref(false);
 
 	// 亲戚数据
-	const relatives = ref([{
-			avatar: "https://i.pravatar.cc/100?img=1",
-			name: "蒋维功",
-			address: "奉化溪口二村",
-			year: "1952.08"
-		},
-		{
-			avatar: "https://i.pravatar.cc/100?img=2",
-			name: "蒋维功",
-			address: "奉化溪口一村",
-			year: "1952.08"
-		},
-		{
-			avatar: "https://i.pravatar.cc/100?img=3",
-			name: "蒋维功",
-			address: "奉化溪口三村",
-			year: "1952.08"
-		},
-		// 可以根据实际需求继续添加数据
-	]);
+	const relatives = ref([]);
+	const relativeCount = ref(0);
+	
+	const scrollHeight=computed(()=>{
+		const windowHeight = document.documentElement.clientHeight;
+		console.log(windowHeight); // 输出浏览器可视区域的高度（以像素为单位）
+        return windowHeight-400;
+	})
 
 	// 显示的亲戚数量
-	const relativeCount = ref(relatives.value.length);
+	const relativeCountFn = async () => {
+		// return relatives.value.length
+		const result = await dataApi.indexPeopleCount();
+		if (result.code == 200) {
+			relativeCount.value = result.data
+		} else {
+			relativeCount.value = '--'
+		}
+
+	}
 
 	// 关闭弹窗
 	const handleClose = () => {
@@ -83,15 +94,42 @@
 	};
 
 	const open = (searchedPeopleList) => {
-		
 		dialogVisible.value = true;
 		relatives.value = searchedPeopleList;
 		console.log('searchedPeopleList--open', searchedPeopleList)
 	}
+	defineExpose({
+		open,
+	})
+	onMounted(() => {
+		relativeCountFn()
+	})
 </script>
 
-<style scoped>
-	.custom-dialog {}
+<style lang="scss" scoped>
+	.custom-dialog {
+		.search-btn{
+			margin:0 auto;
+		}
+		.relative-list{
+			
+		}
+		
+		
+	}
+
+	.name-tr {
+		display: flex;
+		margin-bottom:3px;
+
+		label {
+			font-size: 15px;
+		}
+
+		.el-tag {
+			margin-left: 5px;
+		}
+	}
 
 	.el-dialog__header {
 		background-color: #f6f6f6;
@@ -104,7 +142,10 @@
 
 	.header-info {
 		font-size: 16px;
-		margin-bottom: 20px;
+		font-size:20px;
+		text-align: center;
+		color: #3d3d3d;
+		transform: translateY(-25px);
 	}
 
 	.highlight {
@@ -113,21 +154,32 @@
 
 	.relative-item {
 		margin-bottom: 12px;
+		background:#fff;
+		border-radius: 8px;
+		padding:10px;
+		box-shadow: 0 1px 0 rgba(139,69,19,0.2);
 	}
 
 	.relative-avatar {
+		width: 50px;
+		height: 50px;
 		display: flex;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
 	}
 
 	.relative-info {
 		font-size: 14px;
+		color: #727171;
 	}
 
 	.relative-year {
 		font-size: 14px;
 		text-align: right;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		color: #727171;
 	}
 
 	.footer {

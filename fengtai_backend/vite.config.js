@@ -27,7 +27,8 @@ export default defineConfig({
 		preprocessorOptions: {
 			scss: {
 				// 配置全局 Sass 变量（如果需要）
-				additionalData: `@use "@/styles/variables.scss" as *;`, // 确保加上分号
+				// additionalData: `@use "@/styles/variables.scss" as *;`, // 确保加上分号
+				additionalData: `@use "@/styles/theme.scss" as *;`, // 确保加上分号
 			},
 		},
 	},

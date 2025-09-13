@@ -1,0 +1,14 @@
+// src/styles/theme.scss
+
+
+
+:root{
+	// 自定义主色调
+	$--color-primary: #8B4513; // 设置主色调为棕色
+	
+	// 设置 Tag 组件的颜色
+	$--color-info: #8B4513; // 设置 info 标签颜色为棕色
+	$--color-success: #4CAF50; // 设置成功状态的颜色
+	$--color-warning: #FF9800; // 设置警告状态的颜色
+	$--color-danger: #FF5722; // 设置危险状态的颜色
+}

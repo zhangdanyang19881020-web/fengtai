@@ -106,7 +106,8 @@ export const dataApi = {
 	// ================以下 展示页面接口⬇️=================
 	// 首页搜索查询
 	indexSearch: (params) => post(_ServiceUrl + '/api/visit/indexSearch/', params),
-
+	// 首页底部总人数返回
+	indexPeopleCount: () => get(_ServiceUrl + '/api/visit/indexPeopleCount/'),
 
 	// 创建数据 ⬇️原有
 	// 更新数据

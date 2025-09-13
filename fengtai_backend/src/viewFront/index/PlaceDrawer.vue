@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="dialogVisible" title="亲戚列表" width="60%" :before-close="handleClose" class="custom-dialog">
+	<el-dialog v-model="dialogVisible" title="" width="90%" :before-close="handleClose" class="custom-dialog">
 		<div class="dialog-content">
 			<!-- 顶部信息 -->
 			<div class="header-info">

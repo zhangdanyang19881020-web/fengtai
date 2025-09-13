@@ -90,8 +90,7 @@
 			console.log('地址搜索:', val)
 			console.log('placeDrawerRef--', placeDrawerRef)
 			if (placeDrawerRef.value) {
-				placeDrawerRef.value.open(searchedPeopleList)
-				placeDrawerRef.value = true
+				placeDrawerRef.value.open()				
 			} else {
 				// placeDrawerRef.value = true
 			}
@@ -111,9 +110,9 @@
 					// Prefer an exposed method if PeopleDrawer provides one
 					console.log('peopleDrawerRef', peopleDrawerRef)
 					if (peopleDrawerRef.value) {
-						peopleDrawerRef.value.dialogVisible = true;
+						peopleDrawerRef.value.open(searchedPeopleList);
 					}else{
-						peopleDrawerRef.value.dialogVisible = true;
+						
 					}
 					
 				}
@@ -139,23 +138,16 @@
 		position: relative;
 		overflow-x: hidden;
 
+		
 		.search-btn {
 			width: 150px;
 			height: 35px;
 			line-height: 35px;
-			border-radius: 4px;
-			color: #fff;
 			position: absolute;
 			top: 460px;
 			left: calc(50% - 75px);
 			z-index: 15;
-			text-align: center;
-			background: #b28850;
-			cursor: pointer;
-
-			&:hover {
-				background: #a67a3f;
-			}
+		
 		}
 
 

@@ -150,3 +150,18 @@
 			height:100%;
 			
 		}
+		
+		
+		.search-btn {
+			width: 150px;
+			height: 35px;
+			line-height: 35px;
+			border-radius: 4px;
+			color: #fff;
+			text-align: center;
+			background: #b28850;
+			cursor: pointer;
+			&:hover {
+				background: #a67a3f;
+			}
+		}
