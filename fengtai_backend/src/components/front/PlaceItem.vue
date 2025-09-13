@@ -11,6 +11,7 @@
 			</div>
 			<transition name="fade-slide">
 				<div class="children-box" v-if="street.children && street.children.length&&street.childrenShow">
+					<i class="iconfont icon-zelvxuanzefeiyongzhengsanjiaoxingzhichi"></i>
 					<PlaceItem :placeList="street.children"></PlaceItem>
 				</div>
 			</transition>
@@ -69,27 +70,57 @@
 		}
 
 		.children-box {
+			position: relative;
+			// overflow: hidden;
+			/* 隐藏超出部分 */
+			max-height: 1000px;
+			/* 初始状态是完全收缩 */
 			box-sizing: border-box;
 			margin: 0 10px 10px 0;
 			padding: 20px 20px 10px 20px;
 			background: rgba(139, 69, 19, 0.05);
 			border-radius: 8px;
 
+			.icon-zelvxuanzefeiyongzhengsanjiaoxingzhichi {
+				color: rgba(139, 69, 19, 0.05);
+				position: absolute;
+				top:-12px;
+				left:35px
+			}
+
 		}
 	}
 
-	
-	.fade-slide-enter-active, .fade-slide-leave-active {
-	  transition: transform 0.3s ease, opacity 0.3s ease;
+
+	.fade-slide-enter-active,
+	.fade-slide-leave-active {
+		transition: transform 0.3s ease, opacity 0.3s ease;
 	}
-	
-	.fade-slide-enter, .fade-slide-leave-to {
-	  opacity: 0;
-	  transform: translateY(-10%);
+
+	.fade-slide-enter,
+	.fade-slide-leave-to {
+		opacity: 0;
+		// transform: translateY(-100%);
+		max-height: 0;
+		/* 收缩时高度为0 */
 	}
-	
-	.fade-slide-enter-to, .fade-slide-leave {
-	  opacity: 1;
-	  transform: translateY(0);
+
+	.fade-slide-enter-to,
+	.fade-slide-leave {
+		opacity: 1;
+		// transform: translateY(0);
+		max-height: 1000px;
+		/* 设置一个最大高度值，保证过渡动画平滑 */
+	}
+
+	.icon-jiantouxia {
+		cursor: pointer;
+		transition: transform 0.5s ease;
+		/* 添加旋转过渡 */
+	}
+
+	.icon-jiantouxia.rotated {
+		transform: rotate(90deg);
+		/* 旋转180度 */
 	}
 </style>
