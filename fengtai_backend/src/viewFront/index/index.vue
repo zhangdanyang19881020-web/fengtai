@@ -21,8 +21,8 @@
 		<!-- 通过props传递searchedPeopleList -->
 
 		<!-- 通过 props 传递 searchedPeopleList；也支持通过 ref 调用 -->
-		<PeopleDrawer ref="peopleDrawerRef" v-model:show="peopleDrawerShow" :list="searchedPeopleList" />
-		<PlaceDrawer ref="placeDrawerRef" v-model:show="placeDrawerShow" :list="searchedPlaceList" />
+		<PeopleDrawer ref="peopleDrawerRef" />
+		<PlaceDrawer ref="placeDrawerRef" />
 
 	</div>
 
@@ -46,15 +46,12 @@
 	const searchVal = ref('')
 	const showDropdown = ref(false)
 	const filteredList = ref([])
-	const regionStr = ref('');
-
+	const regionStr = ref('')
+	const regionList = reactive([])
 
 	const peopleDrawerRef = ref(null);
-	const peopleDrawerShow = ref(false); // 控制抽屉显示
-	const searchedPeopleList = reactive([]); // 存储搜索结果
+	const searchedPeopleList = reactive([]); 
 
-
-	const placeDrawerShow = ref(false);
 	const placeDrawerRef = ref(null)
 	const searchedPlaceList = reactive([]);
 
@@ -62,8 +59,12 @@
 		try {
 			const result = await dataApi.regionList();
 			if (result.code === 200 && result.data) {
+				// regionList.value = result.data[0].children;
+				regionList.splice(0, regionList.length, ...(result.data[0].children || []))
+				console.log('regionList', regionList.value);
+				
 				regionStr.value = result.data[0].children.map(x => x.name).join(', '); // 拼接地区名称
-				console.log('regionStr', regionStr.value);
+				// console.log('regionStr', regionStr.value);
 			} else {
 				regionStr.value = '';
 			}
@@ -83,14 +84,14 @@
 		// 地址搜索
 		const isPlace = regionStr.value.includes(val);
 
-		console.log('isPlace', isPlace)
+		// console.log('isPlace', isPlace)
 
 		if (isPlace) {
 			// TODO: 路由到地址详情页或调用地址搜索 API
 			console.log('地址搜索:', val)
-			console.log('placeDrawerRef--', placeDrawerRef)
+			// console.log('placeDrawerRef--', placeDrawerRef)
 			if (placeDrawerRef.value) {
-				placeDrawerRef.value.open()				
+				placeDrawerRef.value.open(regionList)
 			} else {
 				// placeDrawerRef.value = true
 			}
@@ -111,10 +112,10 @@
 					console.log('peopleDrawerRef', peopleDrawerRef)
 					if (peopleDrawerRef.value) {
 						peopleDrawerRef.value.open(searchedPeopleList);
-					}else{
-						
+					} else {
+
 					}
-					
+
 				}
 			} catch (e) {
 				console.error('搜索失败:', e)
@@ -138,7 +139,7 @@
 		position: relative;
 		overflow-x: hidden;
 
-		
+
 		.search-btn {
 			width: 150px;
 			height: 35px;
@@ -147,7 +148,7 @@
 			top: 460px;
 			left: calc(50% - 75px);
 			z-index: 15;
-		
+
 		}
 
 
