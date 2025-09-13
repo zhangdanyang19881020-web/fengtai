@@ -225,6 +225,20 @@
 			height: 100%;
 			max-width: 400px;
 			z-index: 2;
+			animation: blurToClear 10s ease-in-out forwards;
+			/* 应用动画 */
+		}
+
+		@keyframes blurToClear {
+			0% {
+				filter: blur(2px);
+				/* 动画开始时模糊 */
+			}
+
+			100% {
+				filter: blur(0);
+				/* 动画结束时清晰 */
+			}
 		}
 
 		.bototm-right--house {
@@ -240,6 +254,7 @@
 			height: 100%;
 			max-width: 400px;
 			z-index: 3;
+			animation: blurToClear 10s ease-in-out forwards;
 		}
 
 		.top-mountain {
