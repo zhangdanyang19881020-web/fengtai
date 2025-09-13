@@ -108,7 +108,9 @@ export const dataApi = {
 	indexSearch: (params) => post(_ServiceUrl + '/api/visit/indexSearch/', params),
 	// 首页底部总人数返回
 	indexPeopleCount: () => get(_ServiceUrl + '/api/visit/indexPeopleCount/'),
-
+	// 个人详情
+	memberDetail: () => get(_ServiceUrl + '/api/visit/personInfo/'),
+	
 	// 创建数据 ⬇️原有
 	// 更新数据
 	updateData: (id, data) => put(`/data/update/${id}`, data),

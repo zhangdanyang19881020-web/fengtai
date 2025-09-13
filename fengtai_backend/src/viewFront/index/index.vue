@@ -22,7 +22,7 @@
 
 		<!-- 通过 props 传递 searchedPeopleList；也支持通过 ref 调用 -->
 		<PeopleDrawer ref="peopleDrawerRef" />
-		<PlaceDrawer ref="placeDrawerRef" />
+		<PlaceDrawer ref="placeDrawerRef" @choosePlaceEv="choosePlaceFn" />
 
 	</div>
 
@@ -50,10 +50,19 @@
 	const regionList = reactive([])
 
 	const peopleDrawerRef = ref(null);
-	const searchedPeopleList = reactive([]); 
+	const searchedPeopleList = reactive([]);
 
 	const placeDrawerRef = ref(null)
 	const searchedPlaceList = reactive([]);
+
+	const choosePlaceFn = (data) => {
+		console.log('choosePlaceFn', data);
+		if (data.length > 0) {
+			if (peopleDrawerRef.value) {
+				peopleDrawerRef.value.open(data);
+			}
+		}
+	}
 
 	const getRegionList = async () => {
 		try {
@@ -62,7 +71,7 @@
 				// regionList.value = result.data[0].children;
 				regionList.splice(0, regionList.length, ...(result.data[0].children || []))
 				console.log('regionList', regionList.value);
-				
+
 				regionStr.value = result.data[0].children.map(x => x.name).join(', '); // 拼接地区名称
 				// console.log('regionStr', regionStr.value);
 			} else {
@@ -112,10 +121,7 @@
 					console.log('peopleDrawerRef', peopleDrawerRef)
 					if (peopleDrawerRef.value) {
 						peopleDrawerRef.value.open(searchedPeopleList);
-					} else {
-
 					}
-
 				}
 			} catch (e) {
 				console.error('搜索失败:', e)

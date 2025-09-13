@@ -8,7 +8,8 @@
 
 			<!-- 亲戚列表 -->
 			<el-scrollbar class="relative-list" :style="{'height':scrollHeight+'px'}">
-				<el-row v-for="(relative, index) in relatives" :key="index" class="relative-item">
+				<el-row v-for="(relative, index) in relatives" :key="index" class="relative-item"
+					@click="activeMember(relative,index)">
 					<el-col :span="4" class="relative-avatar">
 						<el-avatar v-if="relative.headImgUrl" :src="relative.headImgUrl" :size="40"></el-avatar>
 						<el-avatar v-else :size="40"
@@ -17,7 +18,6 @@
 					<el-col :span="14" class="relative-info">
 						<div class="name-tr">
 							<label>{{ relative.name }}</label>
-
 							<el-tag type="danger" v-if="relative.gender=='female'">女</el-tag>
 							<el-tag type="primary" v-else-if="relative.gender=='male'">男</el-tag>
 							<el-tag type="info" v-else>--</el-tag>
@@ -52,7 +52,8 @@
 		ElAvatar,
 		ElRow,
 		ElCol,
-		ElScrollbar
+		ElScrollbar,
+		ElMessage
 	} from "element-plus";
 	import {
 		dataApi
@@ -87,11 +88,19 @@
 	const handleClose = () => {
 		dialogVisible.value = false;
 	};
-
+	const activeMemberOb = reactive({})
+	const activeMember = (relative, index) => {
+		activeMemberOb.value = relative;
+		console.log('activeMemberOb', activeMemberOb)
+	}
 	// 刷新查询
 	const choosePeople = () => {
 		// 在这里添加重新查询的逻辑，刷新亲戚数据
-		ElMessage.success("选中...");
+		let params = {
+			id: activeMemberOb.value.id,
+		}
+		const result = async () => dataApi.memberDetail(params);
+
 	};
 
 	const open = (searchedPeopleList) => {

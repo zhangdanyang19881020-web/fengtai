@@ -3,9 +3,8 @@
 		<div class="dialog-content">
 			<!-- 顶部信息 -->
 			<div class="header-info">
-				<span>目前已为您联系到 <span class="highlight">{{ relativeCount }}</span> 位台胞</span>
+				<span>请选择街道/镇/村搜索台胞</span>
 			</div>
-
 			<!-- 亲戚列表 -->
 			<el-scrollbar class="relative-list" :style="{'height':scrollHeight+'px'}">
 				<place-item :level="0" :placeList="placeList"></place-item>
@@ -13,7 +12,7 @@
 
 			<!-- 重新查询按钮 -->
 			<div class="footer">
-				<div class="search-btn" @click="choosePeople">选择</div>
+				<div class="search-btn" @click="choosePlace">选择</div>
 			</div>
 		</div>
 	</el-dialog>
@@ -26,7 +25,8 @@
 		defineExpose,
 		computed,
 		onMounted,
-		defineProps
+		defineProps,
+		defineEmits
 	} from "vue";
 	import {
 		ElDialog,
@@ -34,12 +34,21 @@
 		ElAvatar,
 		ElRow,
 		ElCol,
-		ElScrollbar
+		ElScrollbar,
+		ElMessage,
+		ElMessageBox
 	} from "element-plus";
 	import {
 		dataApi
 	} from "@/utils/api";
-	
+	import {
+		useStore
+	} from 'vuex';
+	const store = useStore();
+
+	// 定义 `emit` 事件
+	const emit = defineEmits();
+
 	import PlaceItem from '@/components/front/PlaceItem.vue'
 
 	// 弹窗状态
@@ -62,6 +71,16 @@
 		console.log(windowHeight); // 输出浏览器可视区域的高度（以像素为单位）
 		return windowHeight - 400;
 	})
+
+	// // 使用 computed 获取 Vuex store 中的数据
+	// const choosedPlace = computed(() => {
+	// 	const street = store.getters.choosedStreet;
+	// 	const village = store.getters.choosedVillage;
+	// 	return [street, village];
+	// });
+
+
+
 	const getRegionList = async () => {
 		try {
 			const result = await dataApi.regionList();
@@ -97,20 +116,44 @@
 	};
 
 	// 刷新查询
-	const choosePeople = () => {
-		// 在这里添加重新查询的逻辑，刷新亲戚数据
-		ElMessage.success("选中...");
+	const choosePlace = async () => {
+		// 在这里添加重新查询的逻辑，刷新亲戚数据	
+		let params = {
+			serachType: 1,
+			val: store.getters.choosedStreet.id + '-' + store.getters.choosedVillage.id
+		}
+		console.log('params', params)
+		const result = await dataApi.indexSearch(params);
+		if (result.code == 200) {
+			if (result.data.length==0) {
+				ElMessage({
+					message: '该村下暂未关联该村祖籍的台胞人员,请选择其他村进行搜索!',
+					type: 'error',
+				});
+			} else {
+				ElMessage({
+					message: result.message,
+					type: 'success',
+				});
+				emit('choosePlaceEv', result.data); // 触发父组件的事件
+			}
+		} else {
+			ElMessage({
+				message: result.message,
+				type: 'error',
+			});
+		}
 	};
 
 	const open = (regionList) => {
 		dialogVisible.value = true;
-		placeList.value = regionList.map(x=>{
+		placeList.value = regionList.map(x => {
 			return {
 				...x,
-				childrenShow:false,
+				childrenShow: false,
 			}
 		})
-		console.log('placeList',placeList)
+		console.log('placeList', placeList)
 	}
 	defineExpose({
 		open,
@@ -126,9 +169,7 @@
 			margin: 0 auto;
 		}
 
-		.relative-list {
-		
-		}
+		.relative-list {}
 
 
 	}

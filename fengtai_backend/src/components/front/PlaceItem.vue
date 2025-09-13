@@ -1,7 +1,6 @@
 <template>
 	<div class="street-list">
-		<div class="street-list--item" v-for="(street, sIndex) in placeList" :key="street.id"
-			>
+		<div class="street-list--item" v-for="(street, sIndex) in placeList" :key="street.id">
 			<div class="relative-item" :class="{'active':street.childrenShow}" @click="toggleChildren(street,sIndex)">
 				<label>{{ street.name }}</label>
 				<div v-if="street.children && street.children.length>0">
@@ -12,7 +11,7 @@
 			<transition name="fade-slide">
 				<div class="children-box" v-if="street.children && street.children.length&&street.childrenShow">
 					<i class="iconfont icon-zelvxuanzefeiyongzhengsanjiaoxingzhichi"></i>
-					<PlaceItem :level="1" :placeList="street.children"></PlaceItem>
+					<place-item :level="1" :placeList="street.children"></place-item>
 				</div>
 			</transition>
 
@@ -22,8 +21,17 @@
 
 <script setup>
 	import {
-		defineProps
+		defineProps,
+		defineEmits,
+		reactive
 	} from 'vue';
+	import {
+		useStore
+	} from 'vuex';
+
+	const store = useStore();
+	// 定义发送数据的事件
+	const emit = defineEmits();
 
 	// 确保父组件传递了 placeList，并定义了正确的类型
 	const props = defineProps({
@@ -36,10 +44,21 @@
 			required: true
 		},
 	});
+	const isActive = (street) => {
+		const streetV = store.getters.choosedStreet;
+		const villageV = store.getters.choosedVillage;
+		if (street.id == streetV.id || street.if == villageV.id) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	// console.log('placeList--in0s--', props.placeList)
 	const toggleChildren = (street, sIndex) => {
 		// 切换当前街道的显示状态，收起其他所有街道
-		console.log('street',street)
+
+		street.childrenShow = !street.childrenShow;
 		if (props.level === 0) {
 			//街道层级
 			props.placeList.forEach(item => {
@@ -47,10 +66,11 @@
 					item.childrenShow = false; // 关闭其他的子项
 				}
 			});
-
-			street.childrenShow = !street.childrenShow;
+			store.commit('setChoosedStreet', street);
 		}
-
+		if (props.level === 1) {
+			store.commit('setChoosedVillage', street);
+		}
 	}
 </script>
 
