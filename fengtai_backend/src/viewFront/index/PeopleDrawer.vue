@@ -58,7 +58,11 @@
 	import {
 		dataApi
 	} from "@/utils/api";
+	import {
+		useRouter
+	} from 'vue-router';
 
+	const router = useRouter();
 	// 弹窗状态
 	const dialogVisible = ref(false);
 
@@ -96,10 +100,10 @@
 	// 刷新查询
 	const choosePeople = () => {
 		// 在这里添加重新查询的逻辑，刷新亲戚数据
-		let params = {
-			id: activeMemberOb.value.id,
-		}
-		const result = async () => dataApi.memberDetail(params);
+		router.push({
+			path: `/memberDetail/${activeMemberOb.value.id}`
+		});
+	
 
 	};
 

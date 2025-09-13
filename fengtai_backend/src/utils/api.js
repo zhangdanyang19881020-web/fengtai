@@ -109,7 +109,7 @@ export const dataApi = {
 	// 首页底部总人数返回
 	indexPeopleCount: () => get(_ServiceUrl + '/api/visit/indexPeopleCount/'),
 	// 个人详情
-	memberDetail: () => get(_ServiceUrl + '/api/visit/personInfo/'),
+	memberDetail: (params) => get(_ServiceUrl + '/api/visit/personInfo/',params),
 	
 	// 创建数据 ⬇️原有
 	// 更新数据

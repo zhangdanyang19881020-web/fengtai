@@ -135,6 +135,13 @@ const routes = [{
 			meta: {
 				name: '奉台家缘',
 			},
+		}, {
+			path: '/memberDetail/:id',
+			name: 'memberDetail',
+			component: () => import('@/viewFront/memberDetail/MemberDetail.vue'),
+			meta: {
+				name: '奉台家缘',
+			},
 		}]
 
 	},
