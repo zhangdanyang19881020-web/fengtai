@@ -116,7 +116,7 @@ service.interceptors.response.use(
 			}
 
 			// 这里可以根据后端的响应结构进行调整
-			// console.log('data--', data)
+			console.log('data--', data)
 			if (data.code == 200) {
 				return data
 			} else {

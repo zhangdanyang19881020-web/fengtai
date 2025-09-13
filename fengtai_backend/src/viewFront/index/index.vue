@@ -81,34 +81,41 @@
 		if (!val) return
 
 		// 地址搜索
-		const isPlace = regionStr.value.includes(val)
+		const isPlace = regionStr.value.includes(val);
+
+		console.log('isPlace', isPlace)
+
 		if (isPlace) {
 			// TODO: 路由到地址详情页或调用地址搜索 API
 			console.log('地址搜索:', val)
-			if (placeDrawerRef.value?.open) {
+			console.log('placeDrawerRef--', placeDrawerRef)
+			if (placeDrawerRef.value) {
 				placeDrawerRef.value.open(searchedPeopleList)
-			} else {
 				placeDrawerRef.value = true
+			} else {
+				// placeDrawerRef.value = true
 			}
 			return
 		} else {
 			// 人名搜索
 			const params = {
 				searchType: 0,
-				val
+				val: searchVal.value
 			}
 			try {
 				const result = await dataApi.indexSearch(params)
-				if (result?.code === 200) {
+				if (result.code === 200) {
 					// Update reactive list in-place
 					searchedPeopleList.splice(0, searchedPeopleList.length, ...(result.data || []))
 
 					// Prefer an exposed method if PeopleDrawer provides one
-					if (peopleDrawerRef.value?.open) {
-						peopleDrawerRef.value.open(searchedPeopleList)
-					} else {
-						peopleDrawerShow.value = true
+					console.log('peopleDrawerRef', peopleDrawerRef)
+					if (peopleDrawerRef.value) {
+						peopleDrawerRef.value.dialogVisible = true;
+					}else{
+						peopleDrawerRef.value.dialogVisible = true;
 					}
+					
 				}
 			} catch (e) {
 				console.error('搜索失败:', e)

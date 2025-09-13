@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="dialogVisible" title="亲戚列表" width="60%" :before-close="handleClose" class="custom-dialog">
+	<el-dialog v-model="dialogVisible" title="" width="90%" :before-close="handleClose" class="custom-dialog">
 		<div class="dialog-content">
 			<!-- 顶部信息 -->
 			<div class="header-info">
@@ -32,9 +32,7 @@
 
 <script setup>
 	import {
-		ref,
-		reactive,
-		defineExpose
+		ref
 	} from "vue";
 	import {
 		ElDialog,
@@ -49,7 +47,7 @@
 	const dialogVisible = ref(false);
 
 	// 亲戚数据
-	const relatives = reactive([{
+	const relatives = ref([{
 			avatar: "https://i.pravatar.cc/100?img=1",
 			name: "蒋维功",
 			address: "奉化溪口二村",
@@ -71,7 +69,7 @@
 	]);
 
 	// 显示的亲戚数量
-	const relativeCount = ref(0);
+	const relativeCount = ref(relatives.value.length);
 
 	// 关闭弹窗
 	const handleClose = () => {
@@ -86,15 +84,12 @@
 
 	const open = (searchedPeopleList) => {
 		dialogVisible.value = true;
-		relatives.value = searchedPeopleList
+		relatives.value = searchedPeopleList;
+		console.log('searchedPeopleList', searchedPeopleList)
 	}
-	// 暴露方法给父组件
-	defineExpose({
-		open,
-	})
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 	.custom-dialog {}
 
 	.el-dialog__header {
