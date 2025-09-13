@@ -82,4 +82,7 @@
 			.el-input__wrapper:hover{
 				box-shadow: none;
 			}
+			.el-input:focus {
+			  outline: none;
+			}
 		}

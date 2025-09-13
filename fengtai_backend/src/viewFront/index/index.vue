@@ -18,6 +18,7 @@
 			</div>
 		</div> -->
 		<div class="search-btn" @click="searchFn">查询</div>
+		<div class="bottom-light--brown"></div>
 		<!-- 通过props传递searchedPeopleList -->
 
 		<!-- 通过 props 传递 searchedPeopleList；也支持通过 ref 调用 -->
@@ -240,6 +241,17 @@
 			z-index: 2;
 			animation: blurToClear 10s ease-in-out forwards;
 			/* 应用动画 */
+		}
+
+		.bottom-light--brown {
+			position: absolute;
+			// background: url(../../static/f-Images/webp/bottom-light-brown.webp) 100% 100% no-repeat;
+			background: linear-gradient(to top, rgba(122, 76, 0, 1) 0%, rgba(122, 76, 0, 0) 100%);
+			width: 100%;
+			height: 100px;
+			bottom: -20px;
+			left: 0;
+			z-index: 30;
 		}
 
 		@keyframes blurToClear {
