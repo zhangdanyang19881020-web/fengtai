@@ -6,17 +6,22 @@
 		<div class="bottom-light--brown"></div>
 		<div class="main-box">
 			<div class="header-info">
-				<el-avatar class="header-avatar" :size="50" :src="memberDetailOb.headImg" />
+				<el-avatar class="header-avatar" :size="50" :src="memberDetailOb.headImg || defaultImg" />
 				<div class="header-name--box">
 					<div class="header-name">{{memberDetailOb.name}}</div>
-					<div class="header-birth">{{memberDetailOb.birthMonth}}</div>
+					<div class="header-birth">{{birthday}}</div>
 				</div>
+			</div>
+			<div class="map">
+				<MapDemo></MapDemo>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
+	import MapDemo from '@/viewFront/memberDetail/MapDemo.vue'
+	import moment from 'moment'
 	import {
 		ref,
 		reactive,
@@ -36,6 +41,10 @@
 	const memberDetailOb = ref({});
 	const loading = ref(true);
 	const error = ref(null);
+	const defaultImg = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
+	const birthday=computed(()=>{
+		return moment(memberDetailOb.value.birthMonth).format("YYYY-MM")
+	})
 	// 获取台胞详情
 	const getDetail = async () => {
 		try {
@@ -65,11 +74,19 @@
 
 <style lang='scss' scoped>
 	.member-detail {
-		width: 100%;
-		height: 100%;
+
 		background: url('@/static/f-Images/home-bg.jpg') repeat;
-		position: relative;
-		overflow-x: hidden;
+		background-size: cover;
+		/* 背景图覆盖整个页面 */
+		background-position: center center;
+		/* 背景图居中显示 */
+		/* 背景图从右下角开始 */
+		background-attachment: fixed;
+		/* 背景图固定在页面视口，不随滚动移动 */
+		height: 100vh;
+		/* 确保整个页面视口的高度 */
+		margin: 0;
+		/* 移除默认的页面边距 */
 
 		.detail-logo {
 			background: url('@/static/f-Images/webp/small-logo.webp') no-repeat;
@@ -128,23 +145,41 @@
 
 			.header-info {
 				position: relative;
-				display:flex;
-				align-items: center;
-				margin:20px 0 20px 20px;
+				display: flex;
+				justify-content: flex-start;
 				color: #333;
-				.header-avatar{
-					margin-right:10px;
+				gap: 5px;
+				margin: 20px;
+
+				.header-avatar {
+					margin-right: 10px;
 				}
-				.header-name--box{
-					.header-name{
-						font-size:16px;
+
+				.header-name--box {
+					line-height: 25px;
+
+					.header-name {
+						font-size: 16px;
 						font-weight: bold;
+						color: #333;
 					}
-					.header-birth{
-						font-size:14px;
+
+					.header-birth {
+						font-size: 14px;
+						color: #727171;
 					}
 				}
-				
+
+			}
+			.map{
+				position: absolute;
+				top:0;
+				left:10px;
+			}
+			
+
+			@media (max-width: 768px) {
+				.header-info {}
 			}
 		}
 
