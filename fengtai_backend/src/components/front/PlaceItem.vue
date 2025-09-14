@@ -23,7 +23,9 @@
 	import {
 		defineProps,
 		defineEmits,
-		reactive
+		reactive,
+		onMounted,
+		computed
 	} from 'vue';
 	import {
 		useStore
@@ -44,6 +46,12 @@
 			required: true
 		},
 	});
+
+	
+
+	onMounted(() => {
+
+	})
 	const isActive = (street) => {
 		const streetV = store.getters.choosedStreet;
 		const villageV = store.getters.choosedVillage;

@@ -125,7 +125,7 @@
 		console.log('params', params)
 		const result = await dataApi.indexSearch(params);
 		if (result.code == 200) {
-			if (result.data.length==0) {
+			if (result.data.length == 0) {
 				ElMessage({
 					message: '该村下暂未关联该村祖籍的台胞人员,请选择其他村进行搜索!',
 					type: 'error',
@@ -144,16 +144,39 @@
 			});
 		}
 	};
-
+	// 读取 state
+	const placeSearchVal = computed(() => store.state.placeSearchVal)
+	
 	const open = (regionList) => {
 		dialogVisible.value = true;
+		// console.log('regionList',regionList)
 		placeList.value = regionList.map(x => {
-			return {
-				...x,
-				childrenShow: false,
+			if (x.name.indexOf(placeSearchVal.value) > -1) {
+				console.log("item",x)
+				return {
+					...x,
+					childrenShow: true,
+				}
+			}else{
+				return {
+					...x,
+					childrenShow: false,
+					active:false,
+				}
 			}
+			
 		})
-		console.log('placeList', placeList)
+		initChoose()
+		// console.log('placeList', placeList)
+		// console.log('placeSearchVal', placeSearchVal)
+	}
+
+
+
+	const initChoose = () => {
+		placeList.value.forEach(item => {
+		
+		})
 	}
 	defineExpose({
 		open,

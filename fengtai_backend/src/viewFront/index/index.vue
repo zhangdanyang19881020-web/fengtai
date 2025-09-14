@@ -38,6 +38,11 @@
 		nextTick
 	} from 'vue'
 	import {
+		useStore
+	} from 'vuex';
+	
+	const store = useStore();
+	import {
 		dataApi
 	} from '@/utils/api.js'
 	import PeopleDrawer from '@/viewFront/index/PeopleDrawer.vue'
@@ -99,6 +104,7 @@
 		if (isPlace) {
 			// TODO: 路由到地址详情页或调用地址搜索 API
 			console.log('地址搜索:', val)
+			store.commit('placeSearchVal', val);
 			// console.log('placeDrawerRef--', placeDrawerRef)
 			if (placeDrawerRef.value) {
 				placeDrawerRef.value.open(regionList)
@@ -343,24 +349,18 @@
 
 	@keyframes lanternFloat {
 		0% {
-			transform: translate(0, 0) rotate(0deg) scale(1);
-			opacity:1;
+			opacity: 0;
 			/* 初始比较淡 */
 		}
 
-		// 30% {
-		// 	opacity: 0.4;
-		// 	/* 渐渐变清晰 */
-		// 	transform: translate(50px, -100px) rotate(10deg) scale(0.9);
-		// }
-
-		// 70% {
-		// 	opacity: 0.6;
-		// 	transform: translate(120px, -250px) rotate(20deg) scale(0.8);
-		// }
+		10% {
+			opacity: 1;
+			/* 渐渐变清晰 */
+			transform: translate(0, 0) rotate(0deg) scale(1);
+		}
 
 		100% {
-			transform: translate(200px, -400px) rotate(30deg) scale(0.3);
+			transform: translate(250px, -300px) rotate(45deg) scale(0.1);
 			opacity: 0.2;
 			/* 最终淡出 */
 		}

@@ -7,7 +7,10 @@
 			</div>
 
 			<!-- 亲戚列表 -->
-			<el-scrollbar class="relative-list" :style="{'height':scrollHeight+'px'}">
+			<div class="no-data" v-if="relatives.length==0">
+				暂无数据
+			</div>
+			<el-scrollbar class="relative-list"  v-else :style="{'height':scrollHeight+'px'}">
 				<el-row v-for="(relative, index) in relatives" :key="index" class="relative-item"
 					@click="activeMember(relative,index)">
 					<el-col :span="4" class="relative-avatar">
@@ -28,11 +31,13 @@
 						<div>{{ relative.brithMonth }}</div>
 					</el-col>
 				</el-row>
+
 			</el-scrollbar>
 
 			<!-- 重新查询按钮 -->
-			<div class="footer">
-				<div class="search-btn" @click="choosePeople">选择</div>
+			<div class="footer" >
+				<div class="search-btn" @click="choosePeople" v-if="relatives.length>0">选择</div>
+				<div class="search-btn" @click="handleClose" v-else>关闭</div>
 			</div>
 		</div>
 	</el-dialog>
@@ -103,7 +108,7 @@
 		router.push({
 			path: `/memberDetail/${activeMemberOb.value.id}`
 		});
-	
+
 
 	};
 
@@ -126,7 +131,19 @@
 			margin: 0 auto;
 		}
 
+		.no-data {
+			font-size: 20px;
+			font-weight: bold;
+			color: rgba(0,0,0,0.3);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin:100px 0;
+		}
+
 		.relative-list {
+
+
 			.relative-item {
 				margin-bottom: 12px;
 				background: #fff;

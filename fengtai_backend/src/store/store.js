@@ -8,6 +8,7 @@ const store = createStore({
 		return {
 			choosedStreet: {},
 			choosedVillage: {}, // 需要存储的数据
+			placeSearchVal:'',
 		};
 	},
 	mutations: {
@@ -20,7 +21,11 @@ const store = createStore({
 		setChoosedVillage(state, payload) {
 			state.choosedVillage = payload;
 			console.log('choosedVillage', payload)
-		}
+		},
+		placeSearchVal(state, payload) {
+			state.placeSearchVal = payload;
+			console.log('placeSearchVal', payload)
+		},
 	},
 	actions: {
 		// Action 用于异步处理，可以通过 commit 调用 mutations
@@ -48,7 +53,10 @@ const store = createStore({
 		},
 		choosedVillage(state) {
 			return state.choosedVillage;
-		}
+		},
+		placeSearchVal(state) {
+			return state.placeSearchVal;
+		},
 	}
 });
 
