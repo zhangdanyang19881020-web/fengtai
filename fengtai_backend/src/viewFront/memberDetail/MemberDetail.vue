@@ -4,7 +4,15 @@
 		<div class="inner-top"></div>
 		<div class="inner-bottom"></div>
 		<div class="bottom-light--brown"></div>
-		<div class="main-box">{{memberDetailOb}}</div>
+		<div class="main-box">
+			<div class="header-info">
+				<el-avatar class="header-avatar" :size="50" :src="memberDetailOb.headImg" />
+				<div class="header-name--box">
+					<div class="header-name">{{memberDetailOb.name}}</div>
+					<div class="header-birth">{{memberDetailOb.birthMonth}}</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -59,9 +67,9 @@
 	.member-detail {
 		width: 100%;
 		height: 100%;
-		background: url('@/static/f-Images/home-bg.jpg') 100% 100% repeat;
-		background-size: contain;
+		background: url('@/static/f-Images/home-bg.jpg') repeat;
 		position: relative;
+		overflow-x: hidden;
 
 		.detail-logo {
 			background: url('@/static/f-Images/webp/small-logo.webp') no-repeat;
@@ -107,13 +115,38 @@
 		}
 
 		.main-box {
-			width:calc(100% - 10px);
+			width: calc(100% - 10px);
+			height: 100%;
 			position: absolute;
-			z-index: 3;
+			z-index: 5;
 			top: 100px;
-			left:5px;
+			bottom: 100px;
+			left: 5px;
 			background: #fcf9f4;
 			border-radius: 10px;
+			margin-bottom: 50px;
+
+			.header-info {
+				position: relative;
+				display:flex;
+				align-items: center;
+				margin:20px 0 20px 20px;
+				color: #333;
+				.header-avatar{
+					margin-right:10px;
+				}
+				.header-name--box{
+					.header-name{
+						font-size:16px;
+						font-weight: bold;
+					}
+					.header-birth{
+						font-size:14px;
+					}
+				}
+				
+			}
 		}
+
 	}
 </style>
