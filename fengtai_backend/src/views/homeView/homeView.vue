@@ -175,13 +175,13 @@
 						label: x.name,
 						value: x.id
 					}))
-					getListFn()
-					// if (!state.searchData.street && state.streetOptions.length) {
-					// 	state.searchData.street = state.streetOptions[0].value;
-					// 	state.searchData.streetStr = state.streetOptions[0].label;
-					// 	// 这里不需要额外 watch 触发的话，直接拉一次
-					// 	getListFn()
-					// }
+					// getListFn()
+					if (!state.searchData.street && state.streetOptions.length) {
+						state.searchData.street = state.streetOptions[0].value;
+						state.searchData.streetStr = state.streetOptions[0].label;
+						// 这里不需要额外 watch 触发的话，直接拉一次
+						getListFn()
+					}
 
 				}
 			}
