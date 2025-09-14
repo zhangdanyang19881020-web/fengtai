@@ -36,16 +36,16 @@
 					placeholder="请选择街道/镇/村" clearable style="width: 350px" />
 			</el-form-item>
 
-			<el-form-item label="联系人" prop="contact">
-				<el-input v-model="form.contact" placeholder="请输入联系人" />
+			<el-form-item label="亲友联系人" prop="contact">
+				<el-input v-model="form.contact" placeholder="请输入亲友联系人" />
 			</el-form-item>
-			<el-form-item label="联系人电话" prop="contactPhone">
-				<el-input v-model="form.contactPhone" placeholder="请输入联系人电话" />
+			<el-form-item label="联系电话" prop="contactPhone">
+				<el-input v-model="form.contactPhone" placeholder="请输入联系电话" />
 			</el-form-item>
 
 			<!-- 个人信息 -->
-			<el-form-item label="个人信息" prop="info">
-				<el-input type="textarea" v-model="form.info" placeholder="请输入个人信息" />
+			<el-form-item label="家族故事" prop="info">
+				<el-input type="textarea" v-model="form.info" placeholder="请输入家族故事" />
 			</el-form-item>
 
 			<!-- 到访年份 -->
@@ -68,7 +68,7 @@
 			</el-form-item>
 
 			<!-- 家族关系 -->
-			<el-form-item label="家族关系">
+			<el-form-item label="故土寻根">
 				<el-table class="z-table" :data="form.familyTable">
 					<el-table-column prop="relation" label="关系" width="120" />
 					<el-table-column prop="name" label="名字" />
