@@ -5,7 +5,7 @@
 		<div class="bototm-left--house"></div>
 		<div class="bototm-right--house"></div>
 		<div class="bottom-mountain"></div>
-		<div class="bottom-light"></div>
+		<!-- 	<div class="bottom-light"></div> -->
 		<div class="denglong"></div>
 		<div class="logo"></div>
 		<div class="input-box">
@@ -295,19 +295,19 @@
 			z-index: 1;
 		}
 
-		.bottom-light {
-			position: absolute;
-			background: url('@/static/f-Images/webp/bototm-light.webp') repeat;
-			background-size: contain;
-			/* 图片等比缩放，完全包含 */
-			background-position: left top;
-			/* 背景图居中 */
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			z-index: 2;
-		}
+		// .bottom-light {
+		// 	position: absolute;
+		// 	background: url('@/static/f-Images/webp/bototm-light.webp') repeat;
+		// 	background-size: contain;
+		// 	/* 图片等比缩放，完全包含 */
+		// 	background-position: left top;
+		// 	/* 背景图居中 */
+		// 	bottom: 0;
+		// 	left: 0;
+		// 	width: 100%;
+		// 	height: 100%;
+		// 	z-index: 2;
+		// }
 
 		.denglong {
 			position: absolute;
@@ -321,7 +321,8 @@
 			width: 50%;
 			height: 50%;
 			z-index: 10;
-			animation: moveAndDisappear 40s ease-in-out infinite;
+			// animation: moveAndDisappear 12s ease-in-out infinite;
+			animation: lanternFloat 40s ease-in-out infinite;
 		}
 
 		.logo {
@@ -340,14 +341,49 @@
 	}
 
 
+	@keyframes lanternFloat {
+		0% {
+			transform: translate(0, 0) rotate(0deg) scale(1);
+			opacity:1;
+			/* 初始比较淡 */
+		}
+
+		// 30% {
+		// 	opacity: 0.4;
+		// 	/* 渐渐变清晰 */
+		// 	transform: translate(50px, -100px) rotate(10deg) scale(0.9);
+		// }
+
+		// 70% {
+		// 	opacity: 0.6;
+		// 	transform: translate(120px, -250px) rotate(20deg) scale(0.8);
+		// }
+
+		100% {
+			transform: translate(200px, -400px) rotate(30deg) scale(0.3);
+			opacity: 0.2;
+			/* 最终淡出 */
+		}
+	}
+
 	@keyframes moveAndDisappear {
 		0% {
-			transform: translateY(0) rotate(0deg);
+			transform: translateY(0) rotate(0deg) scale(1);
+			opacity: 0;
+		}
+
+		10% {
 			opacity: 1;
+			transform: translateY(-100px) rotate(10deg) scale(0.8);
+		}
+
+		90% {
+			opacity: 1;
+			transform: translateY(-250px) rotate(20deg) scale(0.5);
 		}
 
 		100% {
-			transform: translateY(-400px) translateX(200px) rotate(30deg);
+			transform: translateY(-400px) translateX(200px) rotate(30deg) scale(0.3);
 			opacity: 0;
 		}
 	}

@@ -173,8 +173,8 @@
 			}
 			.map{
 				position: absolute;
-				top:0;
-				left:10px;
+				top:-10px;
+				left:0;
 			}
 			
 
