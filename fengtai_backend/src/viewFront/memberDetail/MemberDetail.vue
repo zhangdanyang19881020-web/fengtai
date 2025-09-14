@@ -1,9 +1,10 @@
 <template>
 	<div class="member-detail">
+		<div class="detail-logo"></div>
 		<div class="inner-top"></div>
 		<div class="inner-bottom"></div>
 		<div class="bottom-light--brown"></div>
-<!-- 		<div>{{memberDetailOb}}</div> -->
+		<div class="main-box">{{memberDetailOb}}</div>
 	</div>
 </template>
 
@@ -55,39 +56,63 @@
 </script>
 
 <style lang='scss' scoped>
-	.member-detail{
+	.member-detail {
 		width: 100%;
 		height: 100%;
 		background: url('@/static/f-images/home-bg.jpg') repeat;
 		position: relative;
-		.inner-top{
+
+		.detail-logo {
+			background: url('@/static/f-Images/webp/small-logo.webp') no-repeat;
+			position: absolute;
+			background-size: contain;
+			width: 100%;
+			height: 40px;
+			top: 35px;
+			left: 50%;
+			z-index: 10;
+			transform: translateX(-70px);
+		}
+
+		.inner-top {
 			background: url('@/static/f-Images/inner-top.jpg') no-repeat;
 			background-size: contain;
-			position: absolute;
-			top:0;
-			left:0;
-			width:100%;
-			height:300px;
-		}		
-		.inner-bottom{
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 300px;
+		}
+
+		.inner-bottom {
 			background: url('@/static/f-Images/inner-bottom.jpg') no-repeat;
 			background-size: contain;
-			position: absolute;
-			bottom:0;
-			left:0;
-			width:100%;
-			height:250px;
-			z-index:1;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 250px;
+			z-index: 1;
 		}
+
 		.bottom-light--brown {
-			position: absolute;
-			// background: url(../../static/f-Images/webp/bottom-light-brown.webp) 100% 100% no-repeat;
+			position: fixed;
 			background: linear-gradient(to top, rgba(122, 76, 0, 1) 0%, rgba(122, 76, 0, 0) 100%);
 			width: 100%;
 			height: 300px;
-			bottom: -150px;
+			bottom: -180px;
 			left: 0;
 			z-index: 30;
+		}
+
+		.main-box {
+			width: calc(100% - 40px);
+			position: absolute;
+			z-index: 3;
+			top: 100px;
+			left: 20px;
+			background: #fff;
+			border-radius: 8px;
 		}
 	}
 </style>

@@ -245,7 +245,6 @@
 
 		.bottom-light--brown {
 			position: absolute;
-			// background: url(../../static/f-Images/webp/bottom-light-brown.webp) 100% 100% no-repeat;
 			background: linear-gradient(to top, rgba(122, 76, 0, 1) 0%, rgba(122, 76, 0, 0) 100%);
 			width: 100%;
 			height: 100px;
