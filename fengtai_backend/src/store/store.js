@@ -9,6 +9,7 @@ const store = createStore({
 			choosedStreet: {},
 			choosedVillage: {}, // 需要存储的数据
 			placeSearchVal:'',
+			memberDetailOb:{}
 		};
 	},
 	mutations: {
@@ -25,6 +26,10 @@ const store = createStore({
 		placeSearchVal(state, payload) {
 			state.placeSearchVal = payload;
 			console.log('placeSearchVal', payload)
+		},
+		memberDetailOb(state, payload) {
+			state.memberDetailOb = payload;
+			console.log('memberDetailOb', payload)
 		},
 	},
 	actions: {

@@ -12,7 +12,7 @@
 					<div class="header-birth">{{birthday}}</div>
 				</div>
 			</div>
-			<div class="map">
+			<div class="map-box">
 				<MapDemo></MapDemo>
 			</div>
 		</div>
@@ -37,12 +37,16 @@
 	} from 'vue-router';
 
 	const route = useRoute();
+	import {
+		useStore
+	} from 'vuex';
+	const store = useStore();
 	// 响应式变量
 	const memberDetailOb = ref({});
 	const loading = ref(true);
 	const error = ref(null);
 	const defaultImg = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
-	const birthday=computed(()=>{
+	const birthday = computed(() => {
 		return moment(memberDetailOb.value.birthMonth).format("YYYY-MM")
 	})
 	// 获取台胞详情
@@ -56,6 +60,7 @@
 
 			if (result.code === 200 && result.data) {
 				memberDetailOb.value = result.data; // 假设接口返回的数据存储在 result.data
+				store.commit('memberDetailOb', memberDetailOb.value);
 			} else {
 				error.value = '未找到相关数据';
 			}
@@ -171,12 +176,15 @@
 				}
 
 			}
-			.map{
+
+			.map-box {
 				position: absolute;
-				top:-10px;
-				left:0;
+				top: 70px;
+				left: 0;
+				width: 100%;
+				height: 360px;
 			}
-			
+
 
 			@media (max-width: 768px) {
 				.header-info {}

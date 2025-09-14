@@ -78,9 +78,23 @@
 </script>
 
 <style scoped>
-	.map-container {
-		width: 100%;
-		height: 100vh;
-		/* 或者你自己设定的高度 */
+	/* 移动设备 (<768px) */
+	@media (max-width: 767px) {
+		.map-container {
+			width: 100%;
+			height: 350px;
+			/* height: 100vh; */
+			/* 或者你自己设定的高度 */
+		}
+	}
+
+	/* 超小移动设备 (<480px) */
+	@media (max-width: 480px) {
+		.map-container {
+			width: 100%;
+			height: 350px;
+			/* height: 100vh; */
+			/* 或者你自己设定的高度 */
+		}
 	}
 </style>

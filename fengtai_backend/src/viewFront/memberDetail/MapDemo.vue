@@ -54,9 +54,9 @@
 
 <style lang="scss" scoped>
 	.map-demo {
-		width: 100%;
-		height: 600px;
+		width:100%;
 		box-sizing: border-box;
+		// transform: translateX(-40px);
 	}
 
 	.sidebar {
