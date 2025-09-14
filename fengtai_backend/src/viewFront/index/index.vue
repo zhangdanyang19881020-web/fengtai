@@ -9,7 +9,7 @@
 		<div class="denglong"></div>
 		<div class="logo"></div>
 		<div class="input-box">
-			<el-input class="z-input" placeholder="请输入您要查询的姓名/地名" v-model="searchVal"></el-input>
+			<el-input class="z-input" placeholder="请输入您要查询的姓名/地名" v-model="searchVal" clearable></el-input>
 		</div>
 		<!-- 搜索下拉框 -->
 		<!-- 		<div v-show="showDropdown" class="search-dropdown" :style="{ top: dropdownTop + 'px' }">
