@@ -1,6 +1,5 @@
 <template>
-	<div>
-		台胞详情
+	<div class="member-detail">
 		<div>{{memberDetailOb}}</div>
 	</div>
 </template>
@@ -53,4 +52,7 @@
 </script>
 
 <style lang='scss'>
+	.member-detail{
+		
+	}
 </style>

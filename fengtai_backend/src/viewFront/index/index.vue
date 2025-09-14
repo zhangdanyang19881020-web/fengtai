@@ -141,10 +141,10 @@
 	.index-page {
 		width: 100%;
 		height: 100%;
-		background: url('../../static/f-Images/home-bg.jpg') 100% 100% repeat;
+		background: url('@/static/f-Images/home-bg.jpg') 100% 100% repeat;
 		background-size: contain;
 		position: relative;
-		overflow-x: hidden;
+		overflow: hidden;
 
 
 		.search-btn {
@@ -175,7 +175,7 @@
 
 		.input-box {
 			position: absolute;
-			background: url('../../static/f-Images/webp/input-bg.webp') 100% 100% no-repeat;
+			background: url('@/static/f-Images/webp/input-bg.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
@@ -187,7 +187,7 @@
 
 			&:hover {
 				position: absolute;
-				background: url('../../static/f-Images/webp/input-focus--bg.webp') 100% 100% no-repeat;
+				background: url('@/static/f-Images/webp/input-focus--bg.webp') 100% 100% no-repeat;
 				background-size: contain;
 				/* 图片等比缩放，完全包含 */
 				background-position: right bottom;
@@ -201,7 +201,7 @@
 
 		.moon {
 			position: absolute;
-			background: url('../../static/f-Images/webp/moon-2.webp') 100% 100% no-repeat;
+			background: url('@/static/f-Images/webp/moon-2.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
@@ -214,7 +214,7 @@
 
 		.bottom-mountain {
 			position: absolute;
-			background: url('../../static/f-Images/bottom-half-shan.jpg') 100% 100% no-repeat;
+			background: url('@/static/f-Images/bottom-half-shan.jpg') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
@@ -228,7 +228,7 @@
 
 		.bototm-left--house {
 			position: absolute;
-			background: url('../../static/f-Images/webp/bottom-left--cloud.webp') 100% 100% no-repeat;
+			background: url('@/static/f-Images/webp/bottom-left--cloud.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
@@ -268,7 +268,7 @@
 
 		.bototm-right--house {
 			position: absolute;
-			background: url('../../static/f-Images/webp/right-house-2.webp') 100% 100% no-repeat;
+			background: url('@/static/f-Images/webp/right-house-2.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
@@ -284,7 +284,7 @@
 
 		.top-mountain {
 			position: absolute;
-			background: url('../../static/f-Images/webp/top-left--sky2.webp') no-repeat;
+			background: url('@/static/f-Images/webp/top-left--sky2.webp') no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: left top;
@@ -298,7 +298,7 @@
 
 		.bottom-light {
 			position: absolute;
-			background: url('../../static/f-Images/webp/bototm-light.webp') repeat;
+			background: url('@/static/f-Images/webp/bototm-light.webp') repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: left top;
@@ -312,7 +312,7 @@
 
 		.denglong {
 			position: absolute;
-			background: url('../../static/f-Images/webp/denglong-big.webp') no-repeat;
+			background: url('@/static/f-Images/webp/denglong-big.webp') no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: left top;
@@ -327,7 +327,7 @@
 
 		.logo {
 			position: absolute;
-			background: url('../../static/f-Images/webp/logo-together.webp') no-repeat;
+			background: url('@/static/f-Images/webp/logo-together.webp') no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: center top;
