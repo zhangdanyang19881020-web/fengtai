@@ -59,7 +59,8 @@
 	.member-detail {
 		width: 100%;
 		height: 100%;
-		background: url('@/static/f-images/home-bg.jpg') repeat;
+		background: url('@/static/f-Images/home-bg.jpg') 100% 100% repeat;
+		background-size: contain;
 		position: relative;
 
 		.detail-logo {
@@ -106,13 +107,13 @@
 		}
 
 		.main-box {
-			width: calc(100% - 40px);
+			width:calc(100% - 10px);
 			position: absolute;
 			z-index: 3;
 			top: 100px;
-			left: 20px;
-			background: #fff;
-			border-radius: 8px;
+			left:5px;
+			background: #fcf9f4;
+			border-radius: 10px;
 		}
 	}
 </style>
