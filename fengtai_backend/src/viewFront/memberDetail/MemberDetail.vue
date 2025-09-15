@@ -22,6 +22,7 @@
 					<span>{{ item.year }}</span>
 					<div class="dot"></div>
 				</div>
+				<div class="hr"></div>
 			</div>
 
 
@@ -81,7 +82,7 @@
 			if (result.code === 200 && result.data) {
 				memberDetailOb.value = result.data; // 假设接口返回的数据存储在 result.data
 				years.value = result.data.year;
-				console.log('years',years.value );
+				console.log('years', years.value);
 				store.commit('memberDetailOb', memberDetailOb.value);
 			} else {
 				error.value = '未找到相关数据';
@@ -214,6 +215,8 @@
 			@media (max-width: 768px) {
 				.header-info {}
 			}
+
+		
 		}
 
 	}
