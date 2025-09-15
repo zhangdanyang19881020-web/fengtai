@@ -165,3 +165,45 @@
 				background: #a67a3f;
 			}
 		}
+		
+		
+	.timeline {
+		position: absolute;
+		top:0;
+		left:0;
+		display: flex;
+		align-items: center;
+		overflow-x: auto;
+		border-bottom: 2px solid #b23a1c;
+		padding: 10px 0;
+	}
+	
+	.timeline-item {
+		position: relative;
+		flex: 0 0 auto;
+		text-align: center;
+		margin: 0 10px;
+		color: #999;
+		font-size: 14px;
+		cursor: pointer;
+	}
+	
+	.timeline-item.active span {
+		color: #b23a1c;
+		font-weight: bold;
+	}
+	
+	.timeline-item .dot {
+		width: 12px;
+		height: 12px;
+		margin: 6px auto 0;
+		border-radius: 50%;
+		border: 2px solid #b23a1c;
+		background: #fff;
+		transition: all 0.3s;
+	}
+	
+	.timeline-item.active .dot {
+		background: radial-gradient(circle at 30% 30%, #e54d42, #b71c1c);
+		border-color: #b71c1c;
+	}

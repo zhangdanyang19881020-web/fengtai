@@ -15,6 +15,17 @@
 			<div class="map-box">
 				<MapDemo></MapDemo>
 			</div>
+
+			<div class="timeline">
+				<div v-for="item in years.value" :key="item" class="timeline-item" :class="{ active: item.enable==1 }"
+					@click="activeYear = item">
+					<span>{{ item.year }}</span>
+					<div class="dot"></div>
+				</div>
+			</div>
+
+
+
 		</div>
 	</div>
 </template>
@@ -27,11 +38,16 @@
 		reactive,
 		defineExpose,
 		computed,
-		onMounted
+		onMounted,
+		nextTick
 	} from "vue";
 	import {
 		dataApi
 	} from "@/utils/api";
+	// echart ⬇️
+	import * as echarts from 'echarts';
+
+
 	import {
 		useRoute
 	} from 'vue-router';
@@ -49,6 +65,10 @@
 	const birthday = computed(() => {
 		return moment(memberDetailOb.value.birthMonth).format("YYYY-MM")
 	})
+
+	const years = reactive([])
+	const activeYear = ref(null);
+
 	// 获取台胞详情
 	const getDetail = async () => {
 		try {
@@ -60,6 +80,8 @@
 
 			if (result.code === 200 && result.data) {
 				memberDetailOb.value = result.data; // 假设接口返回的数据存储在 result.data
+				years.value = result.data.year;
+				console.log('years',years.value );
 				store.commit('memberDetailOb', memberDetailOb.value);
 			} else {
 				error.value = '未找到相关数据';
@@ -74,6 +96,9 @@
 
 	onMounted(() => {
 		getDetail(); // 在组件挂载时调用
+		nextTick(() => {
+
+		})
 	});
 </script>
 

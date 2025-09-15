@@ -86,7 +86,7 @@
 				// },
 				formatter: function(params) {
 					return `
-				      <div class="z-tooltip" style="padding:5px 10px">
+				      <div class="z-tooltip" style="padding:5px 10px;">
 				        <div class="z-tooltip--name">
 				          ${params.name}
 				        </div>
@@ -149,7 +149,6 @@
 		nextTick(() => {
 			initChart();
 		})
-
 	});
 
 	onBeforeUnmount(() => {
@@ -167,7 +166,7 @@
 		background: #fff;
 		color: #333;
 		border: 1px solid #ff4500;
-		border-radius: 10px;
+
 		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 		font-size: 14px;
 		line-height: 1.6;
