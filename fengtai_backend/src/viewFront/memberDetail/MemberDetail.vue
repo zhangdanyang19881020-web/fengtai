@@ -39,10 +39,40 @@
 					暂无数据
 				</div>
 				<div v-else>
-					<el-carousel :interval="4000" type="card" height="150px" indicator-position="none" >
+					<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
 						<el-carousel-item v-for="item in homeViewList.value" :key="item.id">
 							<div class="home-view--item">
 								<el-image class="home-view--img" :fit="fit" :src="item.imgUrl">
+									<template #error>
+										<div class="image-slot">
+											<el-icon><icon-picture /></el-icon>
+										</div>
+									</template>
+								</el-image>
+								<div class="home-view--title">
+									{{item.title}}
+								</div>
+							</div>
+						</el-carousel-item>
+					</el-carousel>
+				</div>
+			</div>
+
+
+
+			<div class="home-view--box">
+				<div class="home-view--header">
+					最新动态
+				</div>
+
+				<div class="no-data" v-if="homeViewList&&homeViewList.value&&homeViewList.value.length==0">
+					暂无数据
+				</div>
+				<div v-else>
+					<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
+						<el-carousel-item v-for="item in newsList.value" :key="item.activityId">
+							<div class="home-view--item">
+								<el-image class="home-view--img" :fit="fit" :src="item.headImg">
 									<template #error>
 										<div class="image-slot">
 											<el-icon><icon-picture /></el-icon>
@@ -112,6 +142,24 @@
 	const years = reactive([])
 	const activeYear = ref(null);
 
+	const newsList = reactive([])
+	const getNewsList = async () => {
+		let params = {
+			"title": "",
+			"startTime": "",
+			"endTime": "",
+			"pageSize": 100,
+			"pageIndex": 1,
+			"year": "",
+			"userId": route.params.id
+		}
+		const result = await dataApi.newsList(params)
+		if (result.code == 200) {
+			newsList.value = result.data.pageData;
+			console.log('newsList', newsList.value)
+		}
+	}
+
 	const homeViewList = reactive([])
 
 	const getHomeView = async (ob) => {
@@ -159,7 +207,7 @@
 
 	onMounted(() => {
 		getDetail(); // 在组件挂载时调用
-
+		getNewsList();
 		nextTick(() => {
 
 		})
@@ -244,15 +292,17 @@
 
 		.main-box {
 			width: calc(100% - 10px);
-			height: 100%;
+			height: calc(100% - 110px);
+			overflow-y: auto;
 			position: absolute;
-			z-index: 5;
+			z-index: 30;
 			top: 100px;
 			bottom: 100px;
 			left: 5px;
 			background: #fcf9f4;
 			border-radius: 10px;
 			margin-bottom: 50px;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 
 			.header-info {
 				position: relative;
