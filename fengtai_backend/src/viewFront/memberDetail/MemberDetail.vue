@@ -49,7 +49,9 @@
 </template>
 
 <script setup>
-	import { Picture as IconPicture } from '@element-plus/icons-vue'
+	import {
+		Picture as IconPicture
+	} from '@element-plus/icons-vue'
 	import MapDemo from '@/viewFront/memberDetail/MapDemo.vue'
 	import moment from 'moment'
 	import {
@@ -90,9 +92,9 @@
 
 	const homeViewList = reactive([])
 
-	const getHomeView = async () => {
+	const getHomeView = async (ob) => {
 		let params = {
-			"targetId": 1,
+			"targetId": ob.region.id,
 			"targetType": 1,
 			"pageSize": 100,
 			"pageIndex": 1
@@ -117,9 +119,11 @@
 
 			if (result.code === 200 && result.data) {
 				memberDetailOb.value = result.data; // 假设接口返回的数据存储在 result.data
+
 				years.value = result.data.year;
 				console.log('years', years.value);
 				store.commit('memberDetailOb', memberDetailOb.value);
+				getHomeView(memberDetailOb.value)
 			} else {
 				error.value = '未找到相关数据';
 			}
@@ -133,7 +137,7 @@
 
 	onMounted(() => {
 		getDetail(); // 在组件挂载时调用
-		getHomeView();
+
 		nextTick(() => {
 
 		})
