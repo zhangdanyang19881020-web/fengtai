@@ -67,7 +67,7 @@
 						最新动态
 					</div>
 
-					<div class="no-data" v-if="homeViewList&&homeViewList.value&&homeViewList.value.length==0">
+					<div class="no-data" v-if="newsList&&newsList.value&&newsList.value.length==0">
 						暂无数据
 					</div>
 					<div v-else>
