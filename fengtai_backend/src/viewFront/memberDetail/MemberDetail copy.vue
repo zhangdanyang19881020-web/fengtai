@@ -18,30 +18,13 @@
 
 			<div class="timeline">
 				<div v-for="item in years.value" :key="item" class="timeline-item" :class="{ active: item.enable==1 }"
-					@click="">
+					@click="activeYear = item">
 					<span>{{ item.year }}</span>
 					<div class="dot"></div>
 				</div>
 				<div class="hr"></div>
 			</div>
 
-			<div class="home-view--box">
-				<div class="home-view--header">
-					家乡风貌
-				</div>
-				<el-carousel :interval="4000" type="card" height="150px">
-					<el-carousel-item v-for="item in homeViewList.value" :key="item.id">
-						<!-- <h3 text="2xl" justify="center">{{ item.title }}</h3> -->
-						<el-image class="home-view--img" :src="item.imgUrl">
-							<template #error>
-								<div class="image-slot">
-									<el-icon><icon-picture /></el-icon>
-								</div>
-							</template>
-						</el-image>
-					</el-carousel-item>
-				</el-carousel>
-			</div>
 
 
 		</div>
@@ -49,7 +32,6 @@
 </template>
 
 <script setup>
-	import { Picture as IconPicture } from '@element-plus/icons-vue'
 	import MapDemo from '@/viewFront/memberDetail/MapDemo.vue'
 	import moment from 'moment'
 	import {
@@ -88,24 +70,6 @@
 	const years = reactive([])
 	const activeYear = ref(null);
 
-	const homeViewList = reactive([])
-
-	const getHomeView = async () => {
-		let params = {
-			"targetId": 1,
-			"targetType": 1,
-			"pageSize": 100,
-			"pageIndex": 1
-		}
-		const result = await dataApi.homeViewList(params);
-		console.log('homViewList', result)
-		if (result.code == 200) {
-			homeViewList.value = result.data.pageData;
-			console.log('homeViewList', homeViewList)
-		}
-
-	}
-
 	// 获取台胞详情
 	const getDetail = async () => {
 		try {
@@ -133,7 +97,6 @@
 
 	onMounted(() => {
 		getDetail(); // 在组件挂载时调用
-		getHomeView();
 		nextTick(() => {
 
 		})
@@ -142,6 +105,7 @@
 
 <style lang='scss' scoped>
 	.member-detail {
+
 		background: url('@/static/f-Images/home-bg.jpg') repeat;
 		background-size: cover;
 		/* 背景图覆盖整个页面 */
@@ -217,7 +181,6 @@
 				color: #333;
 				gap: 5px;
 				margin: 20px;
-				height: 100px;
 
 				.header-avatar {
 					margin-right: 10px;
@@ -253,7 +216,7 @@
 				.header-info {}
 			}
 
-
+		
 		}
 
 	}

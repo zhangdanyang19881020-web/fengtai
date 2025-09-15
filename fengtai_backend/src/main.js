@@ -6,6 +6,7 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'  // 中文包
 import 'element-plus/dist/index.css'
 
 import Vant from 'vant';
+import { Lazyload } from 'vant';
 
 import App from './App.vue'
 import router from './router'
@@ -14,7 +15,12 @@ import '@/styles/index.scss'
 
 const app = createApp(App)
 
+
 app.use(Vant);
+// 注册时可以配置额外的选项
+app.use(Lazyload, {
+  lazyComponent: true,
+});
 // Lazyload 指令需要单独进行注册
 // app.use(Vant.Lazyload);
 

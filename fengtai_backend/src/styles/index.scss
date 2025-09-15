@@ -172,14 +172,16 @@
 		position: absolute;
 		top:420px;
 		left:0;
+		z-index: 30;
 		display: flex;
 		align-items: center;
 		width: 100%;
 		padding: 10px 0;
-		overflow-x: auto;
-		 white-space: nowrap; /* 防止子元素换行 */
+	  overflow-x: auto; /* 启用水平滚动 */
+	  white-space: nowrap; /* 防止换行 */
 		.timeline-item {
 			position: relative;
+			width:32px;
 			flex: 0 0 auto;
 			text-align: center;
 			margin: 0 10px;
@@ -211,10 +213,57 @@
 			position: absolute;
 			top:38px;
 			border: none;
-			width:4000px;
+			width:100%;
 			height: 1px;
 			/* 控制横线的粗细 */
 			background: linear-gradient(to right, rgba(255, 0, 0, 0.3) 0%, rgba(255, 0, 0, 1) 50%, rgba(255, 0, 0, 0.3) 100%);
 		}
 	}
 	
+	//详情 家乡风貌
+	.home-view--box{
+		transform: translateY(380px);
+		border:1px solid #ede3d0;
+		border-radius: 8px;
+		margin:  10px;
+		.home-view--header{
+			height: 40px;
+			line-height: 40px;
+			background: #ede3d0;
+			padding-left:20px;
+		}
+		
+		.el-carousel__item h3 {
+		  color: #475669;
+		  opacity: 0.75;
+		  line-height: 200px;
+		  margin: 0;
+		  text-align: center;
+		  box-shadow: 0 3px 3px #ede3d0;
+		}
+		
+		.el-carousel__item:nth-child(2n) {
+		  background-color: #99a9bf;
+		}
+		
+		.el-carousel__item:nth-child(2n + 1) {
+		  background-color: #d3dce6;
+		}
+	}
+	
+	
+	// 图片加载失败
+	.home-view--img {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.image-slot {
+		  text-align: center;
+		  color: rgba(0,0,0,0.3);
+		  font-size: 30px;
+		  .el-icon {
+		    font-size: 40px;
+			margin-top:50px;
+		  }
+		}
+	}
