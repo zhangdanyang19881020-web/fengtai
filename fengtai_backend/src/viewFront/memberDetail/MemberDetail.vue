@@ -9,91 +9,89 @@
 		<div class="inner-top"></div>
 		<div class="inner-bottom"></div>
 		<div class="bottom-light--brown"></div>
+
 		<div class="main-box">
-			<div class="header-info">
-				<el-avatar class="header-avatar" :size="50" :src="memberDetailOb.headImg || defaultImg" />
-				<div class="header-name--box">
-					<div class="header-name">{{memberDetailOb.name}}</div>
-					<div class="header-birth">{{birthday}}</div>
+				<div class="header-info">
+					<el-avatar class="header-avatar" :size="50" :src="memberDetailOb.headImg || defaultImg" />
+					<div class="header-name--box">
+						<div class="header-name">{{memberDetailOb.name}}</div>
+						<div class="header-birth">{{birthday}}</div>
+					</div>
 				</div>
-			</div>
-			<div class="map-box">
-				<MapDemo></MapDemo>
-			</div>
-
-			<div class="timeline">
-				<div v-for="item in years.value" :key="item" class="timeline-item" :class="{ active: item.enable==1 }"
-					@click="">
-					<span>{{ item.year }}</span>
-					<div class="dot"></div>
-				</div>
-				<div class="hr"></div>
-			</div>
-
-			<div class="home-view--box">
-				<div class="home-view--header">
-					家乡风貌
+				<div class="map-box">
+					<MapDemo></MapDemo>
 				</div>
 
-				<div class="no-data" v-if="homeViewList&&homeViewList.value&&homeViewList.value.length==0">
-					暂无数据
+				<div class="timeline">
+					<div v-for="item in years.value" :key="item" class="timeline-item"
+						:class="{ active: item.enable==1 }" @click="">
+						<span>{{ item.year }}</span>
+						<div class="dot"></div>
+					</div>
+					<div class="hr"></div>
 				</div>
-				<div v-else>
-					<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
-						<el-carousel-item v-for="item in homeViewList.value" :key="item.id">
-							<div class="home-view--item">
-								<el-image class="home-view--img" :fit="fit" :src="item.imgUrl">
-									<template #error>
-										<div class="image-slot">
-											<el-icon><icon-picture /></el-icon>
-										</div>
-									</template>
-								</el-image>
-								<div class="home-view--title">
-									{{item.title}}
+
+				<div class="home-view--box">
+					<div class="home-view--header">
+						家乡风貌
+					</div>
+
+					<div class="no-data" v-if="homeViewList&&homeViewList.value&&homeViewList.value.length==0">
+						暂无数据
+					</div>
+					<div v-else>
+						<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
+							<el-carousel-item v-for="item in homeViewList.value" :key="item.id">
+								<div class="home-view--item">
+									<el-image class="home-view--img" :fit="fit" :src="item.imgUrl">
+										<template #error>
+											<div class="image-slot">
+												<el-icon><icon-picture /></el-icon>
+											</div>
+										</template>
+									</el-image>
+									<div class="home-view--title">
+										{{item.title}}
+									</div>
 								</div>
-							</div>
-						</el-carousel-item>
-					</el-carousel>
-				</div>
-			</div>
-
-
-
-			<div class="home-view--box">
-				<div class="home-view--header">
-					最新动态
+							</el-carousel-item>
+						</el-carousel>
+					</div>
 				</div>
 
-				<div class="no-data" v-if="homeViewList&&homeViewList.value&&homeViewList.value.length==0">
-					暂无数据
-				</div>
-				<div v-else>
-					<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
-						<el-carousel-item v-for="item in newsList.value" :key="item.activityId">
-							<div class="home-view--item">
-								<el-image class="home-view--img" :fit="fit" :src="item.headImg">
-									<template #error>
-										<div class="image-slot">
-											<el-icon><icon-picture /></el-icon>
-										</div>
-									</template>
-								</el-image>
-								<div class="home-view--title">
-									{{item.title}}
+				<div style="height:5px;"></div>
+
+				<div class="home-view--box">
+					<div class="home-view--header">
+						最新动态
+					</div>
+
+					<div class="no-data" v-if="homeViewList&&homeViewList.value&&homeViewList.value.length==0">
+						暂无数据
+					</div>
+					<div v-else>
+						<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
+							<el-carousel-item v-for="item in newsList.value" :key="item.activityId">
+								<div class="home-view--item">
+									<el-image class="home-view--img" :fit="fit" :src="item.headImg">
+										<template #error>
+											<div class="image-slot">
+												<el-icon><icon-picture /></el-icon>
+											</div>
+										</template>
+									</el-image>
+									<div class="home-view--title">
+										{{item.title}}
+									</div>
 								</div>
-							</div>
-						</el-carousel-item>
-					</el-carousel>
+							</el-carousel-item>
+						</el-carousel>
+					</div>
 				</div>
-			</div>
-			
-			<div style="height:30px">
-				
-			</div>
 
-
+				<div style="height:50px;"></div>
 		</div>
+
 	</div>
 </template>
 
@@ -228,7 +226,7 @@
 		/* 背景图从右下角开始 */
 		background-attachment: fixed;
 		/* 背景图固定在页面视口，不随滚动移动 */
-		height: 100vh;
+		height: 100%;
 		/* 确保整个页面视口的高度 */
 		margin: 0;
 
@@ -294,10 +292,27 @@
 			z-index: 30;
 		}
 
+		/* 自定义滚动条样式 */
+		.main-box::-webkit-scrollbar {
+			width: 6px;
+			/* 设置滚动条的宽度 */
+		}
+
+		.main-box::-webkit-scrollbar-thumb {
+			background: rgba(194, 136, 66, 0.3);
+			/* 滑块的颜色 */
+			border-radius: 3px;
+		}
+
+		.main-box::-webkit-scrollbar-track {
+			background: #f1f1f1;
+			/* 滚动条轨道的颜色 */
+		}
+
 		.main-box {
 			width: calc(100% - 10px);
-			height: calc(100% - 110px);
-			overflow-y: auto;
+			height: calc(100vh - 110px);
+		
 			position: absolute;
 			z-index: 30;
 			top: 100px;
@@ -306,7 +321,11 @@
 			background: #fcf9f4;
 			border-radius: 10px;
 			margin-bottom: 50px;
-			box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+			overflow-x: hidden;
+			overflow-y: auto;
+
+
 
 			.header-info {
 				position: relative;

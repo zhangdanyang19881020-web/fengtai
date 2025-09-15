@@ -179,6 +179,24 @@
 		padding: 10px 0;
 	  overflow-x: auto; /* 启用水平滚动 */
 	  white-space: nowrap; /* 防止换行 */
+	  
+	  /* 自定义滚动条样式 */
+	  &::-webkit-scrollbar {
+	  	height: 0;
+	  	/* 设置滚动条的宽度 */
+	  }
+	  
+	 &::-webkit-scrollbar-thumb {
+	  	background: rgba(194, 136, 66, 0.3);
+	  	/* 滑块的颜色 */
+	  	border-radius: 2px;
+	  }
+	  
+	  &::-webkit-scrollbar-track {
+	  	background: #f1f1f1;
+	  	/* 滚动条轨道的颜色 */
+	  }
+	  
 		.timeline-item {
 			position: relative;
 			width:32px;
@@ -252,7 +270,7 @@
 	// 图片加载失败
 	.home-view--item{
 		position: relative;
-	
+	    margin-bottom:20px;
 		.home-view--img {
 			display: flex;
 			justify-content: center;
@@ -274,7 +292,7 @@
 			padding:10px;
 			background:rgba(0,0,0,0.5);
 			text-align: center;
-			color: #fff;
+			color: #4d2d07;
 		}
 	}
 

@@ -115,6 +115,11 @@
 
 	.placeholder {
 		padding: 24px;
-		color: #999;
+		color: rgba(0,0,0,0.3);
+		display: flex;
+		align-items: center;
+		font-size:16px;
+		justify-content: center;
+		margin-top:70px;
 	}
 </style>

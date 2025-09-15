@@ -160,11 +160,11 @@
 	const ruleFormRef = ref();
 
 	const rules = reactive({
-		avatar: [{
-			required: true,
-			message: '请上传头像',
-			trigger: 'change'
-		}],
+		// avatar: [{
+		// 	required: true,
+		// 	message: '请上传头像',
+		// 	trigger: 'change'
+		// }],
 		name: [{
 			required: true,
 			message: '请输入名字',
