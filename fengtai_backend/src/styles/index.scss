@@ -253,17 +253,30 @@
 	
 	
 	// 图片加载失败
-	.home-view--img {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		.image-slot {
-		  text-align: center;
-		  color: rgba(0,0,0,0.3);
-		  font-size: 30px;
-		  .el-icon {
-		    font-size: 40px;
-			margin-top:50px;
-		  }
+	.home-view--item{
+		position: relative;
+		.home-view--img {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			.image-slot {
+			  text-align: center;
+			  color: rgba(0,0,0,0.3);
+			  font-size: 30px;
+			  .el-icon {
+			    font-size: 40px;
+				margin-top:50px;
+			  }
+			}
+		}
+		.home-view--title{
+			position: absolute;
+			bottom:0;
+			width:100%;
+			padding:10px;
+			background:rgba(0,0,0,0.8);
+			text-align: center;
+			color: #fff;
 		}
 	}
+

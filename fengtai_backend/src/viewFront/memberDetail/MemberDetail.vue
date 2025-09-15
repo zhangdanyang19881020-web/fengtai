@@ -32,13 +32,18 @@
 				<el-carousel :interval="4000" type="card" height="150px">
 					<el-carousel-item v-for="item in homeViewList.value" :key="item.id">
 						<!-- <h3 text="2xl" justify="center">{{ item.title }}</h3> -->
-						<el-image class="home-view--img" :src="item.imgUrl">
-							<template #error>
-								<div class="image-slot">
-									<el-icon><icon-picture /></el-icon>
-								</div>
-							</template>
-						</el-image>
+						<div class="home-view--item">
+							<el-image class="home-view--img" :fit="fit" :src="item.imgUrl">
+								<template #error>
+									<div class="image-slot">
+										<el-icon><icon-picture /></el-icon>
+									</div>
+								</template>
+							</el-image>
+							<div class="home-view--title">
+								{{item.title}}
+							</div>
+						</div>
 					</el-carousel-item>
 				</el-carousel>
 			</div>
@@ -86,6 +91,7 @@
 	const birthday = computed(() => {
 		return moment(memberDetailOb.value.birthMonth).format("YYYY-MM")
 	})
+	const fit=ref('contain')
 
 	const years = reactive([])
 	const activeYear = ref(null);
