@@ -131,16 +131,11 @@
 			margin: 0 auto;
 		}
 
+
 		.no-data {
-			font-size: 20px;
-			font-weight: bold;
-			color: rgba(0,0,0,0.3);
-			display: flex;
-			align-items: center;
-			justify-content: center;
+		
 			margin:100px 0;
 		}
-
 		.relative-list {
 
 

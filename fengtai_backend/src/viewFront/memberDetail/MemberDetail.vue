@@ -1,5 +1,10 @@
 <template>
 	<div class="member-detail">
+		<div class="arrow-left" @click="goBack">
+			<el-icon>
+				<ArrowLeft />
+			</el-icon>
+		</div>
 		<div class="detail-logo"></div>
 		<div class="inner-top"></div>
 		<div class="inner-bottom"></div>
@@ -29,23 +34,28 @@
 				<div class="home-view--header">
 					家乡风貌
 				</div>
-				<el-carousel :interval="4000" type="card" height="150px">
-					<el-carousel-item v-for="item in homeViewList.value" :key="item.id">
-						<!-- <h3 text="2xl" justify="center">{{ item.title }}</h3> -->
-						<div class="home-view--item">
-							<el-image class="home-view--img" :fit="fit" :src="item.imgUrl">
-								<template #error>
-									<div class="image-slot">
-										<el-icon><icon-picture /></el-icon>
-									</div>
-								</template>
-							</el-image>
-							<div class="home-view--title">
-								{{item.title}}
+
+				<div class="no-data" v-if="homeViewList&&homeViewList.value&&homeViewList.value.length==0">
+					暂无数据
+				</div>
+				<div v-else>
+					<el-carousel :interval="4000" type="card" height="150px">
+						<el-carousel-item v-for="item in homeViewList.value" :key="item.id">
+							<div class="home-view--item">
+								<el-image class="home-view--img" :fit="fit" :src="item.imgUrl">
+									<template #error>
+										<div class="image-slot">
+											<el-icon><icon-picture /></el-icon>
+										</div>
+									</template>
+								</el-image>
+								<div class="home-view--title">
+									{{item.title}}
+								</div>
 							</div>
-						</div>
-					</el-carousel-item>
-				</el-carousel>
+						</el-carousel-item>
+					</el-carousel>
+				</div>
 			</div>
 
 
@@ -55,7 +65,8 @@
 
 <script setup>
 	import {
-		Picture as IconPicture
+		Picture as IconPicture,
+		ArrowLeft
 	} from '@element-plus/icons-vue'
 	import MapDemo from '@/viewFront/memberDetail/MapDemo.vue'
 	import moment from 'moment'
@@ -75,14 +86,19 @@
 
 
 	import {
-		useRoute
+		useRoute,
+		useRouter
 	} from 'vue-router';
 
 	const route = useRoute();
+	const router = useRouter();
 	import {
 		useStore
 	} from 'vuex';
 	const store = useStore();
+	const goBack = () => {
+		router.go(-1);
+	}
 	// 响应式变量
 	const memberDetailOb = ref({});
 	const loading = ref(true);
@@ -91,7 +107,7 @@
 	const birthday = computed(() => {
 		return moment(memberDetailOb.value.birthMonth).format("YYYY-MM")
 	})
-	const fit=ref('contain')
+	const fit = ref('contain')
 
 	const years = reactive([])
 	const activeYear = ref(null);
@@ -163,7 +179,25 @@
 		height: 100vh;
 		/* 确保整个页面视口的高度 */
 		margin: 0;
+
+		.no-data {
+			margin: 50px 0;
+		}
+
 		/* 移除默认的页面边距 */
+		.arrow-left {
+			position: absolute;
+			top: 38px;
+			left: 10px;
+			cursor: pointer;
+			z-index: 40;
+			font-size: 30px;
+			color: #651d00;
+
+			&:hover {
+				color: #9a2e03;
+			}
+		}
 
 		.detail-logo {
 			background: url('@/static/f-Images/webp/small-logo.webp') no-repeat;
