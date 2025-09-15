@@ -375,16 +375,35 @@
 		}
 	}
 
-	const addFamily = () => {
+	const addFamily = async () => {
 		if (familyRelation.value && familyName.value) {
 			var relationName = familyRelationOption.value.find(x => x.value == familyRelation.value).label;
-			form.value.familyTable.push({
-				id: familyRelation.value,
-				relation: relationName,
-				name: familyName.value,
-			})
-			familyRelation.value = ""
-			familyName.value = ""
+			// form.value.familyTable.push({
+			// 	id: familyRelation.value,
+			// 	relation: relationName,
+			// 	name: familyName.value,
+			// })
+
+
+			console.log('memberDetailOb-0--', memberDetailOb)
+			console.log('familyRelation', familyRelation)
+			console.log('familyName', familyName)
+			let params = {
+				"currPersonId": memberDetailOb.value.id,
+				"relationshipId": familyRelation.value,
+				"relationshipName": familyName.value
+			}
+			const result = await dataApi.addRelationship(params);
+			if (result.code == 200) {
+				ElMessage({
+					type: 'success',
+					message: result.message
+				})
+				familyRelation.value = "";
+				familyName.value = "";
+				getMemberDetail()
+			}
+
 		}
 	}
 
@@ -402,7 +421,7 @@
 				type: 'success',
 				message: result.message
 			});
-			getMemberDetail()
+			getMemberDetail();
 		} else {
 			ElMessage({
 				type: 'error',

@@ -121,7 +121,7 @@ service.interceptors.response.use(
 				return data
 			} else {
 				// 业务错误处理
-				console.log('data',data)
+				console.log('data', data)
 				ElMessage.error(data.message || '请求失败')
 				return Promise.reject(new Error(data.message || '请求失败'))
 			}
@@ -142,10 +142,12 @@ service.interceptors.response.use(
 				status,
 				data
 			} = error.response
+			console.log('errpr--status', status)
+			console.log('errpr--data', data)
 
 			switch (status) {
 				case 400:
-					ElMessage.error('请求参数错误')
+					ElMessage.error(data.message)
 					break
 				case 401:
 					ElMessage.error('未授权，请重新登录')
@@ -157,7 +159,7 @@ service.interceptors.response.use(
 					ElMessage.error('拒绝访问')
 					break
 				case 404:
-					ElMessage.error('请求地址不存在')
+					ElMessage.error(data.message)
 					break
 				case 500:
 					ElMessage.error('服务器内部错误')
