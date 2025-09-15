@@ -51,7 +51,7 @@
 						shadowOffsetX: 3,
 						shadowOffsetY: 3,
 						textBorderColor: "#f5df21",
-						textShadowOffsetX:3,
+						textShadowOffsetX: 3,
 					}
 				}],
 				label: {
@@ -81,8 +81,21 @@
 		const option = {
 			tooltip: {
 				trigger: "item",
-				formatter: (params) => {
-					return `${params.name} 台胞 ${detailMemberOb.value.region.count} 人`;
+				// formatter: (params) => {
+				// 	return `${params.name} 台胞 ${detailMemberOb.value.region.count} 人`;
+				// },
+				formatter: function(params) {
+					return `
+				      <div class="z-tooltip" style="padding:5px 10px">
+				        <div class="z-tooltip--name">
+				          ${params.name}
+				        </div>
+				        <div>
+				          <span>台胞人数：</span>
+				          <span style="color:#ffd700;font-weight:bold;">${detailMemberOb.value.region.count}</span>
+				        </div>
+				      </div>
+				    `;
 				},
 				textStyle: {
 					color: "rgba(0,0,0,0.6)", // 文字白色
@@ -90,13 +103,14 @@
 				},
 				backgroundColor: "#fffbf1", // 半透明背景
 				borderWidth: 1,
-				borderColor: '#d7c389',
-				extraCssText: `
-				     padding: 5px 10px;
-				     border-radius: 10px;
-				     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-				     backdrop-filter: blur(6px);
-				   `,
+				borderColor: '#cdaf7f',
+				extraCssText: "padding:0;", // 去掉内边距，交给 HTML 控制
+				// extraCssText: `
+				//      padding: 5px 10px;
+				//      border-radius: 20px;
+				//      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+				//      backdrop-filter: blur(6px);
+				//    `,
 			},
 			series: [{
 				type: "map",
@@ -147,7 +161,25 @@
 	});
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+	.z-tooltip {
+		min-width: 180px;
+		background: #fff;
+		color: #333;
+		border: 1px solid #ff4500;
+		border-radius: 10px;
+		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+		font-size: 14px;
+		line-height: 1.6;
+		overflow: hidden;
+
+		.z-tooltip--name {
+			font-weight: bold;
+			font-size: 16px;
+			margin-bottom: 6px;
+		}
+	}
+
 	/* 移动设备 (<768px) */
 	@media (max-width: 767px) {
 		.map-container {
