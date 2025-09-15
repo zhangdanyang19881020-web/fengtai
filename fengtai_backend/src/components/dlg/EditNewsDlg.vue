@@ -103,7 +103,6 @@
 	import {
 		reactive,
 		ref,
-		defineProps,
 		toRefs,
 		watch,
 		onMounted,

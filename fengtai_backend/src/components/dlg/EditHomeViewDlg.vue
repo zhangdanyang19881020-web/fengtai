@@ -45,7 +45,6 @@
 	import {
 		reactive,
 		ref,
-		defineProps,
 		onMounted,
 		toRefs,
 	} from 'vue'

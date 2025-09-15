@@ -47,7 +47,6 @@
 	import {
 		ref,
 		reactive,
-		defineExpose,
 		computed,
 		onMounted
 	} from "vue";

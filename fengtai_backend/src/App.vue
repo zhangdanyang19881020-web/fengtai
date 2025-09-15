@@ -1,5 +1,5 @@
 <template>
-	<div class="main-box">
+	<div class="main-out--box">
 		<div v-if="$route.meta.for == 'back'" class="home-page">
 			<!-- 后台管理页面 -->
 			<el-container>
@@ -16,7 +16,7 @@
 				</el-container>
 			</el-container>
 		</div>
-		<div v-else>
+		<div v-else class="app-body">
 			<router-view></router-view>
 		</div>
 	</div>
@@ -55,17 +55,21 @@
 
 <style lang="scss">
 	#app {
-		// font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-
-		font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", "Lucida Grande", sans-serif;
 		width: 100%;
 		height: 100%;
+	
 	}
 
-
-	.main-box {
+	body {
 		width: 100%;
 		height: 100%;
+		background: url('@/static/f-Images/home-bg.jpg') repeat;
+		overflow-x: hidden;
+	}
+
+	.main-out--box {
+		width: 100%;
+		height:100%;
 	}
 
 	.home-page {

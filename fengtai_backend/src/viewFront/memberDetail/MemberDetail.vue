@@ -11,7 +11,7 @@
 		<div class="bottom-light--brown"></div>
 
 		<div class="main-box">
-			<div style="position: relative;">
+			<div class="main-box--inner">
 				<div class="header-info">
 					<el-avatar class="header-avatar" :size="50" :src="memberDetailOb.headImg || defaultImg" />
 					<div class="header-name--box">
@@ -60,7 +60,22 @@
 					</div>
 				</div>
 
-				<div style="height:5px;"></div>
+
+				<div class="home-view--box">
+					<div class="home-view--header">
+						个人信息
+					</div>
+
+					<!-- 	<div class="no-data" v-if="newsList&&newsList.value&&newsList.value.length==0">
+						暂无数据 
+					</div> -->
+					<div class="personal-info" v-if="memberDetailOb.info">
+						{{memberDetailOb.info}}
+					</div>
+					<div class="no-data" v-else>
+						暂无数据
+					</div>
+				</div>
 
 				<div class="home-view--box">
 					<div class="home-view--header">
@@ -106,7 +121,6 @@
 	import {
 		ref,
 		reactive,
-		defineExpose,
 		computed,
 		onMounted,
 		nextTick
@@ -219,15 +233,8 @@
 
 <style lang='scss' scoped>
 	.member-detail {
-		background: url('@/static/f-Images/home-bg.jpg') repeat;
-		background-size: cover;
-		/* 背景图覆盖整个页面 */
-		background-position: center center;
-		/* 背景图居中显示 */
-		/* 背景图从右下角开始 */
-		background-attachment: fixed;
-		/* 背景图固定在页面视口，不随滚动移动 */
-		height: 100%;
+
+		height: auto;
 		/* 确保整个页面视口的高度 */
 		margin: 0;
 
@@ -308,31 +315,35 @@
 		.main-box::-webkit-scrollbar-track {
 			background: #f1f1f1;
 			/* 滚动条轨道的颜色 */
-		} 
+		}
 
 		.main-box {
 			width: calc(100% - 10px);
 			position: absolute;
 			z-index: 30;
-			top: 100px;
+			top: 95px;
 			bottom: 100px;
 			left: 5px;
-			background: #fcf9f4;
-			border-radius: 10px;
-			margin-bottom: 50px;
-			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-		/* 	overflow-x: hidden;
-			overflow-y: auto; */
+	
 
+			/* 	overflow-x: hidden;
+			overflow-y: auto; */
+			.main-box--inner {
+				position: relative;
+				background: #fcf9f4;
+				border-radius: 10px;
+				margin-bottom: 50px;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+			}
 
 
 			.header-info {
-				position: relative;
 				display: flex;
 				justify-content: flex-start;
 				color: #333;
 				gap: 5px;
-				margin: 20px 20px 0 20px;
+				margin: 0 20px 0 20px;
+				transform: translateY(20px);
 
 				.header-avatar {
 					margin-right: 10px;

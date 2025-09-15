@@ -22,11 +22,8 @@
 	import {
 		ref,
 		reactive,
-		defineExpose,
 		computed,
 		onMounted,
-		defineProps,
-		defineEmits
 	} from "vue";
 	import {
 		ElDialog,

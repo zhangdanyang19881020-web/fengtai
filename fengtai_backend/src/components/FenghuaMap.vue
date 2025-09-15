@@ -8,8 +8,6 @@
 		onMounted,
 		onBeforeUnmount,
 		computed,
-		defineProps,
-		defineExpose,
 		nextTick,
 		reactive
 	} from "vue";

@@ -37,7 +37,6 @@
 	import {
 		ref,
 		reactive,
-		defineExpose,
 		computed,
 		onMounted,
 		nextTick
@@ -164,7 +163,6 @@
 
 		.main-box {
 			width: calc(100% - 10px);
-			height: 100%;
 			position: absolute;
 			z-index: 5;
 			top: 100px;

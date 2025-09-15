@@ -21,8 +21,6 @@
 
 <script setup>
 	import {
-		defineProps,
-		defineEmits,
 		reactive,
 		onMounted,
 		computed
