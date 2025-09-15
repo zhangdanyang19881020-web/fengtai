@@ -9,12 +9,15 @@
 		onBeforeUnmount,
 		computed,
 		defineProps,
-		defineExpose
+		defineExpose,
+		nextTick
 	} from "vue";
 	import {
 		useStore
 	} from 'vuex'
 	const store = useStore();
+
+
 
 	import * as echarts from "echarts";
 
@@ -26,22 +29,42 @@
 	let chartInstance = null;
 
 	const highlightAreaByName = (areaName) => {
+		console.log('highlightAreaByName', areaName)
 		if (!chartInstance) return;
 
-		const option = chartInstance.getOption();
-		const series = option.series[0];
-
-console.log("series",series)
-
-		const targetArea = series.data.find(item => item.name === areaName);
-
-		if (targetArea) {
-			targetArea.itemStyle = {
-				areaColor: '#e6b422',
-			};
-			chartInstance.setOption(option);
-		}
+		chartInstance.setOption({
+			series: [{
+				// 不会覆盖其他配置
+				type: "map",
+				map: "fenghua",
+				data: [{
+					name: areaName,
+					itemStyle: {
+						areaColor: "#9c331a",
+						borderColor: "#9c331a", // 边界色
+					},
+					label: {
+						color: "#fff",
+						fontSize: 12,
+						shadowColor: 'rgba(0,0,0,0.6)',
+						shadowBlur: 3,
+						shadowOffsetX: 3,
+						shadowOffsetY: 3,
+						textBorderColor: "#f5df21",
+						textShadowOffsetX:3,
+					}
+				}],
+				label: {
+					color: "#625b3c",
+					fontSize: 12
+				}
+			}]
+		});
 	};
+	const detailMemberOb = computed(() => {
+		return store.state.memberDetailOb;
+	})
+	console.log('detailMemberOb--xx-', detailMemberOb)
 
 	const initChart = async () => {
 		// 加载 GeoJSON
@@ -53,15 +76,27 @@ console.log("series",series)
 
 		chartInstance = echarts.init(chartRef.value);
 
+
+
 		const option = {
 			tooltip: {
 				trigger: "item",
-				// formatter: "{b} 台胞100人", // 显示镇/街道名称
-				formatter: function(params) {
-					// params.name 是镇/街道名称
-					const randomNum = Math.floor(Math.random() * 5000) + 1; // 随机人数 500~5500
-					return `${params.name} 台胞${randomNum} 人`;
-				}
+				formatter: (params) => {
+					return `${params.name} 台胞 ${detailMemberOb.value.region.count} 人`;
+				},
+				textStyle: {
+					color: "rgba(0,0,0,0.6)", // 文字白色
+					fontSize: 14, // 字号
+				},
+				backgroundColor: "#fffbf1", // 半透明背景
+				borderWidth: 1,
+				borderColor: '#d7c389',
+				extraCssText: `
+				     padding: 5px 10px;
+				     border-radius: 10px;
+				     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+				     backdrop-filter: blur(6px);
+				   `,
 			},
 			series: [{
 				type: "map",
@@ -91,16 +126,16 @@ console.log("series",series)
 		window.addEventListener("resize", resizeChart);
 	};
 
-	const detailMemberOb = computed(() => {
-		return store.state.memberDetailOb;
-	})
 
 	const resizeChart = () => {
 		chartInstance && chartInstance.resize();
 	};
 
 	onMounted(() => {
-		initChart();
+		nextTick(() => {
+			initChart();
+		})
+
 	});
 
 	onBeforeUnmount(() => {
