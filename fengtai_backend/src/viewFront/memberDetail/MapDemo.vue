@@ -120,6 +120,6 @@
 		align-items: center;
 		font-size:16px;
 		justify-content: center;
-		margin-top:70px;
+		margin-top:80px;
 	}
 </style>

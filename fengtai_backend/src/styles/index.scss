@@ -169,16 +169,12 @@
 		
 		
 	.timeline {
-		position: absolute;
-		top:420px;
-		left:0;
-		z-index: 30;
+		position: relative;
 		display: flex;
 		align-items: center;
 		width: 100%;
 		padding: 10px 0;
 	  overflow-x: auto; /* 启用水平滚动 */
-	  white-space: nowrap; /* 防止换行 */
 	  
 	  /* 自定义滚动条样式 */
 	  &::-webkit-scrollbar {
@@ -240,10 +236,9 @@
 	
 	//详情 家乡风貌
 	.home-view--box{
-		transform: translateY(380px);
 		border:1px solid #ede3d0;
 		border-radius: 8px;
-		margin:  10px;
+		margin: 10px;
 		.home-view--header{
 			height: 40px;
 			line-height: 40px;

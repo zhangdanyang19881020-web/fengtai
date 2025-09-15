@@ -11,6 +11,7 @@
 		<div class="bottom-light--brown"></div>
 
 		<div class="main-box">
+			<div style="position: relative;">
 				<div class="header-info">
 					<el-avatar class="header-avatar" :size="50" :src="memberDetailOb.headImg || defaultImg" />
 					<div class="header-name--box">
@@ -90,8 +91,8 @@
 				</div>
 
 				<div style="height:50px;"></div>
+			</div>
 		</div>
-
 	</div>
 </template>
 
@@ -292,7 +293,7 @@
 			z-index: 30;
 		}
 
-		/* 自定义滚动条样式 */
+
 		.main-box::-webkit-scrollbar {
 			width: 6px;
 			/* 设置滚动条的宽度 */
@@ -307,12 +308,10 @@
 		.main-box::-webkit-scrollbar-track {
 			background: #f1f1f1;
 			/* 滚动条轨道的颜色 */
-		}
+		} 
 
 		.main-box {
 			width: calc(100% - 10px);
-			height: calc(100vh - 110px);
-		
 			position: absolute;
 			z-index: 30;
 			top: 100px;
@@ -322,8 +321,8 @@
 			border-radius: 10px;
 			margin-bottom: 50px;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-			overflow-x: hidden;
-			overflow-y: auto;
+		/* 	overflow-x: hidden;
+			overflow-y: auto; */
 
 
 
@@ -333,8 +332,7 @@
 				justify-content: flex-start;
 				color: #333;
 				gap: 5px;
-				margin: 20px;
-				height: 100px;
+				margin: 20px 20px 0 20px;
 
 				.header-avatar {
 					margin-right: 10px;
@@ -358,9 +356,7 @@
 			}
 
 			.map-box {
-				position: absolute;
-				top: 70px;
-				left: 0;
+				position: relative;
 				width: 100%;
 				height: 360px;
 			}
