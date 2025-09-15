@@ -63,12 +63,23 @@
 
 				<div class="home-view--box">
 					<div class="home-view--header">
-						个人信息
+						家族故事
 					</div>
 
-					<!-- 	<div class="no-data" v-if="newsList&&newsList.value&&newsList.value.length==0">
-						暂无数据 
-					</div> -->
+					<div class="personal-info"  v-if="memberDetailOb.info">
+						{{memberDetailOb.info}}
+					</div>
+					<div class="no-data" v-else>
+						暂无数据
+					</div>
+				</div>
+				
+				<div class="home-view--box">
+					<div class="home-view--header">
+						故土寻根
+					</div>
+				
+				
 					<div class="personal-info" v-if="memberDetailOb.info">
 						{{memberDetailOb.info}}
 					</div>
