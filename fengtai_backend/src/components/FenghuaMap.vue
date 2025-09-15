@@ -10,7 +10,8 @@
 		computed,
 		defineProps,
 		defineExpose,
-		nextTick
+		nextTick,
+		reactive
 	} from "vue";
 	import {
 		useStore
@@ -20,6 +21,9 @@
 
 
 	import * as echarts from "echarts";
+	import {
+		dataApi
+	} from "@/utils/api";
 
 	// const props = defineProps({
 	// 	highlightAreaByName: Function, // Accepting the passed function as a prop
@@ -64,9 +68,27 @@
 	const detailMemberOb = computed(() => {
 		return store.state.memberDetailOb;
 	})
-	console.log('detailMemberOb--xx-', detailMemberOb)
 
+	const streetMemberCountArr = reactive([]);
+	const getStreetMemberCount = async () => {
+		const result = await dataApi.getStreetMemberCount()
+		if (result.code == 200) {
+			streetMemberCountArr.value = result.data;
+		} else {
+			streetMemberCountArr.value = []
+		}
+		console.log('streetMemberCountArr', streetMemberCountArr.value)
+	}
+	const countFn = (params) => {
+		console.log("params", params)
+		streetMemberCountArr.value.forEach(x => {
+			if (x.regionName == params.name) {
+				return x.regionCount;
+			}
+		});
+	}
 	const initChart = async () => {
+		getStreetMemberCount()
 		// 加载 GeoJSON
 		const res = await fetch("./data/330213.geojson");
 		const geoJson = await res.json();
@@ -77,7 +99,6 @@
 		chartInstance = echarts.init(chartRef.value);
 
 
-
 		const option = {
 			tooltip: {
 				trigger: "item",
@@ -85,6 +106,17 @@
 				// 	return `${params.name} 台胞 ${detailMemberOb.value.region.count} 人`;
 				// },
 				formatter: function(params) {
+
+					const countFn = (params) => {
+						var ob = streetMemberCountArr.value.find(x => x.regionName == params.name);
+						// console.log('ob', ob)
+						if (ob&&ob.regionCount) {
+							return ob.regionCount;
+						} else {
+							return 0
+						}
+
+					}
 					return `
 				      <div class="z-tooltip" style="padding:5px 10px;">
 				        <div class="z-tooltip--name">
@@ -92,7 +124,7 @@
 				        </div>
 				        <div>
 				          <span>台胞人数：</span>
-				          <span style="color:#ffd700;font-weight:bold;">${detailMemberOb.value.region.count}</span>
+				          <span style="color:#ffd700;font-weight:bold;">${countFn(params)}</span>
 				        </div>
 				      </div>
 				    `;

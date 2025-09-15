@@ -110,7 +110,8 @@ export const dataApi = {
 	indexPeopleCount: () => get(_ServiceUrl + '/api/visit/indexPeopleCount/'),
 	// 个人详情
 	memberDetail: (params) => get(_ServiceUrl + '/api/visit/personInfo/',params),
-	
+	// 获取所有镇/街道对应的人数
+	getStreetMemberCount: () => get(_ServiceUrl + '/api/region/listCount/'),
 	// 创建数据 ⬇️原有
 	// 更新数据
 	updateData: (id, data) => put(`/data/update/${id}`, data),

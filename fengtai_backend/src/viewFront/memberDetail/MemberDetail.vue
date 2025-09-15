@@ -39,7 +39,7 @@
 					暂无数据
 				</div>
 				<div v-else>
-					<el-carousel :interval="4000" type="card" height="150px">
+					<el-carousel :interval="4000" type="card" height="150px" indicator-position="none" >
 						<el-carousel-item v-for="item in homeViewList.value" :key="item.id">
 							<div class="home-view--item">
 								<el-image class="home-view--img" :fit="fit" :src="item.imgUrl">
