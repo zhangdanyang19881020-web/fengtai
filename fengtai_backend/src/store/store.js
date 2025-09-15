@@ -9,14 +9,15 @@ const store = createStore({
 			choosedStreet: {},
 			choosedVillage: {}, // 需要存储的数据
 			placeSearchVal:'',
-			memberDetailOb:{}
+			memberDetailOb:{},
+			regionListX:[]
 		};
 	},
 	mutations: {
 		// Mutation 用于同步地修改 state 数据
 		setChoosedStreet(state, payload) {
 			state.choosedStreet = payload;
-			state.choosedVillage = "";
+			state.choosedVillage = {};
 			console.log('setChoosedStreet', payload)
 		},
 		setChoosedVillage(state, payload) {
@@ -30,6 +31,10 @@ const store = createStore({
 		memberDetailOb(state, payload) {
 			state.memberDetailOb = payload;
 			console.log('memberDetailOb', payload)
+		},
+		regionListX(state, payload) {
+			state.regionList = payload;
+			console.log('regionListS', payload)
 		},
 	},
 	actions: {
@@ -61,6 +66,9 @@ const store = createStore({
 		},
 		placeSearchVal(state) {
 			return state.placeSearchVal;
+		},
+		regionListX(state) {
+			return state.regionListX;
 		},
 	}
 });

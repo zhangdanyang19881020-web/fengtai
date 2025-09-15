@@ -6,12 +6,42 @@
 	import {
 		ref,
 		onMounted,
-		onBeforeUnmount
+		onBeforeUnmount,
+		computed,
+		defineProps,
+		defineExpose
 	} from "vue";
+	import {
+		useStore
+	} from 'vuex'
+	const store = useStore();
+
 	import * as echarts from "echarts";
+
+	// const props = defineProps({
+	// 	highlightAreaByName: Function, // Accepting the passed function as a prop
+	// });
 
 	const chartRef = ref(null);
 	let chartInstance = null;
+
+	const highlightAreaByName = (areaName) => {
+		if (!chartInstance) return;
+
+		const option = chartInstance.getOption();
+		const series = option.series[0];
+
+console.log("series",series)
+
+		const targetArea = series.data.find(item => item.name === areaName);
+
+		if (targetArea) {
+			targetArea.itemStyle = {
+				areaColor: '#e6b422',
+			};
+			chartInstance.setOption(option);
+		}
+	};
 
 	const initChart = async () => {
 		// 加载 GeoJSON
@@ -54,14 +84,16 @@
 						areaColor: "#e6b422"
 					}, // 高亮色
 				},
-			}, ],
+			}],
 		};
-
 		chartInstance.setOption(option);
-
 		// 响应式大小
 		window.addEventListener("resize", resizeChart);
 	};
+
+	const detailMemberOb = computed(() => {
+		return store.state.memberDetailOb;
+	})
 
 	const resizeChart = () => {
 		chartInstance && chartInstance.resize();
@@ -74,6 +106,9 @@
 	onBeforeUnmount(() => {
 		window.removeEventListener("resize", resizeChart);
 		chartInstance && chartInstance.dispose();
+	});
+	defineExpose({
+		highlightAreaByName
 	});
 </script>
 

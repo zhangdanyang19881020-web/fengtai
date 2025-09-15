@@ -122,7 +122,7 @@
 			serachType: 1,
 			val: store.getters.choosedStreet.id + '-' + store.getters.choosedVillage.id
 		}
-		console.log('params', params)
+		// console.log('params', params)
 		const result = await dataApi.indexSearch(params);
 		if (result.code == 200) {
 			if (result.data.length == 0) {
@@ -146,25 +146,27 @@
 	};
 	// 读取 state
 	const placeSearchVal = computed(() => store.state.placeSearchVal)
-	
+
 	const open = (regionList) => {
 		dialogVisible.value = true;
 		// console.log('regionList',regionList)
 		placeList.value = regionList.map(x => {
 			if (x.name.indexOf(placeSearchVal.value) > -1) {
-				console.log("item",x)
+				// console.log("item", x)
+				store.commit('setChoosedStreet', x);
 				return {
 					...x,
 					childrenShow: true,
 				}
-			}else{
+
+			} else {
 				return {
 					...x,
 					childrenShow: false,
-					active:false,
+					active: false,
 				}
 			}
-			
+
 		})
 		initChoose()
 		// console.log('placeList', placeList)
@@ -175,7 +177,7 @@
 
 	const initChoose = () => {
 		placeList.value.forEach(item => {
-		
+
 		})
 	}
 	defineExpose({

@@ -30,7 +30,7 @@
 				</el-form>
 			</div>
 		</div>
-		<!-- 		<template #footer>
+		<!-- <template #footer>
 			<div class="dialog-footer">
 				<el-button @click="resetForm">取消</el-button>
 				<el-button type="primary" @click="submitForm">

@@ -40,7 +40,7 @@
 	import {
 		useStore
 	} from 'vuex';
-	
+
 	const store = useStore();
 	import {
 		dataApi
@@ -76,8 +76,8 @@
 			if (result.code === 200 && result.data) {
 				// regionList.value = result.data[0].children;
 				regionList.splice(0, regionList.length, ...(result.data[0].children || []))
-				console.log('regionList', regionList.value);
-
+				// console.log('regionList', regionList.value);
+				store.commit('regionListX', regionList);
 				regionStr.value = result.data[0].children.map(x => x.name).join(', '); // 拼接地区名称
 				// console.log('regionStr', regionStr.value);
 			} else {
@@ -366,25 +366,4 @@
 		}
 	}
 
-	@keyframes moveAndDisappear {
-		0% {
-			transform: translateY(0) rotate(0deg) scale(1);
-			opacity: 0;
-		}
-
-		10% {
-			opacity: 1;
-			transform: translateY(-100px) rotate(10deg) scale(0.8);
-		}
-
-		90% {
-			opacity: 1;
-			transform: translateY(-250px) rotate(20deg) scale(0.5);
-		}
-
-		100% {
-			transform: translateY(-400px) translateX(200px) rotate(30deg) scale(0.3);
-			opacity: 0;
-		}
-	}
 </style>

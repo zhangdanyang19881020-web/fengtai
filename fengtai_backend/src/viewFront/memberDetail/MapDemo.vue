@@ -1,18 +1,32 @@
 <script setup>
 	import {
 		ref,
-		onMounted
+		onMounted,
+		computed
 	} from 'vue'
 	import FenghuaMap from '@/components/FenghuaMap.vue'
+	import {
+		useStore
+	} from 'vuex'
+	const store = useStore();
 
 	const mapRef = ref()
 	const geojson = ref(null)
 	const people = ref([])
 
-	function highlightByPerson(person) {
-		const areaName = person.village || person.town
+	const detailMemberOb = computed(() => {
+		return store.state.memberDetailOb;
+	})
+
+	function highlightByPerson() {
+		console.log('detailMemberOb.region.name', detailMemberOb)
+		const areaName = detailMemberOb.value.region.name;
 		mapRef.value?.highlightAreaByName(areaName)
 	}
+	// function highlightByPerson(person) {
+	// 	const areaName = person.village || person.town
+	// 	mapRef.value?.highlightAreaByName(areaName)
+	// }
 
 	onMounted(async () => {
 		// 从 public 加载真实文件（你可以替换为自己的路径与文件）
@@ -28,6 +42,9 @@
 				geojson: geojson.value,
 				people: people.value
 			})
+			setTimeout(() => {
+				highlightByPerson()
+			}, 500)
 		} catch (error) {
 			console.error('Error loading data:', error)
 		}
@@ -36,15 +53,15 @@
 
 <template>
 	<div class="map-demo">
-		<!--    <div class="sidebar">
-      <h3>人员列表</h3>
-      <ul>
-        <li v-for="p in people" :key="p.name" @click="highlightByPerson(p)">
-          <span class="name">{{ p.name }}</span>
-          <span class="affix">（{{ p.town }}{{ p.village ? ' - ' + p.village : '' }}）</span>
-        </li>
-      </ul>
-    </div> -->
+<!-- 		<div class="sidebar">
+			<h3>人员列表</h3>
+			<ul>
+				<li v-for="p in people" :key="p.name" @click="highlightByPerson(p)">
+					<span class="name">{{ p.name }}</span>
+					<span class="affix">（{{ p.town }}{{ p.village ? ' - ' + p.village : '' }}）</span>
+				</li>
+			</ul>
+		</div> -->
 		<div class="map">
 			<FenghuaMap ref="mapRef" v-if="geojson" :geojson="geojson" :people="people" />
 			<div v-else class="placeholder">正在加载地图数据...</div>
@@ -54,9 +71,9 @@
 
 <style lang="scss" scoped>
 	.map-demo {
-		width:100%;
+		width: calc(100% + 80px);
 		box-sizing: border-box;
-		// transform: translateX(-40px);
+		transform: translateX(-40px);
 	}
 
 	.sidebar {

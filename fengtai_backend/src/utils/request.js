@@ -41,11 +41,11 @@ service.interceptors.request.use(
 				console.warn('Token 已过期，已自动清除')
 			}
 		}
-		
+
 		if (getAccessToken()) {
-		    config.headers = {
-		        Authorization: `${getTokenType()} ${getAccessToken()}`,
-		    }
+			config.headers = {
+				Authorization: `${getTokenType()} ${getAccessToken()}`,
+			}
 		}
 
 		// 添加时间戳防止缓存
@@ -121,6 +121,7 @@ service.interceptors.response.use(
 				return data
 			} else {
 				// 业务错误处理
+				console.log('data',data)
 				ElMessage.error(data.message || '请求失败')
 				return Promise.reject(new Error(data.message || '请求失败'))
 			}

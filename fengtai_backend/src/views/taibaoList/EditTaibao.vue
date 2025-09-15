@@ -73,8 +73,8 @@
 					<el-table-column prop="relation" label="关系" width="120" />
 					<el-table-column prop="name" label="名字" />
 					<el-table-column label="操作" width="80">
-						<template #default="{ $index }">
-							<i class="iconfont icon-chacha" @click="removeFamily($index)"></i>
+						<template #default="scope">
+							<i class="iconfont icon-chacha" @click="removeFamily(scope)"></i>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -388,8 +388,29 @@
 		}
 	}
 
-	const removeFamily = (index) => {
-		form.value.familyTable.splice(index, 1)
+	const removeFamily = async (scope) => {
+		console.log('scope', scope)
+		// form.value.familyTable.splice(index, 1)
+
+		//已添加 亲属关系
+		let params = {
+			relationshipId: scope.row.id,
+		}
+		const result = await dataApi.delRelationship(params);
+		if (result.code == 200) {
+			ElMessage({
+				type: 'success',
+				message: result.message
+			});
+			getMemberDetail()
+		} else {
+			ElMessage({
+				type: 'error',
+				message: result.message
+			})
+		}
+
+
 	}
 
 
