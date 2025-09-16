@@ -40,7 +40,7 @@
 									class="z-autocomplete" placeholder="请输入台胞名字添加" @select="handleSelect">
 									<template #suffix>
 										<el-icon class="el-input__icon" @click="handleIconClick">
-											<edit />
+											<search />
 										</el-icon>
 									</template>
 									<template #default="{ item }">
@@ -127,7 +127,7 @@
 		ElMessage
 	} from 'element-plus'
 	import {
-		Edit
+		Search
 	} from '@element-plus/icons-vue'
 
 	import {
@@ -139,7 +139,8 @@
 		name: 'NewHomeViewDlg',
 		components: {
 			Editor,
-			Toolbar
+			Toolbar,
+			Search
 		},
 		setup(props, {
 			expose,

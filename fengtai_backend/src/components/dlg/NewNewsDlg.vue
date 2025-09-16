@@ -40,7 +40,7 @@
 									class="z-autocomplete" placeholder="请输入台胞名字添加" @select="handleSelect">
 									<template #suffix>
 										<el-icon class="el-input__icon" @click="handleIconClick">
-											<edit />
+											<search/>
 										</el-icon>
 									</template>
 									<template #default="{ item }">
@@ -127,7 +127,7 @@
 		ElMessage
 	} from 'element-plus'
 	import {
-		Edit
+		Search
 	} from '@element-plus/icons-vue'
 
 	import {
@@ -139,7 +139,8 @@
 		name: 'NewHomeViewDlg',
 		components: {
 			Editor,
-			Toolbar
+			Toolbar,
+			Search
 		},
 		setup(props, {
 			expose,
@@ -194,7 +195,7 @@
 					uploadImage: {
 						async customUpload(file, insertFn) {
 							// 上传逻辑，这里只是演示
-							console.log('file',file)
+							console.log('file', file)
 							// const url = URL.createObjectURL(file)
 							// insertFn(url, file.name, url)
 							const formData = new FormData()
@@ -203,7 +204,7 @@
 							formData.append('type', 2)
 							const result = await uploadApi.uploadFile(formData)
 							console.log('result--', result);
-							if(result.code==200){
+							if (result.code == 200) {
 								insertFn(result.data.access_path, file.name, result.data.access_path)
 							}
 							// const reader = new FileReader();
