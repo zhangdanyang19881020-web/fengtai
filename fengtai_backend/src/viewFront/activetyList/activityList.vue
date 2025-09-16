@@ -4,7 +4,7 @@
 			活动列表
 		</div>
 		<ul class="activity-items--list" @scroll="handleScroll">
-			<li v-for="(item, index) in activities" :key="item.activityId" class="activity-item">
+			<li v-for="(item, index) in activities" :key="item.activityId" class="activity-item" @click="goActivityDetail(item)">
 				<div class="activity-title">
 					<span>{{ item.title }}</span>
 				</div>
@@ -39,6 +39,15 @@
 	const pageIndex = ref(1); // Track current page index
 	const totalPage = ref(0);
 	const activities = reactive([])
+	const goActivityDetail=(item)=>{
+			
+		router.push({
+			name:'activityDetail',
+			params:{
+				id:item.activityId,
+			}
+		})
+	}
 	const getNewsList = async (page) => {
 		let params = {
 			"title": "",
