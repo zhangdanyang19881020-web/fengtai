@@ -184,23 +184,23 @@
 			background: url('@/static/f-Images/webp/input-bg.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
-			background-position: right bottom;
+			background-position:right bottom;
 			left: 10%;
 			top: 370px;
 			width: 80%;
-			height: 50px;
+			height: 47px;
 			z-index: 11;
 
 			&:hover {
 				position: absolute;
-				background: url('@/static/f-Images/webp/input-focus--bg.webp') 100% 100% no-repeat;
+				background: url('@/static/f-Images/webp/input-focus-bg2.webp') 100% 100% no-repeat;
 				background-size: contain;
 				/* 图片等比缩放，完全包含 */
-				background-position: right bottom;
+				background-position:right bottom;
 				left: 10%;
 				top: 370px;
 				width: 80%;
-				height: 50px;
+				height: 47px;
 				z-index: 11;
 			}
 		}

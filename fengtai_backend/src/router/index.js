@@ -4,9 +4,41 @@ import {
 } from 'vue-router'
 
 import AccountLogin from '@/views/login/AccountLogin.vue'
+import Index from '@/viewFront/index/index.vue'
 
-const routes = [{
+const routes = [ {
 		path: '/',
+		name: 'front',
+		component: () => import('@/viewFront/frontMain/frontMain.vue'),
+		meta: {
+			name: '奉台家缘',
+		},
+		children: [{
+			path: '/',
+			name: 'index',
+			component: () => import('@/viewFront/index/index.vue'),
+			meta: {
+				name: '奉台家缘',
+			},
+		}, {
+			path: '/memberDetail/:id',
+			name: 'memberDetail',
+			component: () => import('@/viewFront/memberDetail/MemberDetail.vue'),
+			meta: {
+				name: '奉台家缘',
+			},
+		}, {
+
+			path: 'activityList',
+			name: 'activityList',
+			component: () => import('@/viewFront/activetyList/activityList.vue'),
+			meta: {
+				name: '奉台家缘',
+			},
+		}]
+
+	},{
+		path: '/login',
 		name: 'login',
 		component: AccountLogin,
 		meta: {
@@ -121,37 +153,6 @@ const routes = [{
 
 
 		]
-	}, {
-		path: '/front',
-		name: 'front',
-		component: () => import('@/viewFront/frontMain/frontMain.vue'),
-		meta: {
-			name: '奉台家缘',
-		},
-		children: [{
-			path: '/index',
-			name: 'index',
-			component: () => import('@/viewFront/index/index.vue'),
-			meta: {
-				name: '奉台家缘',
-			},
-		}, {
-			path: '/memberDetail/:id',
-			name: 'memberDetail',
-			component: () => import('@/viewFront/memberDetail/MemberDetail.vue'),
-			meta: {
-				name: '奉台家缘',
-			},
-		}, {
-
-			path: 'activityList',
-			name: 'activityList',
-			component: () => import('@/viewFront/activetyList/activityList.vue'),
-			meta: {
-				name: '奉台家缘',
-			},
-		}]
-
 	},
 	{
 		path: '/home',
