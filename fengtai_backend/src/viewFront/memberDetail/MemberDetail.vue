@@ -83,7 +83,7 @@
 					<div class="">
 						<family-tree></family-tree>
 					</div>
-		<!-- 			<div class="no-data" >
+					<!-- 			<div class="no-data" >
 						暂无数据
 					</div> -->
 				</div>
@@ -172,6 +172,17 @@
 	const years = reactive([])
 	const activeYear = ref(null);
 
+
+	const getRelationShip = async () => {
+		let params = {
+			id: route.params.id
+		}
+		const result = await dataApi.getRealtionDetail(params);
+		if (result.code == 200) {
+			store.commit('realtionDetailX', result.data)
+		}
+	}
+
 	const newsList = reactive([])
 	const getNewsList = async () => {
 		let params = {
@@ -238,9 +249,8 @@
 	onMounted(() => {
 		getDetail(); // 在组件挂载时调用
 		getNewsList();
-		nextTick(() => {
 
-		})
+		getRelationShip();
 	});
 </script>
 

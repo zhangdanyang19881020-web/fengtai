@@ -103,8 +103,7 @@ export const dataApi = {
 	updateRelationship: (params) => post(_ServiceUrl + '/api/famil/editRelationship/', params),
 	// 添加村级地
 	addVillage: (params) => post(_ServiceUrl + '/api/region/addVillage/', params),
-	// 个人详情-家族关系
-	getRealtionDetail: (params) => get(_ServiceUrl + '/api/visit/familyRelationships/', params),
+	
 	// ================以下 展示页面接口⬇️=================
 	// 首页搜索查询
 	indexSearch: (params) => post(_ServiceUrl + '/api/visit/indexSearch/', params),
@@ -114,11 +113,15 @@ export const dataApi = {
 	memberDetail: (params) => get(_ServiceUrl + '/api/visit/personInfo/',params),
 	// 获取所有镇/街道对应的人数
 	getStreetMemberCount: () => get(_ServiceUrl + '/api/region/listCount/'),
+	// 个人详情-家族关系
+	getRealtionDetail: (params) => get(_ServiceUrl + '/api/visit/familyRelationships/', params),
+	
 	// 创建数据 ⬇️原有
 	// 更新数据
 	updateData: (id, data) => put(`/data/update/${id}`, data),
 	// 删除数据
 	deleteData: (id) => del(`/data/delete/${id}`),
+	
 }
 
 // 文件上传相关接口

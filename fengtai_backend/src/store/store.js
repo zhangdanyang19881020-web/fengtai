@@ -2,15 +2,20 @@
 import {
 	createStore
 } from 'vuex';
+import {
+	dataApi
+} from "@/utils/api";
+
 
 const store = createStore({
 	state() {
 		return {
 			choosedStreet: {},
 			choosedVillage: {}, // 需要存储的数据
-			placeSearchVal:'',
-			memberDetailOb:{},
-			regionListX:[]
+			placeSearchVal: '',
+			memberDetailOb: {},
+			regionListX: [],
+			realtionDetail: []
 		};
 	},
 	mutations: {
@@ -36,6 +41,10 @@ const store = createStore({
 			state.regionList = payload;
 			console.log('regionListS', payload)
 		},
+		realtionDetailX(state, payload) {
+			state.realtionDetail = payload;
+			console.log('realtionDetailX', payload)
+		},
 	},
 	actions: {
 		// Action 用于异步处理，可以通过 commit 调用 mutations
@@ -54,7 +63,28 @@ const store = createStore({
 			setTimeout(() => {
 				commit('setChoosedVillage', payload);
 			}, 1000);
-		}
+		},
+		// getRelationShip({
+		// 	commit
+		// }, id) {
+		// 	// 准备请求参数
+		// 	 let params = { id };
+		// 	try {
+		// 		// 发起异步请求
+		// 		const result = await dataApi.getRealtionDetail(params);
+
+		// 		// 如果请求成功，提交数据到 Vuex
+		// 		if (result.code === 200) {
+		// 			commit('realtionDetailX', result.data);
+		// 		} else {
+		// 			// 处理失败的情况
+		// 			console.error('请求失败:', result.message);
+		// 		}
+		// 	} catch (error) {
+		// 		// 异常处理
+		// 		console.error('请求异常:', error);
+		// 	}
+		// }
 	},
 	getters: {
 		// Getter 用于获取 state 数据
@@ -69,6 +99,9 @@ const store = createStore({
 		},
 		regionListX(state) {
 			return state.regionListX;
+		},
+		realtionDetail(state) {
+			return state.realtionDetail;
 		},
 	}
 });
