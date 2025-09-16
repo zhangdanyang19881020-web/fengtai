@@ -23,7 +23,7 @@
 					<MapDemo></MapDemo>
 				</div>
 
-				<div class="timeline">
+				<div class="timeline" 　ref="scrollContainer">
 					<div v-for="item in years.value" :key="item" class="timeline-item"
 						:class="{ active: item.enable==1 }" @click="goActivityList(item)">
 						<span>{{ item.year }}</span>
@@ -155,7 +155,7 @@
 	// echart ⬇️
 	import * as echarts from 'echarts';
 
-
+	const scrollContainer = ref(null);
 	import {
 		useRoute,
 		useRouter
@@ -287,6 +287,18 @@
 		getDetail(); // 在组件挂载时调用
 		getRelationShip();
 		getNewsList();
+
+		// 等待 DOM 更新后执行，确保元素可用
+		nextTick(() => {
+			setTimeout(() => {
+				const container = scrollContainer.value;
+				if (container) {
+					// 将 scrollLeft 设置为 scrollWidth，实现滚动到最右边
+					container.scrollLeft = container.scrollWidth;
+				}
+			}, 1000)
+
+		});
 
 
 	});
