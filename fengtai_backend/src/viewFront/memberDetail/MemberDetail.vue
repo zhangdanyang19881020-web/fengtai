@@ -25,7 +25,7 @@
 
 				<div class="timeline">
 					<div v-for="item in years.value" :key="item" class="timeline-item"
-						:class="{ active: item.enable==1 }" @click="">
+						:class="{ active: item.enable==1 }" @click="goActivityList(item)">
 						<span>{{ item.year }}</span>
 						<div class="dot"></div>
 					</div>
@@ -181,6 +181,17 @@
 	})
 	const fit = ref('contain')
 
+	const goActivityList = (item) => {
+		// console.log('goActivityList',item)
+		router.push({
+			name: 'activityList',
+			query: {
+				year: item.year,
+				userId: route.params.id
+			}
+		})
+	}
+
 	const years = reactive([])
 	const activeYear = ref(null);
 
@@ -217,7 +228,7 @@
 			"pageSize": 100,
 			"pageIndex": 1,
 			"year": "",
-			"userId": route.params.id
+			"userId": ""
 		}
 		const result = await dataApi.newsList(params)
 		if (result.code == 200) {
@@ -437,7 +448,7 @@
 			}
 
 
-		/* 	@media (max-width: 768px) {
+			/* 	@media (max-width: 768px) {
 				.header-info {}
 			} */
 

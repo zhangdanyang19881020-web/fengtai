@@ -142,6 +142,14 @@ const routes = [{
 			meta: {
 				name: '奉台家缘',
 			},
+		}, {
+
+			path: 'activityList',
+			name: 'activityList',
+			component: () => import('@/viewFront/activetyList/activityList.vue'),
+			meta: {
+				name: '奉台家缘',
+			},
 		}]
 
 	},
