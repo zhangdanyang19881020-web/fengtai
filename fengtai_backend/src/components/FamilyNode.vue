@@ -62,9 +62,9 @@
 		setup(props, {
 			emit
 		}) {
-			const nodeWidth = 100;
-			const nodeHeight = 60;
-			const verticalSpacing = 120;
+			const nodeWidth = 80;
+			const nodeHeight = 50;
+			const verticalSpacing = 100;
 
 			const onClick = () => {
 				emit('select-node', props.node);

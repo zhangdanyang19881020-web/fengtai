@@ -8,7 +8,7 @@
 		<div class="detail-logo"></div>
 		<div class="inner-top"></div>
 		<div class="inner-bottom"></div>
-		<div class="bottom-light--brown"></div>
+		<!-- <div class="bottom-light--brown"></div> -->
 
 		<div class="main-box">
 			<div class="main-box--inner">
@@ -283,10 +283,10 @@
 
 <style lang='scss' scoped>
 	.member-detail {
-
-		height: auto;
+		margin: 100vw;
+		height: 100vh;
 		/* 确保整个页面视口的高度 */
-		margin: 0;
+
 
 		.no-data {
 			margin: 50px 0;
@@ -298,7 +298,7 @@
 			color: #9c331a;
 			padding: 10px 20px;
 			background: rgba(215, 195, 137, 0.2);
-			font-size:14px;
+			font-size: 14px;
 
 			.friend-linker--item {
 				width: 50%;
@@ -344,10 +344,10 @@
 		}
 
 		.inner-bottom {
-			background: url('@/static/f-Images/inner-bottom.jpg') no-repeat;
+			background: url('@/static/f-Images/inner-bottom-2.jpg') no-repeat;
 			background-size: contain;
 			position: fixed;
-			bottom: 0;
+			bottom: -42px;
 			left: 0;
 			width: 100%;
 			height: 250px;
@@ -382,12 +382,12 @@
 		}
 
 		.main-box {
-			width: calc(100% - 10px);
+			width: 100%;
 			position: absolute;
 			z-index: 30;
 			top: 95px;
 			bottom: 100px;
-			left: 5px;
+			left: 0;
 
 
 			/* 	overflow-x: hidden;
@@ -437,9 +437,9 @@
 			}
 
 
-			@media (max-width: 768px) {
+		/* 	@media (max-width: 768px) {
 				.header-info {}
-			}
+			} */
 
 
 		}

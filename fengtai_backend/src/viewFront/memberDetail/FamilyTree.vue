@@ -13,8 +13,8 @@
             <div class="generation-label generation-2">第三代</div>
             <div class="generation-label generation-3">第四代</div> -->
 			<!--  -->
-			<svg :width="500 * zoomLevel" :height="325 * zoomLevel" viewBox="0 0 500 325">
-				<FamilyNode :node="familyData" :x="200" :y="50" :level="0" :selectedNode="selectedNode"
+			<svg :width="400 * zoomLevel" :height="300 * zoomLevel" viewBox="0 0 400 300">
+				<FamilyNode :node="familyData" :x="200" :y="30" :level="0" :selectedNode="selectedNode"
 					@select-node="selectNode" />
 			</svg>
 		</div>
@@ -169,8 +169,8 @@
 		height: 100%;
 		overflow: auto;
 		background: #fcf8ee;
-		padding: 20px;
 		position: relative;
+		padding-top:50px;
 	}
 
 	.family-svg {

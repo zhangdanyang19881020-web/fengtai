@@ -63,7 +63,7 @@
 	body {
 		width: 100%;
 		height: 100%;
-		// background: url('@/static/f-Images/home-bg.jpg') repeat;
+		
 		overflow-x: hidden;
 	}
 
