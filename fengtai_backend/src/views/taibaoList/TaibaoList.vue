@@ -5,7 +5,7 @@
 			<el-button type="primary" class="new-button" @click="goNewFn">新建</el-button>
 		</div>
 
-		<el-table class="z-table" :data="filteredData" style="width: 100%">
+		<el-table class="z-table" :data="filteredData" style="width: 100%" v-loading="loading">
 			<el-table-column label="头像" width="100">
 				<template #default="scope">
 					<el-avatar v-if="scope.row.headImg" :src="scope.row.headImg" size="small"></el-avatar>
@@ -76,7 +76,8 @@
 			const currentPage = ref(1)
 			const pageSize = ref(10)
 			const background = ref(true)
-			const total = ref(0)
+			const totalPage = ref(0)
+			const loading = ref(false)
 
 			const router = useRouter();
 
@@ -95,7 +96,7 @@
 				return data.value;
 			})
 			const filteredTotal = computed(() => {
-				return total.value;
+				return totalPage.value*pageSize.value;
 			})
 
 			// Handle pagination size change
@@ -113,12 +114,15 @@
 			// Fetch list from API
 			const getListFn = async () => {
 				try {
+					loading.value = true
 					const result = await dataApi.getDataList(params.value)
 					console.log('result', result)
 					data.value = result.data.pageData; // assuming result.data is the data
-					total.value = result.data.totalPage;
+					totalPage.value = result.data.totalPage;
 				} catch (error) {
 					console.error('Failed to fetch data:', error)
+				} finally {
+					loading.value = false
 				}
 			}
 			const goNewFn = () => {
@@ -165,6 +169,7 @@
 				background,
 				filteredData,
 				filteredTotal,
+				loading,
 				handleSizeChange,
 				handleCurrentChange,
 				editRow: (row) => {

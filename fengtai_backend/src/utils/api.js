@@ -103,6 +103,8 @@ export const dataApi = {
 	updateRelationship: (params) => post(_ServiceUrl + '/api/famil/editRelationship/', params),
 	// 添加村级地
 	addVillage: (params) => post(_ServiceUrl + '/api/region/addVillage/', params),
+	// 个人详情-家族关系
+	getRealtionDetail: (params) => get(_ServiceUrl + '/api/visit/familyRelationships/', params),
 	// ================以下 展示页面接口⬇️=================
 	// 首页搜索查询
 	indexSearch: (params) => post(_ServiceUrl + '/api/visit/indexSearch/', params),

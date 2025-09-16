@@ -17,7 +17,7 @@
 			</div>
 		</div>
 
-		<el-table class="z-table" :data="filteredData" style="width: 100%">
+		<el-table class="z-table" :data="filteredData" style="width: 100%" v-loading="loading">
 			<el-table-column label="图片" width="150">
 				<template #default="scope">
 					<div class="row-img--box">
@@ -40,7 +40,7 @@
 
 		<div class="pagination-box">
 			<el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-				:page-sizes="[10, 20, 30, 40]" :background="background" size="default" :total="total"
+				:page-sizes="[10, 20, 30, 40]" :background="background" size="default" :total="filteredTotal"
 				layout="sizes, prev, pager, next, jumper" @size-change="getListFn" @current-change="getListFn" />
 		</div>
 
@@ -54,7 +54,6 @@
 </template>
 
 <script>
-
 	import {
 		ref,
 		reactive,
@@ -96,7 +95,8 @@
 			const currentPage = ref(1)
 			const pageSize = ref(10)
 			const background = ref(true)
-			const total = ref(0)
+			const totalPage = ref(0)
+			const loading = ref(false)
 
 			const state = reactive({
 				addressOptions: [],
@@ -142,7 +142,7 @@
 
 			// params object to track page info and search query
 			const params = computed(() => ({
-				"targetId": state.searchData.street?state.searchData.street:null,
+				"targetId": state.searchData.street ? state.searchData.street : null,
 				"targetType": 1,
 				pageSize: pageSize.value,
 				pageIndex: currentPage.value,
@@ -156,7 +156,7 @@
 				return data.value;
 			})
 			const filteredTotal = computed(() => {
-				return total.value;
+				return totalPage.value * pageSize.value;
 			})
 
 
@@ -197,12 +197,15 @@
 			// Fetch list from API
 			const getListFn = async () => {
 				try {
+					loading.value = true
 					const result = await dataApi.homeViewList(params.value)
 					console.log('result', result)
 					data.value = result.data.pageData; // assuming result.data is the data
-					total.value = result.data.totalPage;
+					totalPage.value = result.data.totalPage;
 				} catch (error) {
 					console.error('Failed to fetch data:', error)
+				} finally {
+					loading.value = false
 				}
 			}
 
@@ -300,12 +303,12 @@
 				background,
 				filteredData,
 				filteredTotal,
+				loading,
 				getListFn,
 				editRow,
 				deleteRow,
 				Search,
 				goNewFn,
-				total
 			}
 		}
 	}

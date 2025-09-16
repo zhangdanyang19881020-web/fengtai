@@ -4,7 +4,8 @@
 			<div class="search-box--left">
 				<div class="search-box--item">
 					<!-- <label class="item-title">标题</label> -->
-					<el-input v-model="searchData.title" clearable :suffix-icon="Search" placeholder="请输入标题搜索"></el-input>
+					<el-input v-model="searchData.title" clearable :suffix-icon="Search"
+						placeholder="请输入标题搜索"></el-input>
 				</div>
 				<!-- 		<div class="search-box--item">
 					<el-select v-model="searchData.street" placeholder="选择街道或镇进行筛选"
@@ -20,7 +21,7 @@
 			</div>
 		</div>
 
-		<el-table class="z-table" :data="filteredData" style="width: 100%">
+		<el-table class="z-table" :data="filteredData" style="width: 100%" v-loading="loading">
 			<el-table-column label="图片" width="150">
 				<template #default="scope">
 					<div class="row-img--box">
@@ -58,7 +59,7 @@
 
 		<div class="pagination-box">
 			<el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-				:page-sizes="[10, 20, 30, 40]" :background="background" size="default" :total="total"
+				:page-sizes="[10, 20, 30, 40]" :background="background" size="default" :total="filteredTotal"
 				layout="sizes, prev, pager, next, jumper" @size-change="getListFn" @current-change="getListFn" />
 		</div>
 
@@ -117,7 +118,8 @@
 			const currentPage = ref(1)
 			const pageSize = ref(10)
 			const background = ref(true)
-			const total = ref(0)
+			const totalPage = ref(0)
+			const loading = ref(false)
 
 			const state = reactive({
 				addressOptions: [],
@@ -175,7 +177,7 @@
 				return data.value;
 			})
 			const filteredTotal = computed(() => {
-				return total.value;
+				return totalPage.value * pageSize.value;
 			})
 
 
@@ -215,12 +217,15 @@
 			// Fetch list from API
 			const getListFn = async () => {
 				try {
+					loading.value = true
 					const result = await dataApi.newsList(params.value)
 					console.log('result', result)
 					data.value = result.data.pageData; // assuming result.data is the data
-					total.value = result.data.totalPage;
+					totalPage.value = result.data.totalPage;
 				} catch (error) {
 					console.error('Failed to fetch data:', error)
+				} finally {
+					loading.value = false
 				}
 			}
 
@@ -318,12 +323,12 @@
 				background,
 				filteredData,
 				filteredTotal,
+				loading,
 				getListFn,
 				editRow,
 				deleteRow,
 				Search,
 				goNewFn,
-				total
 			}
 		}
 	}
