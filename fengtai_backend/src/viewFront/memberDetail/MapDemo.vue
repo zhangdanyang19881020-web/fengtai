@@ -21,7 +21,10 @@
 	function highlightByPerson() {
 		console.log('detailMemberOb.region.name', detailMemberOb)
 		const areaName = detailMemberOb.value.region.name;
-		mapRef.value?.highlightAreaByName(areaName)
+		if (mapRef) {
+			mapRef.value?.highlightAreaByName(areaName)
+		}
+
 	}
 	// function highlightByPerson(person) {
 	// 	const areaName = person.village || person.town
@@ -53,7 +56,7 @@
 
 <template>
 	<div class="map-demo">
-<!-- 		<div class="sidebar">
+		<!-- 		<div class="sidebar">
 			<h3>人员列表</h3>
 			<ul>
 				<li v-for="p in people" :key="p.name" @click="highlightByPerson(p)">
@@ -115,11 +118,11 @@
 
 	.placeholder {
 		padding: 24px;
-		color: rgba(0,0,0,0.3);
+		color: rgba(0, 0, 0, 0.3);
 		display: flex;
 		align-items: center;
-		font-size:16px;
+		font-size: 16px;
 		justify-content: center;
-		margin-top:80px;
+		margin-top: 80px;
 	}
 </style>

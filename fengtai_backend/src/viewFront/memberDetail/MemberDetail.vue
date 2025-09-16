@@ -80,8 +80,8 @@
 					</div>
 
 
-					<div class="">
-						<family-tree></family-tree>
+					<div class="" v-if="isDataLoaded">
+						<family-tree :familyData="familyData"></family-tree>
 					</div>
 					<!-- 			<div class="no-data" >
 						暂无数据
@@ -159,6 +159,7 @@
 	const goBack = () => {
 		router.go(-1);
 	}
+
 	// 响应式变量
 	const memberDetailOb = ref({});
 	const loading = ref(true);
@@ -172,6 +173,8 @@
 	const years = reactive([])
 	const activeYear = ref(null);
 
+	const isDataLoaded = ref(false);
+	const familyData = ref({})
 
 	const getRelationShip = async () => {
 		let params = {
@@ -179,9 +182,20 @@
 		}
 		const result = await dataApi.getRealtionDetail(params);
 		if (result.code == 200) {
-			store.commit('realtionDetailX', result.data)
+			if (result.data.length > 0) {
+				familyData.value = result.data[0];
+				isDataLoaded.value = true;
+				console.log('familyData', familyData)
+			}
+			store.commit('realtionDetailX', result.data);
+
 		}
 	}
+
+	// const familyData3 = computed(() => {
+	// 	console.log('familyData3', store.state.realtionDetailX)
+	// 	return store.state.realtionDetailX[0]
+	// });
 
 	const newsList = reactive([])
 	const getNewsList = async () => {
@@ -247,10 +261,12 @@
 	};
 
 	onMounted(() => {
+
 		getDetail(); // 在组件挂载时调用
+		getRelationShip();
 		getNewsList();
 
-		getRelationShip();
+
 	});
 </script>
 
