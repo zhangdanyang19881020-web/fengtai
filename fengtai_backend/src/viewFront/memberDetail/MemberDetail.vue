@@ -66,26 +66,26 @@
 						家族故事
 					</div>
 
-					<div class="personal-info"  v-if="memberDetailOb.info">
-						{{memberDetailOb.info}}
-					</div>
-					<div class="no-data" v-else>
-						暂无数据
-					</div>
-				</div>
-				
-				<div class="home-view--box">
-					<div class="home-view--header">
-						故土寻根
-					</div>
-				
-				
 					<div class="personal-info" v-if="memberDetailOb.info">
 						{{memberDetailOb.info}}
 					</div>
 					<div class="no-data" v-else>
 						暂无数据
 					</div>
+				</div>
+
+				<div class="home-view--box">
+					<div class="home-view--header">
+						故土寻根
+					</div>
+
+
+					<div class="">
+						<family-tree></family-tree>
+					</div>
+		<!-- 			<div class="no-data" >
+						暂无数据
+					</div> -->
 				</div>
 
 				<div class="home-view--box">
@@ -115,9 +115,10 @@
 						</el-carousel>
 					</div>
 				</div>
+				<div style="height:20px"></div>
 
-				<div style="height:50px;"></div>
 			</div>
+			<div style="height:20px"></div>
 		</div>
 	</div>
 </template>
@@ -127,6 +128,7 @@
 		Picture as IconPicture,
 		ArrowLeft
 	} from '@element-plus/icons-vue'
+	import FamilyTree from '@/viewFront/memberDetail/FamilyTree.vue'
 	import MapDemo from '@/viewFront/memberDetail/MapDemo.vue'
 	import moment from 'moment'
 	import {
@@ -335,7 +337,7 @@
 			top: 95px;
 			bottom: 100px;
 			left: 5px;
-	
+
 
 			/* 	overflow-x: hidden;
 			overflow-y: auto; */
