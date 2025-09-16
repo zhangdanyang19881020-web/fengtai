@@ -12,7 +12,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vite.dev/config/
 export default defineConfig({
 	server: {
-		hmr: true, // 确保 HMR 是开启的
+		hmr: false, // 确保 HMR 是开启的
 	},
 	plugins: [
 		vue(),

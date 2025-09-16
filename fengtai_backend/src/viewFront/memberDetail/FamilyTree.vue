@@ -1,23 +1,24 @@
 <template>
 	<div class="container">
 
-		<!--  <div class="controls">
-            <button @click="zoomIn">放大</button>
-            <button @click="zoomOut">缩小</button>
-            <button @click="resetZoom">重置</button>
-          </div> -->
+		<div class="controls">
+			<i class="iconfont icon-fangda" @click="zoomIn"></i>
+			<i class="iconfont icon-suoxiao" @click="zoomOut"></i>
+			<i class="iconfont icon-zhongzhi" @click="resetZoom"></i>
+		</div>
 
 		<div class="family-tree">
 			<!--         <div class="generation-label generation-0">第一代</div>
             <div class="generation-label generation-1">第二代</div>
             <div class="generation-label generation-2">第三代</div>
             <div class="generation-label generation-3">第四代</div> -->
-
-			<svg :width="1000 * zoomLevel" :height="650 * zoomLevel" viewBox="0 0 1000 650">
-				<FamilyNode :node="familyData" :x="500" :y="50" :level="0" :selectedNode="selectedNode"
+			<!--  -->
+			<svg :width="500 * zoomLevel" :height="325 * zoomLevel" viewBox="0 0 500 325">
+				<FamilyNode :node="familyData" :x="200" :y="50" :level="0" :selectedNode="selectedNode"
 					@select-node="selectNode" />
 			</svg>
 		</div>
+
 
 		<!-- 		<div class="node-info" v-if="selectedNode">
 			<h3>成员详细信息</h3>
@@ -104,7 +105,7 @@
 	})
 </script>
 
-<style>
+<style lang="scss" scoped>
 	/* 	* {
 		margin: 0;
 		padding: 0;
@@ -147,33 +148,38 @@
 
 	.controls {
 		display: flex;
-		justify-content: center;
+		justify-content: flex-end;
 		gap: 15px;
-		margin-bottom: 25px;
+		transform: translateX(-10px) translateY(-26px);
+
+		.iconfont {
+			cursor: pointer;
+			color: #8b4513;
+			// border: none;
+			// border-radius: 4px;
+			cursor: pointer;
+			// transition: background 0.3s;
+			// font-family: 'SimSun', '宋体', serif;
+		}
 	}
 
-	button {
-		padding: 8px 20px;
-		background: #8b4513;
-		color: #fcf8ee;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-		transition: background 0.3s;
-		font-family: 'SimSun', '宋体', serif;
-	}
-
-	button:hover {
-		background: #a0522d;
-	}
 
 	.family-tree {
 		width: 100%;
-		height: 400px;
+		height: 100%;
 		overflow: auto;
 		background: #fcf8ee;
 		padding: 20px;
 		position: relative;
+	}
+
+	.family-svg {
+		width: 100%;
+		/* Make the SVG fill the container's width */
+		height: 100%;
+		/* Make the SVG fill the container's height */
+		display: block;
+		/* Prevents unwanted margins/paddings */
 	}
 
 	.node-info {

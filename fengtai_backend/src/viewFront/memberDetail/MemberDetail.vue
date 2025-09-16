@@ -81,11 +81,22 @@
 
 
 					<div class="" v-if="isDataLoaded">
-						<family-tree :familyData="familyData"></family-tree>
+						<family-tree v-if="familyData" :familyData="familyData"></family-tree>
+						<div v-else class="no-data">
+							暂无数据
+						</div>
 					</div>
-					<!-- 			<div class="no-data" >
-						暂无数据
-					</div> -->
+					<div class="friend-linker" v-if="memberDetailOb&&memberDetailOb.contact">
+						<div class="friend-linker--item">
+							<label>亲友联系人:</label>
+							<span v-if="memberDetailOb.contact.name">&nbsp;{{memberDetailOb.contact.name}}</span>
+						</div>
+						<div class="friend-linker--item">
+							<label>联系电话:</label>
+							<span v-if="memberDetailOb.contact.phone">&nbsp;{{memberDetailOb.contact.phone}}</span>
+						</div>
+					</div>
+
 				</div>
 
 				<div class="home-view--box">
@@ -279,6 +290,20 @@
 
 		.no-data {
 			margin: 50px 0;
+		}
+
+		.friend-linker {
+			display: flex;
+			align-items: center;
+			color: #9c331a;
+			padding: 8px 15px;
+			background: rgba(215, 195, 137, 0.3);
+			font-size:14px;
+
+			.friend-linker--item {
+				width: 50%;
+				color: #9c331a;
+			}
 		}
 
 		/* 移除默认的页面边距 */
