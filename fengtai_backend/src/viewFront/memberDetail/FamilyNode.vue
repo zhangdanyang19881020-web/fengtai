@@ -37,6 +37,12 @@
 			style="font-size: 14px; pointer-events: none; font-weight: bold;">
 			{{node.sameLevel[0].relatedName }}
 		</text>
+		<!-- 配偶称谓 -->
+		<text v-if="node.sameLevel.length>0&&node.sameLevel[0].relationshipName=='配偶'"
+			:x="x + nodeWidth/2 + 5 + nodeWidth/2" :y="y + 10" text-anchor="middle" fill="#8b4513"
+			style="font-size: 12px; pointer-events: none; ">
+			{{node.sameLevel[0].relationshipName }}
+		</text>
 
 		<!-- 子节点 -->
 		<g v-if="node.children && node.children.length">
@@ -113,3 +119,12 @@
 		}
 	}
 </script>
+<style lang="scss" scoped>
+	rect {
+		transition: fill 0.3s ease;
+	}
+
+	line {
+		transition: stroke-width 0.3s ease;
+	}
+</style>

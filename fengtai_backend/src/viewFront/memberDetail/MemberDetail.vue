@@ -296,8 +296,8 @@
 			display: flex;
 			align-items: center;
 			color: #9c331a;
-			padding: 8px 15px;
-			background: rgba(215, 195, 137, 0.3);
+			padding: 10px 20px;
+			background: rgba(215, 195, 137, 0.2);
 			font-size:14px;
 
 			.friend-linker--item {
