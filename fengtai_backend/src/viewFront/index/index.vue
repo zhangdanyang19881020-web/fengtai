@@ -165,7 +165,7 @@
 		}
 
 
-	
+
 
 
 
@@ -174,17 +174,18 @@
 			background: url('@/static/f-Images/webp/input-bg.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
-			background-position:right bottom;
+			background-position: right bottom;
 			left: 10%;
 			top: 370px;
 			width: 80%;
 			height: 45px;
 			z-index: 11;
+
 			.z-input {
 				width: calc(100% - 40px);
 				margin: 7px 20px 10px;
 				position: relative;
-			
+
 				.el-input__wrapper {
 					background: none;
 				}
@@ -195,7 +196,7 @@
 				background: url('@/static/f-Images/webp/input-focus-bg2.webp') 100% 100% no-repeat;
 				background-size: contain;
 				/* 图片等比缩放，完全包含 */
-				background-position:right bottom;
+				background-position: right bottom;
 				left: 10%;
 				top: 370px;
 				width: 80%;
@@ -244,7 +245,7 @@
 			height: 100%;
 			max-width: 400px;
 			z-index: 2;
-			animation: blurToClear 10s ease-in-out forwards;
+			// animation: blurToClear 10s ease-in-out forwards;
 			/* 应用动画 */
 		}
 
@@ -283,7 +284,7 @@
 			height: 100%;
 			max-width: 400px;
 			z-index: 3;
-			animation: blurToClear 10s ease-in-out forwards;
+			// animation: blurToClear 10s ease-in-out forwards;
 		}
 
 		.top-mountain {
@@ -350,6 +351,7 @@
 		0% {
 			opacity: 0;
 			/* 初始比较淡 */
+			transform: translate(-100px, 0) rotate(−45deg) scale(0.6);
 		}
 
 		10% {
@@ -359,10 +361,9 @@
 		}
 
 		100% {
-			transform: translate(250px, -300px) rotate(45deg) scale(0.1);
+			transform: translate(250px, -300px) rotate(45deg) scale(1);
 			opacity: 0.2;
 			/* 最终淡出 */
 		}
 	}
-
 </style>
