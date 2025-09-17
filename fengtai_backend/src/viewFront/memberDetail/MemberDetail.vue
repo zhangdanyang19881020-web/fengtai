@@ -296,7 +296,7 @@
 					// 将 scrollLeft 设置为 scrollWidth，实现滚动到最右边
 					container.scrollLeft = container.scrollWidth;
 				}
-			}, 1000)
+			}, 2000)
 
 		});
 

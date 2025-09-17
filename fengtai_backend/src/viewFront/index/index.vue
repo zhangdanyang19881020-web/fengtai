@@ -165,17 +165,7 @@
 		}
 
 
-		.input-box {
-			.z-input {
-				width: calc(100% - 40px);
-				margin: 10px 20px;
-
-				.el-input__wrapper {
-					background: none;
-				}
-			}
-		}
-
+	
 
 
 
@@ -188,8 +178,17 @@
 			left: 10%;
 			top: 370px;
 			width: 80%;
-			height: 47px;
+			height: 45px;
 			z-index: 11;
+			.z-input {
+				width: calc(100% - 40px);
+				margin: 7px 20px 10px;
+				position: relative;
+			
+				.el-input__wrapper {
+					background: none;
+				}
+			}
 
 			&:hover {
 				position: absolute;
@@ -200,7 +199,7 @@
 				left: 10%;
 				top: 370px;
 				width: 80%;
-				height: 47px;
+				height: 45px;
 				z-index: 11;
 			}
 		}
