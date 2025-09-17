@@ -23,7 +23,7 @@
 					<MapDemo></MapDemo>
 				</div>
 
-				<div class="timeline" 　ref="scrollContainer">
+				<div class="timeline" 　ref="scrollContainer" id="scrollContainerId">
 					<div v-for="item in years.value" :key="item" class="timeline-item"
 						:class="{ active: item.enable==1 }" @click="goActivityList(item)">
 						<span>{{ item.year }}</span>
@@ -109,7 +109,7 @@
 					</div>
 					<div v-else>
 						<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
-							<el-carousel-item v-for="item in newsList.value" :key="item.activityId">
+							<el-carousel-item v-for="item in newsList.value" :key="item.activityId" @click="goActivityDetail(item)">
 								<div class="home-view--item">
 									<el-image class="home-view--img" :fit="fit" :src="item.headImg">
 										<template #error>
@@ -191,6 +191,18 @@
 			}
 		})
 	}
+	const goActivityDetail=(item)=>{
+		setTimeout(()=>{
+			router.push({
+				name: 'activityDetail',
+				params: {
+					id: item.activityId,
+				
+				}
+			})
+		},1000)
+	
+	}
 
 	const years = reactive([])
 	const activeYear = ref(null);
@@ -268,7 +280,16 @@
 				memberDetailOb.value = result.data; // 假设接口返回的数据存储在 result.data
 
 				years.value = result.data.year;
-				console.log('years', years.value);
+				// console.log('years', years.value);
+				// if (years.value.length > 0) {
+				// 	nextTick(() => {
+				// 		const container = scrollContainer.value;
+				// 		console.log('container',container)
+				// 		if (container) {
+				// 			container.scrollLeft = container.scrollWidth;
+				// 		}
+				// 	});
+				// }
 				store.commit('memberDetailOb', memberDetailOb.value);
 				getHomeView(memberDetailOb.value)
 			} else {
@@ -290,13 +311,23 @@
 
 		// 等待 DOM 更新后执行，确保元素可用
 		nextTick(() => {
-			setTimeout(() => {
-				const container = scrollContainer.value;
-				if (container) {
-					// 将 scrollLeft 设置为 scrollWidth，实现滚动到最右边
-					container.scrollLeft = container.scrollWidth;
-				}
-			}, 2000)
+			// setTimeout(() => {
+			// 	const container = scrollContainer.value;
+			// 	console.log('container--',container)
+			// 	if (container) {
+			// 		// 将 scrollLeft 设置为 scrollWidth，实现滚动到最右边
+			// 		requestAnimationFrame(() => {
+			// 			container.scrollLeft = container.scrollWidth; // 滚动到最右边
+			// 		});
+			// 	}
+			// }, 3000)
+
+			const container = document.getElementById('scrollContainerId');
+			// console.log('container-id--',container)
+			if (container) {
+				container.scrollLeft = container.scrollWidth; // 滚动到最右边
+			}
+
 
 		});
 
@@ -370,7 +401,7 @@
 			background: url('@/static/f-Images/inner-bottom-2.jpg') no-repeat;
 			background-size: contain;
 			position: fixed;
-			bottom: -42px;
+			bottom: -50px;
 			left: 0;
 			width: 100%;
 			height: 250px;
@@ -421,6 +452,7 @@
 				border-radius: 10px;
 				margin-bottom: 50px;
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+				overflow-x: hidden;
 			}
 
 

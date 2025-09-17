@@ -17,8 +17,7 @@
 
 					<!-- 图片上传 -->
 					<el-form-item label="景点图片" prop="imgUrl">
-						<el-upload class="avatar-uploader" :on-change="handleFileChange" :show-file-list="false"
-							:auto-upload="false">
+						<el-upload class="avatar-uploader" :on-change="handleFileChange" :show-file-list="false">
 							<img v-if="form.imgUrl" :src="form.imgUrl" class="uploaded-img" />
 							<i v-else class="el-icon-plus avatar-uploader-icon">+</i>
 						</el-upload>
@@ -279,6 +278,10 @@
 			justify-content: center;
 			align-items: center;
 			cursor: pointer;
+			.el-upload--text{
+				width:100%;
+				height:100%;
+			}
 		}
 
 		.uploaded-img {
@@ -290,6 +293,11 @@
 		.avatar-uploader-icon {
 			font-size: 28px;
 			color: #8c939d;
+			width: 150px;
+			height:150px;
+			display:flex;
+			align-items: center;
+			justify-content: center;
 		}
 	}
 </style>

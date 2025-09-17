@@ -78,11 +78,10 @@
 						</template>
 					</el-table-column>
 				</el-table>
-
 				<div style="margin-top: 10px;">
 					<el-select v-model="familyRelation" placeholder="关系" style="width: 120px;">
 						<el-option v-for="item in familyRelationOption" :key="item.value" :label="item.label"
-							:value="item.value" />
+							:value="item.value"/>
 					</el-select>
 					<el-input v-model="familyName" placeholder="请输入姓名" style="width: 180px; margin-left: 10px;" />
 					<el-button type="success" @click="addFamily" style="margin-left: 10px;">添加</el-button>
@@ -266,7 +265,7 @@
 			"id": null,
 			"gender": form.value.sex,
 			"birthDate": formatDate(form.value.birthday),
-			"headImgId": headerImgOb.value.id,
+			"headImgId": headerImgOb.value.id?headerImgOb.value.id:'',
 			"name": form.value.name,
 			"regionId": regionArr[0],
 			"villageId": regionArr[1],
