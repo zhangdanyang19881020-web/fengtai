@@ -36,15 +36,15 @@
 					placeholder="请选择街道/镇/村" clearable style="width: 350px" />
 			</el-form-item>
 
-			<el-form-item label="亲友联系人" prop="contact">
+			<el-form-item label="亲友联系人" >
 				<el-input v-model="form.contact" placeholder="请输入亲友联系人" />
 			</el-form-item>
-			<el-form-item label="联系电话" prop="contactPhone">
+			<el-form-item label="联系电话" >
 				<el-input v-model="form.contactPhone" placeholder="请输入联系电话" />
 			</el-form-item>
 
 			<!-- 个人信息 -->
-			<el-form-item label="家族故事" prop="info">
+			<el-form-item label="家族故事" >
 				<el-input type="textarea" v-model="form.info" placeholder="请输入家族故事" />
 			</el-form-item>
 
@@ -308,7 +308,6 @@
 			"id": Number(route.params.userId),
 			"gender": form.value.sex,
 			"birthDate": formatDate(form.value.birthday),
-			"headImgId": headerImgOb.value.id,
 			"name": form.value.name,
 			"regionId": regionArr[0],
 			"villageId": regionArr[1],
@@ -317,6 +316,11 @@
 			"contactPhone": form.value.contactPhone,
 			"yearList": form.value.visitYears.map(y => Number(y)),
 			"relationshipList": tableData
+		}
+		if (headerImgOb.value) {
+			params.headImgId = headerImgOb.value.id;
+		} else {
+			params.headImgId = null;
 		}
 		const result = await dataApi.addMember(params)
 		if (result.code == 200) {

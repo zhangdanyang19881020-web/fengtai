@@ -146,7 +146,7 @@
 
 	const open = (regionList) => {
 		dialogVisible.value = true;
-		// console.log('regionList',regionList)
+		//console.log('regionList',regionList)
 		placeList.value = regionList.map(x => {
 			if (x.name.indexOf(placeSearchVal.value) > -1) {
 				// console.log("item", x)
@@ -154,13 +154,13 @@
 				return {
 					...x,
 					childrenShow: true,
+					openId: 'openId'
 				}
 
 			} else {
 				return {
 					...x,
 					childrenShow: false,
-					active: false,
 				}
 			}
 

@@ -1,6 +1,6 @@
 <template>
 	<div class="street-list">
-		<div class="street-list--item" v-for="(street, sIndex) in placeList" :key="street.id">
+		<div class="street-list--item" v-for="(street, sIndex) in placeList" :id="street.openId" :key="street.id">
 			<div class="relative-item" :class="{'active':street.childrenShow}" @click="toggleChildren(street,sIndex)">
 				<label>{{ street.name }}</label>
 				<div v-if="street.children && street.children.length>0">
@@ -23,7 +23,8 @@
 	import {
 		reactive,
 		onMounted,
-		computed
+		computed,
+		nextTick
 	} from 'vue';
 	import {
 		useStore
@@ -45,10 +46,25 @@
 		},
 	});
 
-	
+	const scrollToTop = () => {
+		// 获取匹配的 div 元素，假设通过某个字段 `field` 来匹配
+		const targetDiv = document.getElementById('openId');
+
+		if (targetDiv) {
+			// 使用 scrollIntoView 将该 div 滚动到顶部
+			targetDiv.scrollIntoView({
+				behavior: 'smooth', // 平滑滚动
+				block: 'start' // 滚动到容器的顶部
+			});
+		} else {
+			console.log('未找到匹配的 div');
+		}
+	}
 
 	onMounted(() => {
-
+		nextTick(() => {
+			scrollToTop()
+		})
 	})
 	const isActive = (street) => {
 		const streetV = store.getters.choosedStreet;
