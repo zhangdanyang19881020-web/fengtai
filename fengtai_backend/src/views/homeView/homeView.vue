@@ -186,7 +186,18 @@
 				}
 			}
 
-			const searchFn = () => {
+			const searchFn = (data) => {
+				console.log('daa', data)
+				console.log('state.streetOptions', state.streetOptions)
+				var ob = reactive({})
+				state.streetOptions.forEach(x => {
+					if (x.value == data) {
+						ob.value = x;
+					}
+				});
+				console.log('ob', ob)
+				state.searchData.streetStr = ob.value.label;
+				
 				currentPage.value = 1
 				getListFn()
 			}
