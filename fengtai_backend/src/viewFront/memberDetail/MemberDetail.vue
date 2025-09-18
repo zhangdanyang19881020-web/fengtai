@@ -90,10 +90,12 @@
 						<div class="friend-linker--item">
 							<label>亲友联系人:</label>
 							<span v-if="memberDetailOb.contact.name">&nbsp;{{memberDetailOb.contact.name}}</span>
+							<span v-else class="grey"> &nbsp;--</span>
 						</div>
 						<div class="friend-linker--item">
 							<label>联系电话:</label>
 							<span v-if="memberDetailOb.contact.phone">&nbsp;{{memberDetailOb.contact.phone}}</span>
+							<span v-else class="grey"> &nbsp;--</span>
 						</div>
 					</div>
 
@@ -372,6 +374,9 @@
 			.friend-linker--item {
 				width: 50%;
 				color: #9c331a;
+				.grey{
+					color:rgba(0,0,0,0.3);
+				}
 			}
 		}
 
