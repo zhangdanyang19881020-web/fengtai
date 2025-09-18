@@ -180,11 +180,14 @@
 			width: 80%;
 			height: 45px;
 			z-index: 11;
+			
 
 			.z-input {
-				width: calc(100% - 40px);
-				margin: 7px 20px 10px;
+				width: calc(80% - 40px);
+				margin: 7px auto 10px;
 				position: relative;
+				display: flex;
+				justify-content: flex-end;
 
 				.el-input__wrapper {
 					background: none;

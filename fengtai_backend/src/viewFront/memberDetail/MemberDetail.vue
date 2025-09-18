@@ -195,13 +195,15 @@
 	}
 	const goActivityDetail = (item) => {
 		console.log('goActivityDetail')
-		router.push({
-			name: 'activityDetail',
-			params: {
-				id: item.activityId,
+		setTimeout(() => {
+			router.push({
+				name: 'activityDetail',
+				params: {
+					id: item.activityId,
 
-			}
-		})
+				}
+			})
+		}, 1000)
 	}
 
 
