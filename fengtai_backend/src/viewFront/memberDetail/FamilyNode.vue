@@ -10,13 +10,13 @@
 			style="cursor: pointer;" />
 
 		<!-- 配偶矩形 -->
-		<rect v-if="node.sameLevel.length>0&&(node.sameLevel[0].relationshipName=='配偶'||node.sameLevel[0].relationshipName=='母亲')" :x="x + nodeWidth/2 + 5"
-			:y="y - nodeHeight/2" :width="nodeWidth" :height="nodeHeight" fill="#f7f0db" stroke="#744b30"
-			stroke-width="1" rx="10" style="cursor: pointer;" />
+		<rect v-if="node.sameLevel.length>0&&wifeNode(node)" :x="x + nodeWidth/2 + 5" :y="y - nodeHeight/2"
+			:width="nodeWidth" :height="nodeHeight" fill="#f7f0db" stroke="#744b30" stroke-width="1" rx="10"
+			style="cursor: pointer;" />
 
 		<!-- 连接配偶的线 -->
-		<line v-if="node.sameLevel.length>0&&(node.sameLevel[0].relationshipName=='配偶'||node.sameLevel[0].relationshipName=='母亲')" :x1="x + nodeWidth/2" :y1="y"
-			:x2="x + nodeWidth/2 + 5" :y2="y" stroke="#744b30" stroke-width="1" />
+		<line v-if="node.sameLevel.length>0&&wifeNode(node)" :x1="x + nodeWidth/2" :y1="y" :x2="x + nodeWidth/2 + 5"
+			:y2="y" stroke="#744b30" stroke-width="1" />
 
 
 
@@ -32,15 +32,13 @@
 		</text>
 
 		<!-- 配偶姓名 -->
-		<text v-if="node.sameLevel.length>0&&(node.sameLevel[0].relationshipName=='配偶'||node.sameLevel[0].relationshipName=='母亲')"
-			:x="x + nodeWidth/2 + 5 + nodeWidth/2" :y="y - 3" text-anchor="middle" fill="#8b4513"
-			style="font-size: 14px; pointer-events: none; font-weight: bold;">
+		<text v-if="node.sameLevel.length>0&&wifeNode(node)" :x="x + nodeWidth/2 + 5 + nodeWidth/2" :y="y - 3"
+			text-anchor="middle" fill="#8b4513" style="font-size: 14px; pointer-events: none; font-weight: bold;">
 			{{node.sameLevel[0].relatedName }}
 		</text>
 		<!-- 配偶称谓 -->
-		<text v-if="node.sameLevel.length>0&&(node.sameLevel[0].relationshipName=='配偶'||node.sameLevel[0].relationshipName=='母亲')"
-			:x="x + nodeWidth/2 + 5 + nodeWidth/2" :y="y + 14" text-anchor="middle" fill="#c28842"
-			style="font-size: 12px; pointer-events: none; ">
+		<text v-if="node.sameLevel.length>0&&wifeNode(node)" :x="x + nodeWidth/2 + 5 + nodeWidth/2" :y="y + 14"
+			text-anchor="middle" fill="#c28842" style="font-size: 12px; pointer-events: none; ">
 			{{node.sameLevel[0].relationshipName }}
 		</text>
 
@@ -104,6 +102,7 @@
 			horizontalSpacing() {
 				return this.getHorizontalSpacing(this.node.children ? this.node.children.length : 0);
 			}
+			
 		},
 
 		mounted() {
@@ -115,6 +114,15 @@
 				if (!this.collapsible) return
 				this.node.collapsed = !this.node.collapsed
 				this.$emit('toggle')
+			},
+			wifeNode(node) {
+				console.log('node',node)
+				if (node.sameLevel[0].relationshipName == '配偶' || node.sameLevel[0].relationshipName == '母亲' || node
+					.sameLevel[0].relationshipName == '奶奶') {
+					return true;
+				} else {
+					return false;
+				}
 			}
 		}
 	}

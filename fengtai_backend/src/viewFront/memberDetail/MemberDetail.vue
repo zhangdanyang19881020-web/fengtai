@@ -194,7 +194,7 @@
 		})
 	}
 	const goActivityDetail = (item) => {
-		console.log('goActivityDetail')
+		// console.log('goActivityDetail')
 		setTimeout(() => {
 			router.push({
 				name: 'activityDetail',
