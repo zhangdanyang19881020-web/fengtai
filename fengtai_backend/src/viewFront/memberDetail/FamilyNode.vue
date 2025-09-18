@@ -10,12 +10,12 @@
 			style="cursor: pointer;" />
 
 		<!-- 配偶矩形 -->
-		<rect v-if="node.sameLevel.length>0&&node.sameLevel[0].relationshipName=='配偶'" :x="x + nodeWidth/2 + 5"
+		<rect v-if="node.sameLevel.length>0&&(node.sameLevel[0].relationshipName=='配偶'||node.sameLevel[0].relationshipName=='母亲')" :x="x + nodeWidth/2 + 5"
 			:y="y - nodeHeight/2" :width="nodeWidth" :height="nodeHeight" fill="#f7f0db" stroke="#744b30"
 			stroke-width="1" rx="10" style="cursor: pointer;" />
 
 		<!-- 连接配偶的线 -->
-		<line v-if="node.sameLevel.length>0&&node.sameLevel[0].relationshipName=='配偶'" :x1="x + nodeWidth/2" :y1="y"
+		<line v-if="node.sameLevel.length>0&&(node.sameLevel[0].relationshipName=='配偶'||node.sameLevel[0].relationshipName=='母亲')" :x1="x + nodeWidth/2" :y1="y"
 			:x2="x + nodeWidth/2 + 5" :y2="y" stroke="#744b30" stroke-width="1" />
 
 
@@ -32,13 +32,13 @@
 		</text>
 
 		<!-- 配偶姓名 -->
-		<text v-if="node.sameLevel.length>0&&node.sameLevel[0].relationshipName=='配偶'"
+		<text v-if="node.sameLevel.length>0&&(node.sameLevel[0].relationshipName=='配偶'||node.sameLevel[0].relationshipName=='母亲')"
 			:x="x + nodeWidth/2 + 5 + nodeWidth/2" :y="y - 3" text-anchor="middle" fill="#8b4513"
 			style="font-size: 14px; pointer-events: none; font-weight: bold;">
 			{{node.sameLevel[0].relatedName }}
 		</text>
 		<!-- 配偶称谓 -->
-		<text v-if="node.sameLevel.length>0&&node.sameLevel[0].relationshipName=='配偶'"
+		<text v-if="node.sameLevel.length>0&&(node.sameLevel[0].relationshipName=='配偶'||node.sameLevel[0].relationshipName=='母亲')"
 			:x="x + nodeWidth/2 + 5 + nodeWidth/2" :y="y + 14" text-anchor="middle" fill="#c28842"
 			style="font-size: 12px; pointer-events: none; ">
 			{{node.sameLevel[0].relationshipName }}
@@ -56,7 +56,7 @@
 				stroke-width="1" />
 
 			<!-- 递归渲染子节点 -->
-			<FamilyNode v-for="(child, index) in node.children" :key="child.id" :node="child"
+			<FamilyNode v-for="(child, index) in node.children" :key="child.sortIndex" :node="child"
 				:x="x - ((node.children.length - 1) * horizontalSpacing) / 2 + index * horizontalSpacing"
 				:y="y + verticalSpacing" :level="level + 1" :selectedNode="selectedNode"
 				@select-node="$emit('select-node', $event)" />

@@ -109,8 +109,8 @@
 					</div>
 					<div v-else>
 						<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
-							<el-carousel-item v-for="item in newsList.value" :key="item.activityId" @click="goActivityDetail(item)">
-								<div class="home-view--item">
+							<el-carousel-item v-for="item in newsList.value" :key="item.activityId">
+								<div class="home-view--item" @click="goActivityDetail(item)">
 									<el-image class="home-view--img" :fit="fit" :src="item.headImg">
 										<template #error>
 											<div class="image-slot">
@@ -170,7 +170,9 @@
 	const goBack = () => {
 		router.go(-1);
 	}
-
+	import {
+		debounce
+	} from 'lodash-es';
 	// 响应式变量
 	const memberDetailOb = ref({});
 	const loading = ref(true);
@@ -191,18 +193,17 @@
 			}
 		})
 	}
-	const goActivityDetail=(item)=>{
-		setTimeout(()=>{
-			router.push({
-				name: 'activityDetail',
-				params: {
-					id: item.activityId,
-				
-				}
-			})
-		},1000)
-	
+	const goActivityDetail = (item) => {
+		console.log('goActivityDetail')
+		router.push({
+			name: 'activityDetail',
+			params: {
+				id: item.activityId,
+
+			}
+		})
 	}
+
 
 	const years = reactive([])
 	const activeYear = ref(null);
@@ -336,9 +337,21 @@
 </script>
 
 <style lang='scss' scoped>
+	.member-detail::before {
+		content: "";
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: url('@/static/f-Images/home-bg.jpg') repeat center center / cover;
+		z-index: -1;
+		/* 放到最底层 */
+	}
+
 	.member-detail {
-		margin: 100vw;
-		height: 100vh;
+		margin: 100%;
+		height: 100%;
 		/* 确保整个页面视口的高度 */
 
 
@@ -442,7 +455,6 @@
 			top: 95px;
 			bottom: 100px;
 			left: 0;
-
 
 			/* 	overflow-x: hidden;
 			overflow-y: auto; */
