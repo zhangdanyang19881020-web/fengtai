@@ -1,0 +1,30 @@
+{
+  "name": "Doc_RAG",
+  "kind": "workflow",
+  "version": "1.0",
+  "steps": [
+    {
+      "id": "1",
+      "type": "knowledge_retrieval",
+      "name": "Retrieve_Doc",
+      "params": {
+        "knowledge_base": "你的知识库ID",
+        "top_k": 5,
+        "score_threshold": 0.65
+      }
+    },
+    {
+      "id": "2",
+      "type": "llm",
+      "name": "Answer_with_Source",
+      "params": {
+        "prompt_template": "你是一个专业的文档助手。\n请基于以下检索内容回答问题，并在答案后标注来源：\n\n{{#context#}}\n\n问题：{{#input#}}\n\n回答时引用『来源编号』。如果知识库中没有相关资料，请回答「未找到相关内容」。"
+      },
+      "inputs": {
+        "context": "{{ steps.1.output }}",
+        "input": "{{ user_input }}"
+      }
+    }
+  ],
+  "entry": "2"
+}
