@@ -41,22 +41,25 @@
 						暂无数据
 					</div>
 					<div v-else>
-						<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
-							<el-carousel-item v-for="item in homeViewList.value" :key="item.id">
-								<div class="home-view--item">
-									<el-image class="home-view--img" :fit="fit" :src="item.imgUrl">
-										<template #error>
-											<div class="image-slot">
-												<el-icon><icon-picture /></el-icon>
-											</div>
-										</template>
-									</el-image>
-									<div class="home-view--title">
-										{{item.title}}
-									</div>
+						<!-- :style="{ transform: `translateX(${translateX}px)` }" -->
+						<div class="home-view--list">
+							<div class="home-view--item" v-for="(item,index) in homeViewList.value" :key="item.id">
+								<el-image class="home-view--img" fit="cover" :src="item.imgUrl" :zoom-rate="1.2"
+									:max-scale="7" :min-scale="0.2" :preview-src-list="homeViewPreList.value"
+									 :initial-index="index"
+									>
+									<template #error>
+										<div class="image-slot">
+											<el-icon><icon-picture /></el-icon>
+										</div>
+									</template>
+								</el-image>
+								<div class="home-view--title">
+									{{item.title}}
 								</div>
-							</el-carousel-item>
-						</el-carousel>
+							</div>
+						</div>
+
 					</div>
 				</div>
 
@@ -110,7 +113,7 @@
 						暂无数据
 					</div>
 					<div v-else>
-						<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
+						<!-- 			<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
 							<el-carousel-item v-for="item in newsList.value" :key="item.activityId">
 								<div class="home-view--item" @click="goActivityDetail(item)">
 									<el-image class="home-view--img" :fit="fit" :src="item.headImg">
@@ -125,7 +128,23 @@
 									</div>
 								</div>
 							</el-carousel-item>
-						</el-carousel>
+						</el-carousel> -->
+						<!-- :class="{ 'animate-slide': animateList }" -->
+						<div class="home-view--list">
+							<div class="home-view--item" v-for="item in newsList.value" :key="item.activityId"
+								@click="goActivityDetail(item)">
+								<el-image class="home-view--img" :fit="fit" :src="item.headImg">
+									<template #error>
+										<div class="image-slot">
+											<el-icon><icon-picture /></el-icon>
+										</div>
+									</template>
+								</el-image>
+								<div class="home-view--title">
+									{{item.title}}
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div style="height:20px"></div>
@@ -149,7 +168,8 @@
 		reactive,
 		computed,
 		onMounted,
-		nextTick
+		nextTick,
+		onUnmounted
 	} from "vue";
 	import {
 		dataApi
@@ -183,7 +203,41 @@
 	const birthday = computed(() => {
 		return moment(memberDetailOb.value.birthMonth).format("YYYY-MM")
 	})
-	const fit = ref('contain')
+	const fit = ref('cover')
+	// 动画start
+
+	const translateX = ref(0); // Initialize the translation value to 0
+
+	const moveDistance = 180; // The distance to move the images
+	const interval = 2000; // Interval for moving (in milliseconds)
+	let intervalId = null; // To store the interval ID for clearing it
+	let intervalId0 = null;
+
+	// Function to move the list every second
+	const moveList = () => {
+		translateX.value -= moveDistance; // Move the list to the left by 170px
+
+		if (Math.abs(translateX.value) >= moveDistance) {
+			// Reset to original position if it's fully moved
+			// Remove the first item and append it to the end of the array
+			const removedItem = homeViewList.value.shift(); // Remove the first item
+			homeViewList.value.push(removedItem); // Append the removed item to the end of the array
+			translateX.value = 0;
+			// console.log('removedItem', removedItem)
+
+		}
+
+
+		// // Check if the list has moved beyond its total width
+		if (Math.abs(translateX.value) >= homeViewList.value.length * moveDistance) {
+			// Reset to original position if it's fully moved
+			// const removedItem = homeViewList.value.shift(); // Remove the first item
+			// homeViewList.value.push(removedItem);
+		}
+	};
+
+
+	// 动画end
 
 	const goActivityList = (item) => {
 		// console.log('goActivityList',item)
@@ -255,6 +309,7 @@
 	}
 
 	const homeViewList = reactive([])
+	const homeViewPreList = reactive([])
 
 	const getHomeView = async (ob) => {
 		let params = {
@@ -267,6 +322,9 @@
 		console.log('homViewList', result)
 		if (result.code == 200) {
 			homeViewList.value = result.data.pageData;
+			homeViewPreList.value = result.data.pageData.map(x => {
+				return x.imgUrl;
+			})
 			console.log('homeViewList', homeViewList)
 		}
 
@@ -332,10 +390,18 @@
 			if (container) {
 				container.scrollLeft = container.scrollWidth; // 滚动到最右边
 			}
-
+			// Trigger animation every second
+			// intervalId = setInterval(moveList, interval);
 
 		});
 
+
+	});
+
+	onUnmounted(() => {
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
 
 	});
 </script>
@@ -374,8 +440,9 @@
 			.friend-linker--item {
 				width: 50%;
 				color: #9c331a;
-				.grey{
-					color:rgba(0,0,0,0.3);
+
+				.grey {
+					color: rgba(0, 0, 0, 0.3);
 				}
 			}
 		}

@@ -271,32 +271,43 @@
 	}
 	
 	
-	// 图片加载失败
-	.home-view--item{
-		position: relative;
-	    margin-bottom:20px;
-		.home-view--img {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			.image-slot {
-			  text-align: center;
-			  color: rgba(0,0,0,0.3);
-			  font-size: 30px;
-			  .el-icon {
-			    font-size: 40px;
-				margin-top:50px;
-			  }
+
+	.home-view--list{
+		display:flex;
+		align-items: center;
+	    transition: transform 2s ease-in-out; /* Smooth sliding effect */
+		overflow-y: hidden;
+		overflow-x: auto;
+		.home-view--item{
+			position: relative;
+			 flex: 0 0 auto;
+			margin:0 10px 0 0;
+			width:170px;
+			height:100px;
+			.home-view--img {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width:160px;
+				.image-slot {
+				  text-align: center;
+				  color: rgba(0,0,0,0.3);
+				  font-size: 30px;
+				  .el-icon {
+					font-size: 40px;
+					margin-top:50px;
+				  }
+				}
 			}
-		}
-		.home-view--title{
-			position: absolute;
-			bottom:0;
-			width:100%;
-			padding:10px;
-			background:rgba(255,255,255,0.5);
-			text-align: center;
-			color: #4d2d07;
+			.home-view--title{
+				position: absolute;
+				bottom:0;
+				width:100%;
+				padding:5px 10px;
+				background:rgba(255,255,255,0.5);
+				text-align: center;
+				color: #4d2d07;
+			}
 		}
 	}
 
