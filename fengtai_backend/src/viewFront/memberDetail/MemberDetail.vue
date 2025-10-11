@@ -44,7 +44,7 @@
 						<!-- :style="{ transform: `translateX(${translateX}px)` }" -->
 						<div class="home-view--list">
 							<div class="home-view--item" v-for="(item,index) in homeViewList.value" :key="item.id">
-								<el-image class="home-view--img" fit="cover" :src="item.imgUrl" :zoom-rate="1.2"
+								<el-image class="home-view--img" :fit="fit" :src="item.imgUrl" :zoom-rate="1.2"
 									:max-scale="7" :min-scale="0.2" :preview-src-list="homeViewPreList.value"
 									 :initial-index="index"
 									>
@@ -203,7 +203,7 @@
 	const birthday = computed(() => {
 		return moment(memberDetailOb.value.birthMonth).format("YYYY-MM")
 	})
-	const fit = ref('cover')
+	const fit = ref('contain')
 	// 动画start
 
 	const translateX = ref(0); // Initialize the translation value to 0

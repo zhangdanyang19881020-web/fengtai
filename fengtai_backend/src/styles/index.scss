@@ -284,11 +284,15 @@
 			margin:0 10px 0 0;
 			width:170px;
 			height:100px;
+			background: rgba(0,0,0,0.05);
+			border-radius: 4px;
 			.home-view--img {
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				width:160px;
+				    height: 100%;
+				    object-fit: cover; /* Make the image cover the container */
+				    object-position: bottom; /* Align the image to the bottom */
 				.image-slot {
 				  text-align: center;
 				  color: rgba(0,0,0,0.3);
