@@ -41,6 +41,14 @@
 		useStore
 	} from 'vuex';
 
+	import {
+		useRoute,
+		useRouter
+	} from 'vue-router';
+
+	const route = useRoute();
+	const router = useRouter();
+
 	const store = useStore();
 	import {
 		dataApi
@@ -123,12 +131,20 @@
 				if (result.code === 200) {
 					// Update reactive list in-place
 					searchedPeopleList.splice(0, searchedPeopleList.length, ...(result.data || []))
-
-					// Prefer an exposed method if PeopleDrawer provides one
-					console.log('peopleDrawerRef', peopleDrawerRef)
-					if (peopleDrawerRef.value) {
-						peopleDrawerRef.value.open(searchedPeopleList);
+					console.log('searchedPeopleList--', searchedPeopleList);
+					if (searchedPeopleList.length > 0) {
+						// 搜索到人名
+						// console.log('peopleDrawerRef', peopleDrawerRef)
+						if (peopleDrawerRef.value) {
+							peopleDrawerRef.value.open(searchedPeopleList);
+						}
+					} else {
+						// 搜索不到人名
+						router.push({
+							name: 'memberSearch',
+						})
 					}
+
 				}
 			} catch (e) {
 				console.error('搜索失败:', e)
@@ -180,7 +196,7 @@
 			width: 80%;
 			height: 45px;
 			z-index: 11;
-			
+
 
 			.z-input {
 				width: calc(80% - 40px);
