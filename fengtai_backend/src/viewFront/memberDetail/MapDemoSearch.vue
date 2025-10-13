@@ -5,14 +5,16 @@
 				@streetMapClick="streetMapClickFn" />
 			<div v-else class="placeholder">正在加载地图数据...</div>
 		</div>
-		<div class="street-box">
-			<div class="street-name">{{streetOb.name}}</div>
-			<ul class="village-list">
-				<li class="village" v-for="(item,index) in streetOb.villages" :key="index">
-					{{item}}
-				</li>
-			</ul>
-		</div>
+		<transition name="el-zoom-in-top">
+			<div class="street-box" v-if="streetOb.name">
+				<div class="street-name" v-if="streetOb.name">{{streetOb.name}}</div>
+				<ul class="village-list">
+					<li class="village-item" v-for="(item,index) in streetOb.villages" :key="index">
+						{{item}}
+					</li>
+				</ul>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -88,16 +90,17 @@
 
 <style lang="scss" scoped>
 	.map-demo {
-		width: calc(100% + 80px);
 		box-sizing: border-box;
-		//
+
+		.map {
+			width: calc(100% + 80px);
+			border-radius: 8px;
+			overflow: hidden;
+			transform: translateX(-40px);
+		}
 	}
 
-	.map {
-		border-radius: 8px;
-		overflow: hidden;
-		transform: translateX(-40px);
-	}
+
 
 	.placeholder {
 		padding: 24px;
@@ -107,5 +110,35 @@
 		font-size: 16px;
 		justify-content: center;
 		margin-top: 80px;
+	}
+
+	.street-box {
+		box-sizing: border-box;
+		width: calc(100% - 30px);
+		margin: 0 15px 15px 15px;
+		border: 1px solid #ede3d1;
+		border-radius: 10px;
+		overflow: hidden;
+
+		.street-name {
+			padding: 10px;
+			background: #ede3d1;
+			color: #5b1107;
+		}
+
+		.village-list {
+			list-style: none;
+			padding: 0;
+
+			.village-item {
+				padding: 7px 10px;
+				color: #842012;
+
+				&:hover {
+					background: rgba(237, 227, 209, 0.5);
+
+				}
+			}
+		}
 	}
 </style>
