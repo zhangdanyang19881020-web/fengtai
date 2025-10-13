@@ -89,14 +89,6 @@
 		return count;
 	};
 
-	const countColorFn = (areaName) => {
-		const regionName = areaName;
-		const region = streetMemberCountArr.value.find(x => x.regionName === regionName);
-		const count = region ? region.regionCount : 0;
-		console.log(`countColorFn--区域: ${regionName}, 台胞人数: ${count}`); // 打印调试
-		return count;
-	};
-
 
 	const getColorByCount = (count) => {
 		console.log('getColorByCount--', count)
@@ -194,7 +186,7 @@
 						color: '#8B0000'
 					},
 				],
-				show:false,
+				show: false,
 			},
 			series: [{
 				type: "map",
@@ -223,6 +215,11 @@
 			}],
 		};
 		chartInstance.setOption(option);
+		
+		chartInstance.on('click', function(params) {
+			console.log('chartInstance-click', params)
+		})
+		
 		window.addEventListener("resize", resizeChart);
 	};
 
@@ -230,6 +227,8 @@
 	const resizeChart = () => {
 		chartInstance && chartInstance.resize();
 	};
+
+
 
 	onMounted(() => {
 		nextTick(() => {
