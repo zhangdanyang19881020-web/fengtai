@@ -1,10 +1,30 @@
+<template>
+	<div class="map-demo">
+		<div class="map">
+			<FenghuaMapSearch ref="mapRef" v-if="geojson" :geojson="geojson" :people="people"
+				@streetMapClick="streetMapClickFn" />
+			<div v-else class="placeholder">正在加载地图数据...</div>
+		</div>
+		<div class="street-box">
+			<div class="street-name">{{streetOb.name}}</div>
+			<ul class="village-list">
+				<li class="village" v-for="(item,index) in streetOb.villages" :key="index">
+					{{item}}
+				</li>
+			</ul>
+		</div>
+	</div>
+</template>
+
 <script setup>
 	import {
 		ref,
 		onMounted,
-		computed
+		computed,
+		reactive
 	} from 'vue'
 	import FenghuaMapSearch from '@/components/FenghuaMapSearch.vue'
+	import rawData from '@/datas/fenghua.json'
 	import {
 		useStore
 	} from 'vuex'
@@ -33,6 +53,15 @@
 	// 		mapRef.value?.highlightAreaByCount(areaName)
 	// 	}
 	// }
+	const streetOb = ref({
+		name: '',
+		villages: []
+	});
+	const streetMapClickFn = (params) => {
+		// console.log('xxxxwwxx', params)
+		streetOb.value = rawData.subdivisions.find(x => x.name == params.name);
+		console.log('streetOb', streetOb.value)
+	}
 
 	onMounted(async () => {
 		// 从 public 加载真实文件（你可以替换为自己的路径与文件）
@@ -48,69 +77,26 @@
 				geojson: geojson.value,
 				people: people.value
 			})
-			// setTimeout(() => {
-			// 	highlightAreaByCount();
-			// }, 800)
-			setTimeout(() => {
-				// highlightByPerson();
-			}, 1000)
+
 		} catch (error) {
 			console.error('Error loading data:', error)
 		}
 	})
 </script>
 
-<template>
-	<div class="map-demo">
-		<div class="map">
-			<FenghuaMapSearch ref="mapRef" v-if="geojson" :geojson="geojson" :people="people" />
-			<div v-else class="placeholder">正在加载地图数据...</div>
-		</div>
-	</div>
-</template>
+
 
 <style lang="scss" scoped>
 	.map-demo {
 		width: calc(100% + 80px);
 		box-sizing: border-box;
-		transform: translateX(-40px);
-	}
-
-	.sidebar {
-		/* border: 1px solid #eee; */
-		border-radius: 8px;
-		padding: 12px;
-		background: #fafafa;
-	}
-
-	.sidebar ul {
-		margin: 8px 0 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.sidebar li {
-		padding: 8px 6px;
-		border-radius: 6px;
-		cursor: pointer;
-	}
-
-	.sidebar li:hover {
-		background: #f0f6ff;
-	}
-
-	.sidebar .name {
-		font-weight: 600;
-	}
-
-	.sidebar .affix {
-		color: #666;
-		margin-left: 4px;
+		//
 	}
 
 	.map {
 		border-radius: 8px;
 		overflow: hidden;
+		transform: translateX(-40px);
 	}
 
 	.placeholder {

@@ -9,14 +9,15 @@
 		onBeforeUnmount,
 		computed,
 		nextTick,
-		reactive
+		reactive,
+		defineEmits
 	} from "vue";
 	import {
 		useStore
 	} from 'vuex'
 	const store = useStore();
 
-
+	const emit = defineEmits()
 
 	import * as echarts from "echarts";
 	import {
@@ -215,13 +216,15 @@
 			}],
 		};
 		chartInstance.setOption(option);
-		
+
 		chartInstance.on('click', function(params) {
-			console.log('chartInstance-click', params)
+			// console.log('chartInstance-click', params)
+			emit('streetMapClick',params)
 		})
-		
+
 		window.addEventListener("resize", resizeChart);
 	};
+
 
 
 	const resizeChart = () => {
