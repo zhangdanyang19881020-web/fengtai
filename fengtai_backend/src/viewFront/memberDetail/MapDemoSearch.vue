@@ -5,6 +5,9 @@
 				@streetMapClick="streetMapClickFn" />
 			<div v-else class="placeholder">正在加载地图数据...</div>
 		</div>
+		<div class="total-members--box">
+			<label>目前以为您联系到<span class="highlight">{{relativeCount}}</span>位台胞</label>
+		</div>
 		<transition name="el-zoom-in-top">
 			<div class="street-box" v-if="streetOb.regionName">
 				<div class="street-name" v-if="streetOb.regionName">{{streetOb.regionName}}</div>
@@ -25,6 +28,9 @@
 		computed,
 		reactive
 	} from 'vue'
+	import {
+		dataApi
+	} from "@/utils/api";
 	import FenghuaMapSearch from '@/components/FenghuaMapSearch.vue'
 	import rawData from '@/datas/fenghua.json'
 	import {
@@ -35,6 +41,7 @@
 	const mapRef = ref()
 	const geojson = ref(null)
 	const people = ref([])
+	const relativeCount = ref(0)
 
 	const detailMemberOb = computed(() => {
 		return store.state.memberDetailOb;
@@ -59,10 +66,22 @@
 		name: '',
 		villages: []
 	});
-	const streetMapClickFn = (params,streetMemberCountArr) => {
-		console.log('xxxxwwxx', params,streetMemberCountArr)
+	const streetMapClickFn = (params, streetMemberCountArr) => {
+		console.log('xxxxwwxx', params, streetMemberCountArr)
 		streetOb.value = streetMemberCountArr.find(x => x.regionName == params.name);
 		console.log('streetOb', streetOb.value)
+	}
+
+	// 显示的亲戚数量
+	const relativeCountFn = async () => {
+		// return relatives.value.length
+		const result = await dataApi.indexPeopleCount();
+		if (result.code == 200) {
+			relativeCount.value = result.data
+		} else {
+			relativeCount.value = '--'
+		}
+
 	}
 
 	onMounted(async () => {
@@ -79,6 +98,9 @@
 				geojson: geojson.value,
 				people: people.value
 			})
+
+			//台胞总人数
+			relativeCountFn();
 
 		} catch (error) {
 			console.error('Error loading data:', error)
@@ -97,6 +119,21 @@
 			border-radius: 8px;
 			overflow: hidden;
 			transform: translateX(-40px);
+		}
+
+		.total-members--box {
+			box-sizing: border-box;
+			// width: calc(100% - 30px);
+			margin: 0 15px 15px 15px;
+			border: 1px solid #ede3d1;
+			border-radius: 10px;
+			background: #ede3d1;
+			padding: 5px 15px;
+
+			.highlight {
+				color: #842012;
+				margin:0 5px;
+			}
 		}
 	}
 
@@ -133,9 +170,10 @@
 			.village-item {
 				padding: 7px 10px;
 				color: #842012;
-				margin:5px 10px;
-				.village-item--span{
-					color:rgba(0,0,0,0.3);
+				margin: 5px 10px;
+
+				.village-item--span {
+					color: rgba(0, 0, 0, 0.3);
 				}
 
 				&:hover {
