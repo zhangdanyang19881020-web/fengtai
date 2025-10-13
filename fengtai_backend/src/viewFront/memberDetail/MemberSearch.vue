@@ -12,96 +12,8 @@
 
 		<div class="main-box">
 			<div class="main-box--inner">
-				<div class="header-info">
-					<el-avatar class="header-avatar" :size="50" :src="memberDetailOb.headImg || defaultImg" />
-					<div class="header-name--box">
-						<div class="header-name">{{memberDetailOb.name}}</div>
-						<div class="header-birth">{{birthday}}</div>
-					</div>
-				</div>
 				<div class="map-box">
-					<MapDemo></MapDemo>
-				</div>
-
-				<div class="timeline" 　ref="scrollContainer" id="scrollContainerId">
-					<div v-for="item in years.value" :key="item" class="timeline-item"
-						:class="{ active: item.enable==1 }" @click="goActivityList(item)">
-						<span>{{ item.year }}</span>
-						<div class="dot"></div>
-					</div>
-					<div class="hr"></div>
-				</div>
-
-				<div class="home-view--box">
-					<div class="home-view--header">
-						家乡风貌
-					</div>
-
-					<div class="no-data" v-if="homeViewList&&homeViewList.value&&homeViewList.value.length==0">
-						暂无数据
-					</div>
-					<div v-else>
-						<!-- :style="{ transform: `translateX(${translateX}px)` }" -->
-						<div class="home-view--list">
-							<div class="home-view--item" v-for="(item,index) in homeViewList.value" :key="item.id">
-								<el-image class="home-view--img" :fit="fit" :src="item.imgUrl" :zoom-rate="1.2"
-									:max-scale="7" :min-scale="0.2" :preview-src-list="homeViewPreList.value"
-									 :initial-index="index"
-									>
-									<template #error>
-										<div class="image-slot">
-											<el-icon><icon-picture /></el-icon>
-										</div>
-									</template>
-								</el-image>
-								<div class="home-view--title">
-									{{item.title}}
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-
-
-				<div class="home-view--box">
-					<div class="home-view--header">
-						家族故事
-					</div>
-
-					<div class="personal-info" v-if="memberDetailOb.info">
-						{{memberDetailOb.info}}
-					</div>
-					<div class="no-data" v-else>
-						暂无数据
-					</div>
-				</div>
-
-				<div class="home-view--box">
-					<div class="home-view--header">
-						故土寻根
-					</div>
-
-
-					<div class="" v-if="isDataLoaded">
-						<family-tree v-if="familyData" :familyData="familyData"></family-tree>
-						<div v-else class="no-data">
-							暂无数据
-						</div>
-					</div>
-					<div class="friend-linker" v-if="memberDetailOb&&memberDetailOb.contact">
-						<div class="friend-linker--item">
-							<label>亲友联系人:</label>
-							<span v-if="memberDetailOb.contact.name">&nbsp;{{memberDetailOb.contact.name}}</span>
-							<span v-else class="grey"> &nbsp;--</span>
-						</div>
-						<div class="friend-linker--item">
-							<label>联系电话:</label>
-							<span v-if="memberDetailOb.contact.phone">&nbsp;{{memberDetailOb.contact.phone}}</span>
-							<span v-else class="grey"> &nbsp;--</span>
-						</div>
-					</div>
-
+					<MapDemoSearch></MapDemoSearch>
 				</div>
 
 				<div class="home-view--box">
@@ -113,23 +25,6 @@
 						暂无数据
 					</div>
 					<div v-else>
-						<!-- 			<el-carousel :interval="4000" type="card" height="150px" indicator-position="none">
-							<el-carousel-item v-for="item in newsList.value" :key="item.activityId">
-								<div class="home-view--item" @click="goActivityDetail(item)">
-									<el-image class="home-view--img" :fit="fit" :src="item.headImg">
-										<template #error>
-											<div class="image-slot">
-												<el-icon><icon-picture /></el-icon>
-											</div>
-										</template>
-									</el-image>
-									<div class="home-view--title">
-										{{item.title}}
-									</div>
-								</div>
-							</el-carousel-item>
-						</el-carousel> -->
-						<!-- :class="{ 'animate-slide': animateList }" -->
 						<div class="home-view--list">
 							<div class="home-view--item" v-for="item in newsList.value" :key="item.activityId"
 								@click="goActivityDetail(item)">
@@ -161,7 +56,7 @@
 		ArrowLeft
 	} from '@element-plus/icons-vue'
 	import FamilyTree from '@/viewFront/memberDetail/FamilyTree.vue'
-	import MapDemo from '@/viewFront/memberDetail/MapDemo.vue'
+	import MapDemoSearch from '@/viewFront/memberDetail/MapDemoSearch.vue'
 	import moment from 'moment'
 	import {
 		ref,

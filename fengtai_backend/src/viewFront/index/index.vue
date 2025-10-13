@@ -142,6 +142,7 @@
 						// 搜索不到人名
 						router.push({
 							name: 'memberSearch',
+	
 						})
 					}
 

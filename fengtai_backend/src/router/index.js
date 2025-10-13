@@ -21,7 +21,7 @@ const routes = [ {
 				name: '奉台家缘',
 			},
 		},  {
-			path: '/memberSearch',
+			path: '/memberSearch/:id',
 			name: 'memberSearch',
 			component: () => import('@/viewFront/memberDetail/memberSearch.vue'),
 			meta: {
