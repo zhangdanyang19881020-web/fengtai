@@ -6,11 +6,18 @@
 			</div> -->
 			<div>
 				<el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-					<!-- 		<el-form-item label="祖籍">
+					<!-- <el-form-item label="祖籍">
 						<el-tag class="address-tag" type="primary" size="large">奉化市 /
 							{{dadData.value.searchData.streetStr}}</el-tag>
 					</el-form-item> -->
 					<!-- 名称 -->
+					<el-form-item label="活动类型" prop="type">
+						<el-radio-group v-model="form.type">
+							<el-radio-button label="默认活动" value="default" />
+							<el-radio-button label="平台活动" value="platform" />
+
+						</el-radio-group>
+					</el-form-item>
 					<el-form-item label="活动名称" prop="title">
 						<el-input v-model="form.title" placeholder="请输入活动名称" />
 					</el-form-item>
@@ -40,7 +47,7 @@
 									class="z-autocomplete" placeholder="请输入台胞名字添加" @select="handleSelect">
 									<template #suffix>
 										<el-icon class="el-input__icon" @click="handleIconClick">
-											<search/>
+											<search />
 										</el-icon>
 									</template>
 									<template #default="{ item }">
@@ -265,6 +272,7 @@
 
 			// 表单数据
 			const form = reactive({
+				type: 'default',
 				title: '',
 				date: '',
 				imgUrl: '',
@@ -286,6 +294,7 @@
 			}
 
 			function initData() {
+				form.type = "default";
 				form.title = "";
 				form.date = "";
 				form.imgUrl = "";
@@ -324,6 +333,11 @@
 			}
 			// 校验规则
 			const rules = {
+				type: [{
+					required: true,
+					message: '请选择活动类型',
+					trigger: 'change'
+				}],
 				title: [{
 					required: true,
 					message: '请输入景点名称',
@@ -440,7 +454,8 @@
 						"indexImgId": form.imgUrlId, //上传接口报错 
 						"activityTime": formatDate(form.date),
 						"userIds": form.peopleList.map(item => item.userId),
-						"text": String(html.value)
+						"text": String(html.value),
+						"activityType":form.type,
 					}
 					// console.log('html',html)
 					const result = await dataApi.updateNews(params);

@@ -6,11 +6,13 @@
 			</div> -->
 			<div>
 				<el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-					<!-- 		<el-form-item label="祖籍">
-						<el-tag class="address-tag" type="primary" size="large">奉化市 /
-							{{dadData.value.searchData.streetStr}}</el-tag>
-					</el-form-item> -->
-					<!-- 名称 -->
+					<el-form-item label="活动类型" prop="type">
+						<el-radio-group v-model="form.type">
+							<el-radio-button label="默认活动" value="default" />
+							<el-radio-button label="平台活动" value="platform" />
+					
+						</el-radio-group>
+					</el-form-item>
 					<el-form-item label="活动名称" prop="title">
 						<el-input v-model="form.title" placeholder="请输入活动名称" />
 					</el-form-item>
@@ -253,6 +255,7 @@
 
 			// 表单数据
 			const form = reactive({
+				type:'default',
 				title: '',
 				date: '',
 				imgUrl: '',
@@ -280,6 +283,7 @@
 				}
 				const result = await dataApi.newsDetail(params);
 				if (result.code == 200) {
+					form.type="";
 					form.title = result.data.title;
 					form.date = result.data.createdAt;
 					form.imgUrl = result.data.indexImgUrl;
