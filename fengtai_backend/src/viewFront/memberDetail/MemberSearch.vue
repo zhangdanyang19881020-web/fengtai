@@ -263,8 +263,8 @@
 
 	onMounted(() => {
 
-		getDetail(); // 在组件挂载时调用
-		getRelationShip();
+		// getDetail(); // 在组件挂载时调用
+		// getRelationShip();
 		getNewsList();
 
 		// 等待 DOM 更新后执行，确保元素可用

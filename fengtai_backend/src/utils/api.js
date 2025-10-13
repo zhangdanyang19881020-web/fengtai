@@ -116,7 +116,7 @@ export const dataApi = {
 	// 个人详情-家族关系
 	getRealtionDetail: (params) => get(_ServiceUrl + '/api/visit/familyRelationships/', params),
 	// 获取默认最新的活动
-	getDefaultActivity: (params) => get(_ServiceUrl + '/api/view/getDefaultActivity/', params),
+	getDefaultActivity: () => get(_ServiceUrl + '/api/view/getDefaultActivity/'),
 
 	// 创建数据 ⬇️原有
 	// 更新数据

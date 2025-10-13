@@ -6,11 +6,11 @@
 			<div v-else class="placeholder">正在加载地图数据...</div>
 		</div>
 		<transition name="el-zoom-in-top">
-			<div class="street-box" v-if="streetOb.name">
-				<div class="street-name" v-if="streetOb.name">{{streetOb.name}}</div>
+			<div class="street-box" v-if="streetOb.regionName">
+				<div class="street-name" v-if="streetOb.regionName">{{streetOb.regionName}}</div>
 				<ul class="village-list">
-					<li class="village-item" v-for="(item,index) in streetOb.villages" :key="index">
-						{{item}}
+					<li class="village-item" v-for="(item,index) in streetOb.subRegions" :key="index">
+						{{item.regionName}}
 					</li>
 				</ul>
 			</div>
@@ -59,9 +59,9 @@
 		name: '',
 		villages: []
 	});
-	const streetMapClickFn = (params) => {
-		// console.log('xxxxwwxx', params)
-		streetOb.value = rawData.subdivisions.find(x => x.name == params.name);
+	const streetMapClickFn = (params,streetMemberCountArr) => {
+		console.log('xxxxwwxx', params,streetMemberCountArr)
+		streetOb.value = streetMemberCountArr.find(x => x.regionName == params.name);
 		console.log('streetOb', streetOb.value)
 	}
 
@@ -133,10 +133,13 @@
 			.village-item {
 				padding: 7px 10px;
 				color: #842012;
+				margin:5px 10px;
+				.village-item--span{
+					color:rgba(0,0,0,0.3);
+				}
 
 				&:hover {
 					background: rgba(237, 227, 209, 0.5);
-
 				}
 			}
 		}

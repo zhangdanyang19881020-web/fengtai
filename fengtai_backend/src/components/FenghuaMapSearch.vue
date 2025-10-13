@@ -219,7 +219,7 @@
 
 		chartInstance.on('click', function(params) {
 			// console.log('chartInstance-click', params)
-			emit('streetMapClick',params)
+			emit('streetMapClick',params,　streetMemberCountArr.value)
 		})
 
 		window.addEventListener("resize", resizeChart);
