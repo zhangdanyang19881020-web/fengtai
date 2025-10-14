@@ -15,8 +15,14 @@
 			style="cursor: pointer;" />
 
 		<!-- 连接配偶的线 -->
-		<line v-if="node.sameLevel.length>0&&wifeNode(node)" :x1="x + nodeWidth/2" :y1="y" :x2="x + nodeWidth/2 + 5"
-			:y2="y" stroke="#744b30" stroke-width="1" />
+		<template v-if="node.sameLevel.length>0&&wifeNode(node)">
+			<line :x1="x+nodeWidth+5" :y1="y+nodeHeight/2" :x2="x+nodeWidth+5" :y2="y + verticalSpacing/2"
+				stroke="#8b4513" stroke-width="1" />
+
+			<line :x1="x" :y1="y + nodeHeight -10" :x2="x + nodeWidth + 5" :y2="y + nodeHeight-10" stroke="#744b30"
+				stroke-width="1" />
+		</template>
+
 
 
 
@@ -102,7 +108,7 @@
 			horizontalSpacing() {
 				return this.getHorizontalSpacing(this.node.children ? this.node.children.length : 0);
 			}
-			
+
 		},
 
 		mounted() {
@@ -116,7 +122,7 @@
 				this.$emit('toggle')
 			},
 			wifeNode(node) {
-				console.log('node',node)
+				console.log('node', node)
 				if (node.sameLevel[0].relationshipName == '配偶' || node.sameLevel[0].relationshipName == '母亲' || node
 					.sameLevel[0].relationshipName == '奶奶') {
 					return true;

@@ -8,11 +8,6 @@
 		</div>
 
 		<div class="family-tree">
-			<!--         <div class="generation-label generation-0">第一代</div>
-            <div class="generation-label generation-1">第二代</div>
-            <div class="generation-label generation-2">第三代</div>
-            <div class="generation-label generation-3">第四代</div> -->
-			<!--  -->
 			<svg :width="400 * zoomLevel" :height="300 * zoomLevel" viewBox="0 0 400 300">
 				<FamilyNode :node="familyData" :x="200" :y="30" :level="0" :selectedNode="selectedNode"
 					@select-node="selectNode" />

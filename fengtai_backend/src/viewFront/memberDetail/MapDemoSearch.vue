@@ -21,7 +21,7 @@
 			</div>
 		</transition>
 		<div class="total-members--box">
-			<label>目前以为您联系到<span class="highlight">{{relativeCount}}</span>位台胞</label>
+			<i class="iconfont icon-shoucang"></i><label>目前以为您联系到<span class="highlight">{{relativeCount}}</span>位台胞</label>
 		</div>
 		<PeopleDrawer ref="peopleDrawerRef" />
 	</div>
@@ -193,7 +193,7 @@
 				color: #ede3d1;
 			}
 			.highlight {
-				color: rgba(132,32,18,0.6);
+				color: rgba(132,32,18,0.8);
 			}
 		}
 
@@ -212,9 +212,12 @@
 			border-radius: 10px;
 			background: #ede3d1;
 			padding: 5px 15px;
-
+			.icon-shoucang{
+				color: #f00000;
+				margin-right:3px;
+			}
 			.highlight {
-				color: #842012;
+				color: #f00000;
 				margin: 0 5px;
 			}
 		}
