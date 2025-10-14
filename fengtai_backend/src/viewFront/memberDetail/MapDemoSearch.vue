@@ -5,19 +5,21 @@
 				@streetMapClick="streetMapClickFn" />
 			<div v-else class="placeholder">正在加载地图数据...</div>
 		</div>
-		<div class="total-members--box">
-			<label>目前以为您联系到<span class="highlight">{{relativeCount}}</span>位台胞</label>
-		</div>
 		<transition name="el-zoom-in-top">
 			<div class="street-box" v-if="streetOb.regionName">
 				<div class="street-name" v-if="streetOb.regionName">{{streetOb.regionName}}</div>
 				<ul class="village-list">
-					<li class="village-item" v-for="(item,index) in streetOb.subRegions" :key="index">
+					<li class="village-item" v-for="(item,index) in streetOb.subRegions" :key="index"
+						@click="villageChoose(item,index)">
 						{{item.regionName}}
 					</li>
 				</ul>
 			</div>
 		</transition>
+		<div class="total-members--box">
+			<label>目前以为您联系到<span class="highlight">{{relativeCount}}</span>位台胞</label>
+		</div>
+		<PeopleDrawer ref="peopleDrawerRef" />
 	</div>
 </template>
 
@@ -33,15 +35,27 @@
 	} from "@/utils/api";
 	import FenghuaMapSearch from '@/components/FenghuaMapSearch.vue'
 	import rawData from '@/datas/fenghua.json'
+	import PeopleDrawer from '@/viewFront/index/PeopleDrawer.vue'
 	import {
 		useStore
 	} from 'vuex'
+	import {
+		ElDialog,
+		ElButton,
+		ElAvatar,
+		ElRow,
+		ElCol,
+		ElScrollbar,
+		ElMessage,
+		ElMessageBox
+	} from "element-plus";
 	const store = useStore();
 
 	const mapRef = ref()
 	const geojson = ref(null)
 	const people = ref([])
 	const relativeCount = ref(0)
+	const peopleDrawerRef = ref(null);
 
 	const detailMemberOb = computed(() => {
 		return store.state.memberDetailOb;
@@ -67,11 +81,54 @@
 		villages: []
 	});
 	const streetMapClickFn = (params, streetMemberCountArr) => {
-		console.log('xxxxwwxx', params, streetMemberCountArr)
+		// console.log('xxxxwwxx', params, streetMemberCountArr)
 		streetOb.value = streetMemberCountArr.find(x => x.regionName == params.name);
+		store.commit('setChoosedStreet', streetOb.value);
 		console.log('streetOb', streetOb.value)
 	}
 
+	const villageChoose = (item, index) => {
+		store.commit('setChoosedVillage', item);
+		choosePlace();
+	}
+
+	// 刷新查询
+	const choosePlace = async () => {
+		// 在这里添加重新查询的逻辑，刷新亲戚数据	
+		let params = {
+			serachType: 1,
+			val: store.getters.choosedStreet.regionId + '-' + store.getters.choosedVillage.regionId
+		}
+		// console.log('params', params)
+		const result = await dataApi.indexSearch(params);
+		if (result.code == 200) {
+			if (result.data.length == 0) {
+				ElMessage({
+					message: '该村下暂未关联该村祖籍的台胞人员,请选择其他村进行搜索!',
+					type: 'error',
+				});
+			} else {
+				ElMessage({
+					message: result.message,
+					type: 'success',
+				});
+				choosePlaceFn(result.data)
+			}
+		} else {
+			ElMessage({
+				message: result.message,
+				type: 'error',
+			});
+		}
+	};
+	const choosePlaceFn = (data) => {
+		console.log('choosePlaceFn', data);
+		if (data.length > 0) {
+			if (peopleDrawerRef.value) {
+				peopleDrawerRef.value.open(data);
+			}
+		}
+	}
 	// 显示的亲戚数量
 	const relativeCountFn = async () => {
 		// return relatives.value.length
@@ -132,7 +189,7 @@
 
 			.highlight {
 				color: #842012;
-				margin:0 5px;
+				margin: 0 5px;
 			}
 		}
 	}

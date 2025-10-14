@@ -194,7 +194,8 @@
 			"pageSize": 100,
 			"pageIndex": 1,
 			"year": "",
-			"userId": ""
+			"userId": "",
+			"activityType":'default'
 		}
 		const result = await dataApi.newsList(params)
 		if (result.code == 200) {
