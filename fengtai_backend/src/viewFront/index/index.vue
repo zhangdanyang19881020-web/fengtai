@@ -102,7 +102,11 @@
 	// ----------------- search action -----------------
 	const searchFn = async () => {
 		const val = searchVal.value.trim()
-		if (!val) return
+		if (!val) {
+			router.push({
+				name:'memberSearch'
+			})
+		}
 
 		// 地址搜索
 		const isPlace = regionStr.value.includes(val);
