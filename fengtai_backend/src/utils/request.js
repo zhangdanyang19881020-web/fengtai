@@ -70,7 +70,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
 	response => {
 		// 对响应数据做点什么
-
 		const {
 			data,
 			status,
@@ -80,7 +79,6 @@ service.interceptors.response.use(
 
 		// console.log('响应拦截器:', response)
 		console.log('config:', config)
-
 		console.log('status', status)
 		// 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
 		if (status === 200 || status == 201) {
@@ -89,6 +87,10 @@ service.interceptors.response.use(
 				config.url.includes('/api/auth/login/')
 			)
 			console.log('isLoginResponse--', isLoginResponse);
+			if(config.responseType=='blob'){
+				//文件返回
+				return data;
+			}
 
 			if (isLoginResponse || data.code == 200) {
 				// 自动保存登录返回的 token

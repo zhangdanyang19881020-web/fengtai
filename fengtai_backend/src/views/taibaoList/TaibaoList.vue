@@ -2,7 +2,12 @@
 	<div class="container">
 		<div class="header">
 			<el-input v-model="searchQuery" placeholder="输入名字搜索" :suffix-icon="Search" class="search-box" />
-			<el-button type="primary" class="new-button" @click="goNewFn">新建</el-button>
+			<div>
+				<el-button type="text" @click="templateDownload">模板下载</el-button>
+				<el-button type="primary" @click="goNewFn">新建</el-button>
+				<el-button type="success" @click="batcgImportFn">导入</el-button>
+			</div>
+
 		</div>
 
 		<el-table class="z-table" :data="filteredData" style="width: 100%" v-loading="loading">
@@ -33,7 +38,8 @@
 	</div>
 </template>
 
-<script>
+<script setup>
+	import moment from 'moment';
 	import {
 		ref,
 		reactive,
@@ -66,138 +72,148 @@
 	} from 'lodash-es'
 
 
-	export default {
-		name: 'UserTable',
-		components: {
-			Search, // 注册图标
-		},
-		setup() {
-			const searchQuery = ref('')
-			const currentPage = ref(1)
-			const pageSize = ref(10)
-			const background = ref(true)
-			const totalPage = ref(0)
-			const loading = ref(false)
+	// export default {
+	// 	name: 'UserTable',
+	// 	components: {
+	// 		Search, // 注册图标
+	// 	},
+	// 	setup() {
+	const searchQuery = ref('')
+	const currentPage = ref(1)
+	const pageSize = ref(10)
+	const background = ref(true)
+	const totalPage = ref(0)
+	const loading = ref(false)
 
-			const router = useRouter();
+	const router = useRouter();
 
-			// params object to track page info and search query
-			const params = computed(() => ({
-				userName: searchQuery.value,
-				pageSize: pageSize.value,
-				pageIndex: currentPage.value,
-			}))
+	// params object to track page info and search query
+	const params = computed(() => ({
+		userName: searchQuery.value,
+		pageSize: pageSize.value,
+		pageIndex: currentPage.value,
+	}))
 
-			// Simulated data
-			const data = ref([])
+	// Simulated data
+	const data = ref([])
 
-			// Filtered data based on search query
-			const filteredData = computed(() => {
-				return data.value;
-			})
-			const filteredTotal = computed(() => {
-				return totalPage.value*pageSize.value;
-			})
+	// Filtered data based on search query
+	const filteredData = computed(() => {
+		return data.value;
+	})
+	const filteredTotal = computed(() => {
+		return totalPage.value * pageSize.value;
+	})
 
-			// Handle pagination size change
-			const handleSizeChange = (val) => {
-				pageSize.value = val
-				getListFn()
-			}
+	// Handle pagination size change
+	const handleSizeChange = (val) => {
+		pageSize.value = val
+		getListFn()
+	}
 
-			// Handle page change
-			const handleCurrentChange = (val) => {
-				currentPage.value = val
-				getListFn()
-			}
+	// Handle page change
+	const handleCurrentChange = (val) => {
+		currentPage.value = val
+		getListFn()
+	}
 
-			// Fetch list from API
-			const getListFn = async () => {
-				try {
-					loading.value = true
-					const result = await dataApi.getDataList(params.value)
-					console.log('result', result)
-					data.value = result.data.pageData; // assuming result.data is the data
-					totalPage.value = result.data.totalPage;
-				} catch (error) {
-					console.error('Failed to fetch data:', error)
-				} finally {
-					loading.value = false
-				}
-			}
-			const goNewFn = () => {
-				router.push('/newTaibao')
-			}
-
-			// Search query watcher
-			const debouncedGetList = debounce(() => {
-				currentPage.value = 1
-				getListFn()
-			}, 500) // 500ms 内只触发一次
-
-			const delMemberFn = async (row) => {
-				let params = {
-					userId: row.userId
-				}
-				const result = await dataApi.delMember(params);
-				if (result.code == 200) {
-					ElMessage({
-						type: 'success',
-						message: result.message,
-					});
-					currentPage.value = 1
-					getListFn()
-				}
-			}
-
-			watch(searchQuery, () => {
-				// debouncedGetList()
-				currentPage.value = 1
-				getListFn()
-			})
-
-
-			// Mounted lifecycle hook to fetch initial data
-			onMounted(() => {
-				getListFn()
-			})
-
-			return {
-				searchQuery,
-				currentPage,
-				pageSize,
-				background,
-				filteredData,
-				filteredTotal,
-				loading,
-				handleSizeChange,
-				handleCurrentChange,
-				editRow: (row) => {
-					router.push({
-						name: 'editTaibao',
-						params: {
-							userId: row.userId
-
-						}
-					})
-				},
-				deleteRow: (row) => {
-					ElMessageBox.alert(`确认删除 <span class="el-tag el-tag--danger el-tag--light">${row.userName}</span>`, '提示', {
-						// if you want to disable its autofocus
-						// autofocus: false,
-						dangerouslyUseHTMLString: true,
-						confirmButtonText: 'OK',
-						callback: (action) => {
-							delMemberFn(row)
-						},
-					})
-
-				},
-				Search,
-				goNewFn
-			}
+	// Fetch list from API
+	const getListFn = async () => {
+		try {
+			loading.value = true
+			const result = await dataApi.getDataList(params.value)
+			console.log('result', result)
+			data.value = result.data.pageData; // assuming result.data is the data
+			totalPage.value = result.data.totalPage;
+		} catch (error) {
+			console.error('Failed to fetch data:', error)
+		} finally {
+			loading.value = false
 		}
 	}
+	const goNewFn = () => {
+		router.push('/newTaibao')
+	}
+
+	// Search query watcher
+	const debouncedGetList = debounce(() => {
+		currentPage.value = 1
+		getListFn()
+	}, 500) // 500ms 内只触发一次
+
+	const delMemberFn = async (row) => {
+		let params = {
+			userId: row.userId
+		}
+		const result = await dataApi.delMember(params);
+		if (result.code == 200) {
+			ElMessage({
+				type: 'success',
+				message: result.message,
+			});
+			currentPage.value = 1
+			getListFn()
+		}
+	}
+	const editRow = (row) => {
+		router.push({
+			name: 'editTaibao',
+			params: {
+				userId: row.userId
+
+			}
+		})
+	}
+
+	const deleteRow = (row) => {
+		ElMessageBox.alert(`确认删除 <span class="el-tag el-tag--danger el-tag--light">${row.userName}</span>`,
+			'提示', {
+				// if you want to disable its autofocus
+				// autofocus: false,
+				dangerouslyUseHTMLString: true,
+				confirmButtonText: 'OK',
+				callback: (action) => {
+					delMemberFn(row)
+				},
+			})
+
+	}
+	const batcgImportFn = () => {
+
+	}
+	const templateDownload = async () => {
+		const result = await dataApi.downloadTemplate();
+		console.log('templateDownload', result);
+		downloadResFile(result, '导入模板');
+	}
+	const downloadResFile = (res, title) => {
+		if (!res) {
+			return
+		}
+		// console.log('downloadResFile', res)
+		let url = window.URL.createObjectURL(new Blob([res], {
+			type: "application/vnd.ms-excel"
+		}));
+		let link = document.createElement('a')
+		link.style.display = 'none'
+		link.href = url;
+		var datetime = moment().unix();
+		link.setAttribute('download', title + '_' + datetime + ".xlsx")
+		document.body.appendChild(link)
+		link.click()
+	}
+
+	watch(searchQuery, () => {
+		// debouncedGetList()
+		currentPage.value = 1
+		getListFn()
+	})
+
+
+	// Mounted lifecycle hook to fetch initial data
+	onMounted(() => {
+		getListFn()
+	})
 </script>
 
 <style lang="scss" scoped>
@@ -208,7 +224,7 @@
 
 	.header {
 		display: flex;
-		justify-content: center;
+		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 30px;
 		position: relative;
@@ -217,10 +233,7 @@
 			width: 400px;
 		}
 
-		.new-button {
-			position: absolute;
-			right: 0;
-		}
+
 	}
 
 	.pagination-box {

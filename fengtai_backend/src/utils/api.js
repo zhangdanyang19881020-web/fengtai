@@ -103,6 +103,12 @@ export const dataApi = {
 	updateRelationship: (params) => post(_ServiceUrl + '/api/famil/editRelationship/', params),
 	// 添加村级地
 	addVillage: (params) => post(_ServiceUrl + '/api/region/addVillage/', params),
+	// 下载excel导入模板
+	downloadTemplate: () => {
+		return get(_ServiceUrl + '/api/visit/download-template/', {}, {
+			responseType: 'blob' // Set responseType to 'blob' to handle file download
+		});
+	},
 
 	// ================以下 展示页面接口⬇️=================
 	// 首页搜索查询
