@@ -10,7 +10,7 @@
 						<el-radio-group v-model="form.type">
 							<el-radio-button label="默认活动" value="default" />
 							<el-radio-button label="平台活动" value="platform" />
-					
+
 						</el-radio-group>
 					</el-form-item>
 					<el-form-item label="活动名称" prop="title">
@@ -255,7 +255,7 @@
 
 			// 表单数据
 			const form = reactive({
-				type:'default',
+				type: 'default',
 				title: '',
 				date: '',
 				imgUrl: '',
@@ -283,7 +283,7 @@
 				}
 				const result = await dataApi.newsDetail(params);
 				if (result.code == 200) {
-					form.type="";
+					form.type = result.data.activityType;
 					form.title = result.data.title;
 					form.date = result.data.createdAt;
 					form.imgUrl = result.data.indexImgUrl;
@@ -431,6 +431,7 @@
 					}
 
 					let params = {
+						"activityType":form.type,
 						"id": dadData.value.row.activityId,
 						"title": form.title,
 						"indexImgId": form.imgUrlId, //上传接口报错 

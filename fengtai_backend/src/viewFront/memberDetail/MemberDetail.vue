@@ -316,7 +316,8 @@
 			"targetId": ob.region.id,
 			"targetType": 1,
 			"pageSize": 100,
-			"pageIndex": 1
+			"pageIndex": 1,
+			"activityType":'platform'
 		}
 		const result = await dataApi.homeViewList(params);
 		console.log('homViewList', result)
