@@ -1,5 +1,9 @@
 <template>
 	<div class="map-demo">
+		<div class="no-date--box">
+			未检索到信息,请在地图<span class="highlight">点击</span>街道/镇,进行搜索
+			<i class="iconfont icon-zelvxuanzefeiyongzhengsanjiaoxingzhichi"></i>
+		</div>
 		<div class="map">
 			<FenghuaMapSearch ref="mapRef" v-if="geojson" :geojson="geojson" :people="people"
 				@streetMapClick="streetMapClickFn" />
@@ -170,6 +174,28 @@
 <style lang="scss" scoped>
 	.map-demo {
 		box-sizing: border-box;
+
+		.no-date--box {
+			box-sizing: border-box;
+			margin: 15px;
+			border: 1px solid #ede3d1;
+			border-radius: 10px;
+			background: #ede3d1;
+			padding: 5px 15px;
+			color: rgba(0, 0, 0, 0.3);
+			position: relative;
+
+			.iconfont {
+				position: absolute;
+				bottom: -13px;
+				left: 20px;
+				transform: rotate(180deg);
+				color: #ede3d1;
+			}
+			.highlight {
+				color: rgba(132,32,18,0.6);
+			}
+		}
 
 		.map {
 			width: calc(100% + 80px);
