@@ -109,6 +109,25 @@ export const dataApi = {
 			responseType: 'blob' // Set responseType to 'blob' to handle file download
 		});
 	},
+	// 批量导入excel人员
+	batchImport: async (file) => {
+		const formData = new FormData();
+		formData.append('file', file);
+		try {
+			const result = await post(_ServiceUrl + '/api/visit/import-excel/', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				}
+			});
+			return result;
+			// Handle the result
+			console.log('Batch import result:', result);
+		} catch (error) {
+			console.error('Batch import failed:', error);
+			return error;
+		}
+
+	},
 
 	// ================以下 展示页面接口⬇️=================
 	// 首页搜索查询

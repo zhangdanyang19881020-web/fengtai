@@ -87,12 +87,14 @@ service.interceptors.response.use(
 				config.url.includes('/api/auth/login/')
 			)
 			console.log('isLoginResponse--', isLoginResponse);
-			if(config.responseType=='blob'){
+			if (config.responseType == 'blob') {
 				//文件返回
 				return data;
+			} else {
+
 			}
 
-			if (isLoginResponse || data.code == 200) {
+			if (isLoginResponse && data.code == 200) {
 				// 自动保存登录返回的 token
 				var loginResOb = data.data;
 				import('./token').then(({
@@ -116,6 +118,8 @@ service.interceptors.response.use(
 			} else {
 				console.log('others--', config)
 			}
+
+
 
 			// 这里可以根据后端的响应结构进行调整
 			console.log('data--', data)

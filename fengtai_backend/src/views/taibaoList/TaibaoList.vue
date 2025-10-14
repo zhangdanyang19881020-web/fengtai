@@ -3,9 +3,23 @@
 		<div class="header">
 			<el-input v-model="searchQuery" placeholder="输入名字搜索" :suffix-icon="Search" class="search-box" />
 			<div>
-				<el-button type="text" @click="templateDownload">模板下载</el-button>
-				<el-button type="primary" @click="goNewFn">新建</el-button>
-				<el-button type="success" @click="batcgImportFn">导入</el-button>
+				<el-button link type="warning" @click="templateDownload">
+					模板下载&nbsp;
+					<el-icon>
+						<Download />
+					</el-icon>
+				</el-button>
+				<el-button type="primary" @click="goNewFn">
+					新建
+				</el-button>
+				<el-button type="success" bg @click="batcgImportFn">
+					导入&nbsp;
+					<el-icon>
+						<Upload />
+					</el-icon>
+				</el-button>
+				<input type="file" ref="fileInput" @change="handleExcelUpload" accept=".xlsx, .xls"
+					style="display: none">
 			</div>
 
 		</div>
@@ -61,7 +75,10 @@
 		ElMessage
 	} from 'element-plus'
 	import {
-		Search
+		Search,
+		Upload,
+		Plus,
+		Download
 	} from '@element-plus/icons-vue'
 	import {
 		dataApi
@@ -84,7 +101,45 @@
 	const background = ref(true)
 	const totalPage = ref(0)
 	const loading = ref(false)
+	const fileInput = ref(null);
 
+	const batcgImportFn = () => {
+		fileInput.value.click();
+	};
+	const handleExcelUpload = (event) => {
+		const file = event.target.files[0];
+		if (file) {
+			console.log('file', file)
+			const validFileTypes = [
+				'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx, .xlsm
+				'application/vnd.ms-excel', // .xls, .xlt, .xlsb
+				'application/vnd.openxmlformats-officedocument.spreadsheetml.template', // .xltx
+				'application/vnd.ms-excel.sheet.binary.macroEnabled.12' // .xlsb
+			];
+			// const isExcel = file.type === 'image/jpeg' || file.type === 'image/png' || file.type ===
+			// 	'image/gif' || file.type === 'image/webp'
+			// console.log('isImage',isImage)
+			if (validFileTypes.includes(file.type)) {
+				uploadApiFn(file);
+			} else {
+				ElMessage.error('只能上传 JPG/PNG/GIF/WEBP 格式的图片!')
+				return
+			}
+		}
+	};
+
+	const uploadApiFn = async (file) => {
+		const result = await dataApi.batchImport(file);
+		console.log('uploadApiFn--result--', result)
+		if (result.code == 200) {
+			ElMessage({
+				type: 'success',
+				message: result.message,
+			});
+			currentPage.value = 1
+			getListFn()
+		}
+	}
 	const router = useRouter();
 
 	// params object to track page info and search query
@@ -178,9 +233,7 @@
 			})
 
 	}
-	const batcgImportFn = () => {
 
-	}
 	const templateDownload = async () => {
 		const result = await dataApi.downloadTemplate();
 		console.log('templateDownload', result);
