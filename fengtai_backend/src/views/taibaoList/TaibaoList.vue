@@ -10,13 +10,13 @@
 					</el-icon>
 				</el-button>
 				<el-button type="primary" @click="goNewFn">
-					新建
+					<i class="iconfont icon-xinjianzhanghao"></i>&nbsp; 新建
 				</el-button>
 				<el-button type="success" bg @click="batcgImportFn">
-					导入&nbsp;
 					<el-icon>
 						<Upload />
-					</el-icon>
+					</el-icon>&nbsp;导入
+
 				</el-button>
 				<input type="file" ref="fileInput" @change="handleExcelUpload" accept=".xlsx, .xls"
 					style="display: none">
