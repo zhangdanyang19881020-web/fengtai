@@ -279,20 +279,23 @@
 		overflow-y: hidden;
 		overflow-x: auto;
 		.home-view--item{
-			position: relative;
 			 flex: 0 0 auto;
-			margin:0 10px 0 0;
-			width:170px;
-			height:100px;
-			background: rgba(0,0,0,0.05);
-			border-radius: 4px;
+			 &:last-child{
+				 	.home-view--img{
+							margin:10px 10px 0 10px;
+					}
+			 }
 			.home-view--img {
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				    height: 100%;
-				    object-fit: cover; /* Make the image cover the container */
-				    object-position: bottom; /* Align the image to the bottom */
+					border-radius: 4px;
+					margin:10px 0 0 10px;
+					width:125px;
+					height:80px;
+					border-radius: 4px;
+					
 				.image-slot {
 				  text-align: center;
 				  color: rgba(0,0,0,0.3);
@@ -304,13 +307,11 @@
 				}
 			}
 			.home-view--title{
-				position: absolute;
-				bottom:0;
 				width:100%;
 				padding:5px 10px;
-				background:rgba(255,255,255,0.5);
+		font-size:12px;
 				text-align: center;
-				color: #4d2d07;
+				color: #333;
 			}
 		}
 	}

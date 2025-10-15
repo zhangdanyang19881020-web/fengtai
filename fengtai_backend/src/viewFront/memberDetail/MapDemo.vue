@@ -56,15 +56,6 @@
 
 <template>
 	<div class="map-demo">
-		<!-- 		<div class="sidebar">
-			<h3>人员列表</h3>
-			<ul>
-				<li v-for="p in people" :key="p.name" @click="highlightByPerson(p)">
-					<span class="name">{{ p.name }}</span>
-					<span class="affix">（{{ p.town }}{{ p.village ? ' - ' + p.village : '' }}）</span>
-				</li>
-			</ul>
-		</div> -->
 		<div class="map">
 			<FenghuaMap ref="mapRef" v-if="geojson" :geojson="geojson" :people="people" />
 			<div v-else class="placeholder">正在加载地图数据...</div>

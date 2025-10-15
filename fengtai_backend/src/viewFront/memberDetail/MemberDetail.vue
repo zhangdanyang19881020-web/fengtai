@@ -203,7 +203,7 @@
 	const birthday = computed(() => {
 		return moment(memberDetailOb.value.birthMonth).format("YYYY-MM")
 	})
-	const fit = ref('contain')
+	const fit = ref('cover')
 	// 动画start
 
 	const translateX = ref(0); // Initialize the translation value to 0
