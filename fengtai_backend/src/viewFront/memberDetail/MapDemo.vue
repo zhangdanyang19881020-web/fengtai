@@ -47,7 +47,7 @@
 			})
 			setTimeout(() => {
 				highlightByPerson()
-			}, 500)
+			}, 1000)
 		} catch (error) {
 			console.error('Error loading data:', error)
 		}
