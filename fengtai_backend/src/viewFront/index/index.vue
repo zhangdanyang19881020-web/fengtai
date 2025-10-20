@@ -9,7 +9,12 @@
 		<div class="denglong"></div>
 		<div class="logo"></div>
 		<div class="input-box">
-			<el-input class="z-input" placeholder="请输入您要查询的姓名/地名" v-model="searchVal" clearable></el-input>
+			<div class="input-box--l"></div>
+			<div class="input-box--m">
+				<el-input class="z-input" placeholder="请输入您要查询的姓名/地名" v-model="searchVal" clearable></el-input>
+			</div>
+			<div class="input-box--r"></div>
+
 		</div>
 		<!-- 搜索下拉框 -->
 		<!-- 		<div v-show="showDropdown" class="search-dropdown" :style="{ top: dropdownTop + 'px' }">
@@ -104,7 +109,7 @@
 		const val = searchVal.value.trim()
 		if (!val) {
 			router.push({
-				name:'memberSearch'
+				name: 'memberSearch'
 			})
 		}
 
@@ -146,7 +151,7 @@
 						// 搜索不到人名
 						router.push({
 							name: 'memberSearch',
-	
+
 						})
 					}
 
@@ -192,19 +197,41 @@
 
 		.input-box {
 			position: absolute;
-			background: url('@/static/f-Images/webp/input-bg.webp') 100% 100% no-repeat;
+			// background: url('@/static/f-Images/webp/input-bg.webp') 100% 100% no-repeat;
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
 			left: 10%;
 			top: 370px;
 			width: 80%;
-			height: 45px;
 			z-index: 11;
+			display: flex;
+			justify-content: center;
 
+
+			.input-box--l {
+				content: "";
+				background: url('@/static/f-Images/input/input-l.png') no-repeat;
+				width: 12px;
+				height: 45px;
+				background-size: contain;
+
+			}
+
+			.input-box--r {
+				background: url('@/static/f-Images/input/input-r.png') no-repeat;
+				width: 13px;
+				height: 45px;
+				background-size: contain;
+			}
+
+			.input-box--m {
+				width: calc(80% - 25px);
+				background: url('@/static/f-Images/input/input-m.png') repeat-x;
+				height: 45px;
+			}
 
 			.z-input {
-				width: calc(80% - 40px);
 				margin: 7px auto 10px;
 				position: relative;
 				display: flex;
@@ -217,8 +244,8 @@
 
 			&:hover {
 				position: absolute;
-				background: url('@/static/f-Images/webp/input-focus-bg2.webp') 100% 100% no-repeat;
-				background-size: contain;
+				// background: url('@/static/f-Images/webp/input-focus-bg2.webp') 100% 100% no-repeat;
+				// background-size: contain;
 				/* 图片等比缩放，完全包含 */
 				background-position: right bottom;
 				left: 10%;
@@ -226,6 +253,28 @@
 				width: 80%;
 				height: 45px;
 				z-index: 11;
+				
+				.input-box--l {
+					content: "";
+					background: url('@/static/f-Images/input/input-focus-l.png') no-repeat;
+					width: 12px;
+					height: 45px;
+					background-size: contain;
+				
+				}
+				
+				.input-box--r {
+					background: url('@/static/f-Images/input/input-focus-r.png') no-repeat;
+					width: 13px;
+					height: 45px;
+					background-size: contain;
+				}
+				
+				.input-box--m {
+					width: calc(80% - 25px);
+					background: url('@/static/f-Images/input/input-focus-m.png') repeat-x;
+					height: 45px;
+				}
 			}
 		}
 
