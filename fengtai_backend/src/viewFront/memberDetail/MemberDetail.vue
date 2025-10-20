@@ -476,7 +476,7 @@
 		}
 
 		.inner-top {
-			background: url('@/static/f-Images/inner-top.jpg') no-repeat;
+			background: url('@/static/f-Images/inner-top-3.jpg') no-repeat;
 			background-size: contain;
 			position: fixed;
 			top: 0;
