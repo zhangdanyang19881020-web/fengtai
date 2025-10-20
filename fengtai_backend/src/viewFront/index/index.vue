@@ -203,7 +203,7 @@
 			background-position: right bottom;
 			left: 10%;
 			top: 370px;
-			width: 80%;
+			width: 85%;
 			z-index: 11;
 			display: flex;
 			justify-content: center;
@@ -226,7 +226,7 @@
 			}
 
 			.input-box--m {
-				width: calc(80% - 25px);
+				width: calc(85% - 25px);
 				background: url('@/static/f-Images/input/input-m.png') repeat-x;
 				height: 45px;
 			}
@@ -250,7 +250,7 @@
 				background-position: right bottom;
 				left: 10%;
 				top: 370px;
-				width: 80%;
+				width: 85%;
 				height: 45px;
 				z-index: 11;
 				
@@ -271,7 +271,7 @@
 				}
 				
 				.input-box--m {
-					width: calc(80% - 25px);
+					width: calc(85% - 25px);
 					background: url('@/static/f-Images/input/input-focus-m.png') repeat-x;
 					height: 45px;
 				}
