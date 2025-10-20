@@ -131,12 +131,19 @@
 		const result = await dataApi.batchImport(file);
 		console.log('uploadApiFn--result--', result)
 		if (result.code == 200) {
+
 			ElMessage({
 				type: 'success',
 				message: result.message,
 			});
 			currentPage.value = 1
 			getListFn()
+
+			// ✅ 上传成功后清空文件选择
+			if (fileInput.value) {
+				fileInput.value.value = null;
+			}
+
 		}
 	}
 	const router = useRouter();
