@@ -266,7 +266,7 @@
 			top: -20px;
 			width: 800px;
 			height:800px;
-			z-index: 3;
+			z-index: 10;
 		}
 
 		.bottom-mountain {
@@ -340,16 +340,16 @@
 
 		.top-mountain {
 			position: absolute;
-			background: url('@/static/f-Images/webp/top-left--sky2.webp') no-repeat;
-			// background-size: contain;
+			background: url('@/static/f-Images/webp/top-left-tower.webp') 100% 100% no-repeat;
+			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: left top;
 			/* 背景图居中 */
 			top: 0;
 			left: 0;
-			width: 200%;
-			height: 200%;
-			z-index: 1;
+			width: 90%;
+			height: 90%;
+			z-index: 5;
 		}
 
 		// .bottom-light {
