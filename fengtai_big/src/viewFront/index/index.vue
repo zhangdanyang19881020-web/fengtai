@@ -207,6 +207,7 @@
 			z-index: 11;
 			display: flex;
 			justify-content: center;
+
 			.input-box--l {
 				content: "";
 				background: url('@/static/f-Images/input/input-l.png') no-repeat;
@@ -234,6 +235,7 @@
 				position: relative;
 				display: flex;
 				justify-content: flex-end;
+
 				.el-input__wrapper {
 					background: none;
 				}
@@ -262,8 +264,8 @@
 			background-position: right bottom;
 			right: -20px;
 			top: -20px;
-			width: 200px;
-			height: 200px;
+			width: 800px;
+			height:800px;
 			z-index: 3;
 		}
 
@@ -290,9 +292,9 @@
 			/* 背景图居中 */
 			bottom: 0;
 			left: 0;
-			width: 100%;
-			height: 100%;
-			max-width: 400px;
+			width: 500%;
+			height: 500%;
+			max-width: 100%;
 			z-index: 2;
 			// animation: blurToClear 10s ease-in-out forwards;
 			/* 应用动画 */
@@ -300,9 +302,9 @@
 
 		.bottom-light--brown {
 			position: absolute;
-			background: linear-gradient(to top, rgba(122, 76, 0, 1) 0%, rgba(122, 76, 0, 0) 100%);
+			background: linear-gradient(to top, rgba(122, 76, 0, 0.8) 0%, rgba(122, 76, 0, 0) 60%);
 			width: 100%;
-			height: 100px;
+			height: 600px;
 			bottom: -20px;
 			left: 0;
 			z-index: 30;
@@ -329,9 +331,9 @@
 			/* 背景图居中 */
 			bottom: 0;
 			right: 0;
-			width: 100%;
-			height: 100%;
-			max-width: 400px;
+			width: 500%;
+			height: 500%;
+			max-width: 90%;
 			z-index: 3;
 			// animation: blurToClear 10s ease-in-out forwards;
 		}
@@ -339,14 +341,14 @@
 		.top-mountain {
 			position: absolute;
 			background: url('@/static/f-Images/webp/top-left--sky2.webp') no-repeat;
-			background-size: contain;
+			// background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: left top;
 			/* 背景图居中 */
 			top: 0;
 			left: 0;
-			width: 100%;
-			height: 100%;
+			width: 200%;
+			height: 200%;
 			z-index: 1;
 		}
 
@@ -387,9 +389,9 @@
 			/* 图片等比缩放，完全包含 */
 			background-position: center top;
 			/* 背景图居中 */
-			top: 200px;
-			left: 60px;
-			width: calc(100% - 120px);
+			top: 900px;
+			left: 260px;
+			width: calc(100% - 520px);
 			height: 100%;
 			z-index: 11;
 		}
