@@ -1,0 +1,72 @@
+{
+  "name": "RAG Knowledge Base",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "rag",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "Webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "query",
+        "projectId": "your_project_id",
+        "query": "={{$json[\"question\"]}}",
+        "limit": 3
+      },
+      "id": "VectorDB",
+      "name": "Vector DB (Pinecone)",
+      "type": "n8n-nodes-base.pinecone",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "credentials": {
+        "pineconeApi": "Your Pinecone API"
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": [
+          {
+            "role": "system",
+            "content": "你是一个知识库问答助手，请结合提供的知识库内容回答问题。"
+          },
+          {
+            "role": "user",
+            "content": "问题：={{$json[\"question\"]}}\n\n知识库参考：={{$json[\"matches\"]}}"
+          }
+        ]
+      },
+      "id": "OpenAI",
+      "name": "OpenAI Chat",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [750, 300],
+      "credentials": {
+        "openAiApi": "Your OpenAI API"
+      }
+    },
+    {
+      "parameters": {
+        "responseBody": "={{$json[\"choices\"][0][\"message\"][\"content\"]}}"
+      },
+      "id": "Respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Vector DB (Pinecone)", "type": "main", "index": 0 }]] },
+    "Vector DB (Pinecone)": { "main": [[{ "node": "OpenAI Chat", "type": "main", "index": 0 }]] },
+    "OpenAI Chat": { "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]] }
+  }
+}

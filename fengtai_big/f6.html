@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>蒋氏族谱</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'SimSun', '宋体', serif;
+    }
+    body {
+      padding: 20px;
+      background-color: #f9f3e5;
+      color: #333;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><rect fill="%23866f4d" x="0" y="0" width="100" height="100"/><path d="M0 0L100 100M100 0L0 100" stroke="%23866f4d" stroke-width="1"/></svg>');
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fcf8ee;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      border: 1px solid #d4c7a7;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #b8860b;
+    }
+    h1 {
+      font-size: 32px;
+      color: #8b4513;
+      margin-bottom: 10px;
+      letter-spacing: 5px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    .subtitle {
+      color: #8b4513;
+      font-size: 16px;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    button {
+      padding: 8px 20px;
+      background: #8b4513;
+      color: #fcf8ee;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-family: 'SimSun', '宋体', serif;
+    }
+    button:hover {
+      background: #a0522d;
+    }
+    .family-tree {
+      width: 100%;
+      height: 550px;
+      border: 1px solid #d4c7a7;
+      border-radius: 8px;
+      overflow: auto;
+      background: #fcf8ee;
+      padding: 20px;
+      position: relative;
+    }
+    .node-info {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 8px;
+      background: #f7f0db;
+      border: 1px solid #d4c7a7;
+    }
+    .node-info h3 {
+      margin-bottom: 15px;
+      color: #8b4513;
+      text-align: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #d4c7a7;
+    }
+    .node-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    .detail-item {
+      padding: 8px 0;
+      border-bottom: 1px dashed #d4c7a7;
+    }
+    .detail-label {
+      font-weight: bold;
+      color: #8b4513;
+      margin-right: 8px;
+    }
+    .generation-label {
+      position: absolute;
+      left: 10px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      color: #8b4513;
+      font-weight: bold;
+      background: #f7f0db;
+      padding: 10px 5px;
+      border-radius: 4px;
+      border: 1px solid #d4c7a7;
+    }
+    .generation-0 { top: 50px; }
+    .generation-1 { top: 200px; }
+    .generation-2 { top: 380px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    const { createApp, ref, reactive } = Vue;
+    
+    const App = {
+      setup() {
+        // 根据图片数据构建族谱
+        const familyData = reactive({
+          id: 1,
+          name: '蒋生娥',
+          title: '爷爷',
+          birthYear: '1940',
+          spouse: '',
+          children: [
+            {
+              id: 2,
+              name: '蒋孝天',
+              title: '父亲',
+              birthYear: '1965',
+              spouse: '王惠菊',
+              children: [
+                {
+                  id: 4,
+                  name: '蒋维功',
+                  title: '',
+                  birthYear: '1990',
+                  spouse: '',
+                  children: []
+                },
+                {
+                  id: 5,
+                  name: '蒋得明',
+                  title: '儿子',
+                  birthYear: '1993',
+                  spouse: '',
+                  children: []
+                },
+                {
+                  id: 6,
+                  name: '蒋得恩',
+                  title: '女儿',
+                  birthYear: '1995',
+                  spouse: '',
+                  children: []
+                }
+              ]
+            }
+          ]
+        });
+        
+        const selectedNode = ref(null);
+        const zoomLevel = ref(1);
+        
+        const selectNode = (node) => {
+          selectedNode.value = node;
+        };
+        
+        const zoomIn = () => {
+          if (zoomLevel.value < 1.5) {
+            zoomLevel.value += 0.1;
+          }
+        };
+        
+        const zoomOut = () => {
+          if (zoomLevel.value > 0.7) {
+            zoomLevel.value -= 0.1;
+          }
+        };
+        
+        const resetZoom = () => {
+          zoomLevel.value = 1;
+        };
+        
+        return {
+          familyData,
+          selectedNode,
+          zoomLevel,
+          selectNode,
+          zoomIn,
+          zoomOut,
+          resetZoom
+        };
+      },
+      template: `
+        <div class="container">
+          <div class="header">
+            <h1>蒋氏族谱</h1>
+            <div class="subtitle">传承家风 · 弘扬美德</div>
+          </div>
+          
+          <div class="controls">
+            <button @click="zoomIn">放大</button>
+            <button @click="zoomOut">缩小</button>
+            <button @click="resetZoom">重置</button>
+          </div>
+          
+          <div class="family-tree">
+            <div class="generation-label generation-0">第一代</div>
+            <div class="generation-label generation-1">第二代</div>
+            <div class="generation-label generation-2">第三代</div>
+            
+            <svg 
+              :width="900 * zoomLevel" 
+              :height="500 * zoomLevel" 
+              viewBox="0 0 900 500"
+            >
+              <FamilyNode 
+                :node="familyData" 
+                :x="450" 
+                :y="50" 
+                :level="0"
+                :selectedNode="selectedNode"
+                @select-node="selectNode"
+              />
+            </svg>
+          </div>
+          
+          <div class="node-info" v-if="selectedNode">
+            <h3>成员详细信息</h3>
+            <div class="node-details">
+              <div class="detail-item">
+                <span class="detail-label">姓名：</span>
+                {{ selectedNode.name }}
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">称谓：</span>
+                {{ selectedNode.title || '无' }}
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">出生年份：</span>
+                {{ selectedNode.birthYear }}
+              </div>
+              <div class="detail-item" v-if="selectedNode.spouse">
+                <span class="detail-label">配偶：</span>
+                {{ selectedNode.spouse }}
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">后代数量：</span>
+                {{ selectedNode.children ? selectedNode.children.length : 0 }}
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+    };
+    
+    const FamilyNode = {
+      props: ['node', 'x', 'y', 'level', 'selectedNode'],
+      emits: ['select-node'],
+      setup(props, { emit }) {
+        const nodeWidth = 100;
+        const nodeHeight = 60;
+        const verticalSpacing = 120;
+        const horizontalSpacing = 150;
+        
+        const onClick = () => {
+          emit('select-node', props.node);
+        };
+        
+        return {
+          nodeWidth,
+          nodeHeight,
+          verticalSpacing,
+          horizontalSpacing,
+          onClick
+        };
+      },
+      computed: {
+        isSelected() {
+          return this.selectedNode && this.selectedNode.id === this.node.id;
+        }
+      },
+      template: `
+        <g>
+          <!-- 连接线 -->
+          <line 
+            v-if="level > 0"
+            :x1="x" 
+            :y1="y - nodeHeight/2" 
+            :x2="x" 
+            :y2="y - verticalSpacing/2"
+            stroke="#8b4513" 
+            stroke-width="2"
+          />
+          
+          <!-- 节点矩形 -->
+          <rect 
+            :x="x - nodeWidth/2" 
+            :y="y - nodeHeight/2" 
+            :width="nodeWidth" 
+            :height="nodeHeight" 
+            :fill="isSelected ? '#e6d2b5' : '#f7f0db'" 
+            stroke="#8b4513" 
+            stroke-width="2"
+            rx="5"
+            @click="onClick"
+            style="cursor: pointer;"
+          />
+          
+          <!-- 配偶矩形 -->
+          <rect 
+            v-if="node.spouse"
+            :x="x + nodeWidth/2 + 5" 
+            :y="y - nodeHeight/2" 
+            :width="nodeWidth" 
+            :height="nodeHeight" 
+            fill="#f7f0db" 
+            stroke="#8b4513" 
+            stroke-width="2"
+            rx="5"
+            style="cursor: pointer;"
+          />
+          
+          <!-- 连接配偶的线 -->
+          <line 
+            v-if="node.spouse"
+            :x1="x + nodeWidth/2" 
+            :y1="y" 
+            :x2="x + nodeWidth/2 + 5" 
+            :y2="y"
+            stroke="#8b4513" 
+            stroke-width="2"
+          />
+          
+          <!-- 姓名 -->
+          <text 
+            :x="x" 
+            :y="y - 10" 
+            text-anchor="middle" 
+            fill="#8b4513"
+            style="font-size: 14px; pointer-events: none; font-weight: bold;"
+          >
+            {{ node.name }}
+          </text>
+          
+          <!-- 称谓 -->
+          <text 
+            :x="x" 
+            :y="y + 10" 
+            text-anchor="middle" 
+            fill="#8b4513"
+            style="font-size: 12px; pointer-events: none;"
+          >
+            {{ node.title }}
+          </text>
+          
+          <!-- 配偶姓名 -->
+          <text 
+            v-if="node.spouse"
+            :x="x + nodeWidth/2 + 5 + nodeWidth/2" 
+            :y="y - 10" 
+            text-anchor="middle" 
+            fill="#8b4513"
+            style="font-size: 14px; pointer-events: none; font-weight: bold;"
+          >
+            {{ node.spouse }}
+          </text>
+          
+          <!-- 子节点 -->
+          <g v-if="node.children && node.children.length">
+            <!-- 连接子节点的水平线 -->
+            <line 
+              :x1="x - (node.children.length - 1) * horizontalSpacing / 2" 
+              :y1="y + verticalSpacing/2" 
+              :x2="x + (node.children.length - 1) * horizontalSpacing / 2" 
+              :y2="y + verticalSpacing/2"
+              stroke="#8b4513" 
+              stroke-width="2"
+            />
+            
+            <!-- 连接到水平线的垂直线 -->
+            <line 
+              :x1="x" 
+              :y1="y + nodeHeight/2" 
+              :x2="x" 
+              :y2="y + verticalSpacing/2"
+              stroke="#8b4513" 
+              stroke-width="2"
+            />
+            
+            <!-- 递归渲染子节点 -->
+            <FamilyNode 
+              v-for="(child, index) in node.children" 
+              :key="child.id"
+              :node="child" 
+              :x="x - (node.children.length - 1) * horizontalSpacing / 2 + index * horizontalSpacing"
+              :y="y + verticalSpacing" 
+              :level="level + 1"
+              :selectedNode="selectedNode"
+              @select-node="$emit('select-node', $event)"
+            />
+          </g>
+        </g>
+      `
+    };
+    
+    const app = createApp(App);
+    app.component('FamilyNode', FamilyNode);
+    app.mount('#app');
+  </script>
+</body>
+</html>

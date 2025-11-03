@@ -1,0 +1,333 @@
+@use "./constant.scss" as *;
+@use "./fixed.scss" as *;
+@import url('//at.alicdn.com/t/c/font_5014666_m6nxj6bhirc.css');
+
+ 
+ body,ul,li{
+	 margin:0;
+	 padding:0;
+ }
+ html{
+	 width:100%;
+	 height:100%;
+	 overflow-x: hidden;
+ }
+ body{
+	 width:100%;
+	 height:100%;
+	 overflow-x: hidden;
+ }
+ .app-body{
+ 	 width:100%;
+ 	 height:100%;
+	 overflow-x: hidden;
+ }
+
+ *{
+	 box-sizing: border-box;
+ }
+ 
+.l-size {
+  font-size: $large-size;
+}
+	// 以下后台css⬆️
+.search-box--container{
+	display:flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom:15px;
+	background: rgba(0,0,0,0.01);
+	border-radius: 4px;
+	padding:10px;
+	border:1px solid rgba(0,0,0,0.1);
+	.search-box--left{
+		display:flex;
+		justify-content: flex-start;
+		align-items: center;
+		.search-box--item{
+			display:flex;
+			justify-content: flex-start;
+			align-items: center;
+			margin-right:10px;
+			label{
+				width:100px;
+				font-size:14px;
+				color: rgba(0,0,0,0.6);
+			}
+			label.item-title{
+				width:50px;
+			}
+			.search-box--tag{
+				margin-right:10px;
+			}
+			.search-box--input{
+				
+			}
+		}
+	}
+	
+	
+}
+
+
+	
+	.row-img--box{
+	width: 50px;
+	height:50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+	border:1px solid rgba(0,0,0,.08);
+	.row-img {
+		width: 50px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: rgba(0, 0, 0, 0.05);
+		border-radius: 4px;
+	
+		.el-image__error ,.el-image__placeholder{
+			font-size: 10px;
+			color: rgba(0,0,0,0.3);
+		}
+	}
+		.no-img{
+			width:25px;
+		}
+	}
+	
+	
+	//添加动态
+	.people-in--box{
+		.people-box{
+			margin-bottom:10px;
+			.people-box--tag{
+				margin-right:10px;
+			}
+		}
+		.people-add--line{
+			display:flex;
+			align-items:center;
+			// .people-add--input{
+			// 	margin-right:10px;
+			// }
+			.z-autocomplete{
+				margin-right:10px;
+			}
+			.people-add--btn{
+				
+			}
+		}
+	}
+	.prople-tr--box{
+		padding-top:5px;
+		.prople-tr{
+			display:flex;
+			align-items: center;
+			label{
+				color: rgba(0,0,0,0.6);
+			}
+			.prople-tr--avatar{
+				margin-right:5px;
+			}
+		
+			.prople-tr--address{
+					color:rgba(0,0,0,0.4);
+					margin-right:20px;
+			}
+			.prople-tr--birthday{
+				color:rgba(0,0,0,0.4)
+			}
+		}
+	}
+
+	
+	// 富文本
+	.rich-text--box{
+		border: 1px solid #c0c4cc;
+		border-radius: 4px;
+		overflow: hidden;
+		.rich-text--toolbar{
+				border-bottom: 1px solid #c0c4cc;
+		}
+	}
+	
+
+	
+	
+		// 以下展示页面css⬇️
+		
+		
+		.search-btn {
+			width: 150px;
+			height: 35px;
+			line-height: 35px;
+			border-radius: 4px;
+			color: #fff;
+			text-align: center;
+			background: #b28850;
+			cursor: pointer;
+			&:hover {
+				background: #a67a3f;
+			}
+		}
+		
+		
+	.timeline {
+		position: relative;
+		display: flex;
+		align-items: center;
+		width: 100%;
+		padding: 10px 0;
+	  overflow-x: auto; /* 启用水平滚动 */
+	  transform: translateY(-20px);
+	  
+	  /* 自定义滚动条样式 */
+	  &::-webkit-scrollbar {
+	  	height: 0;
+	  	/* 设置滚动条的宽度 */
+	  }
+	  
+	 &::-webkit-scrollbar-thumb {
+	  	background: rgba(194, 136, 66, 0.3);
+	  	/* 滑块的颜色 */
+	  	border-radius: 2px;
+	  }
+	  
+	  &::-webkit-scrollbar-track {
+	  	background: #f1f1f1;
+	  	/* 滚动条轨道的颜色 */
+	  }
+	  
+		.timeline-item {
+			position: relative;
+			width:32px;
+			flex: 0 0 auto;
+			text-align: center;
+			margin: 0 10px;
+			color: #999;
+			font-size: 14px;
+			cursor: pointer;
+		}
+		
+		.timeline-item.active span {
+			color: #b23a1c;
+			font-weight: bold;
+		}
+		
+		.timeline-item .dot {
+			width: 12px;
+			height: 12px;
+			margin: 6px auto 0;
+			border-radius: 50%;
+			border: 2px solid #b23a1c;
+			background: #fff;
+			transition: all 0.3s;
+		}
+		
+		.timeline-item.active .dot {
+			background: radial-gradient(circle at 30% 30%, #e54d42, #b71c1c);
+			border-color: #b71c1c;
+		}
+		.hr {
+			position: absolute;
+			top:41px;
+			border: none;
+			width:4000px;
+			height: 1px;
+			/* 控制横线的粗细 */
+			background: linear-gradient(to right, rgba(255, 0, 0, 0.3) 0%, rgba(255, 0, 0, 1) 50%, rgba(255, 0, 0, 0.3) 100%);
+		}
+	}
+	
+	//详情 家乡风貌
+	.home-view--box{
+		border:1px solid #ede3d0;
+		border-radius: 8px;
+		margin: 10px;
+		overflow:hidden;
+		.home-view--header{
+			height: 40px;
+			line-height: 40px;
+			background: #ede3d1;
+			padding-left:20px;
+		}
+		
+		.el-carousel__item  {
+		 // border:1px solid rgba(0,0,0,0.1);
+		 // border-radius: 8px;
+		 overflow: hidden;
+		}
+		
+		.el-carousel__item:nth-child(2n) {
+		  background-color: rgba(0,0,0,0.8);
+		}
+		
+		.el-carousel__item:nth-child(2n + 1) {
+		  background-color:rgba(0,0,0,0.6);
+		}
+	}
+	
+	
+
+	.home-view--list{
+		display:flex;
+		align-items: center;
+	    transition: transform 2s ease-in-out; /* Smooth sliding effect */
+		overflow-y: hidden;
+		overflow-x: auto;
+		.home-view--item{
+			 flex: 0 0 auto;
+			 &:last-child{
+				 	.home-view--img{
+							margin:10px 10px 0 10px;
+					}
+			 }
+			.home-view--img {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				    height: 100%;
+					border-radius: 4px;
+					margin:10px 0 0 10px;
+					width:125px;
+					height:80px;
+					border-radius: 4px;
+					
+				.image-slot {
+				  text-align: center;
+				  color: rgba(0,0,0,0.3);
+				  font-size: 30px;
+				  .el-icon {
+					font-size: 40px;
+					margin-top:50px;
+				  }
+				}
+			}
+			.home-view--title{
+				width:100%;
+				padding:5px 10px;
+		font-size:12px;
+				text-align: center;
+				color: #333;
+			}
+		}
+	}
+
+
+		.no-data {
+			font-size: 20px;
+			font-weight: bold;
+			color: rgba(0,0,0,0.3);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+	
+		}
+		
+		.personal-info{
+			padding:20px;
+			color: #333;
+		}

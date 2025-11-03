@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue3 矢量族谱组件</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Microsoft YaHei', sans-serif;
+    }
+    body {
+      padding: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 8px 16px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .family-tree {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: auto;
+      background: #f9f9f9;
+    }
+    .node-info {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #f0f0f0;
+    }
+    .node-info h3 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    .node-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .detail-item {
+      padding: 5px 0;
+    }
+    .detail-label {
+      font-weight: bold;
+      color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    const { createApp, ref, reactive } = Vue;
+    
+    const App = {
+      setup() {
+        // 示例族谱数据
+        const familyData = reactive({
+          id: 1,
+          name: '张大明',
+          birthYear: '1950',
+          spouse: '李小红',
+          children: [
+            {
+              id: 2,
+              name: '张中华',
+              birthYear: '1975',
+              spouse: '王丽',
+              children: [
+                {
+                  id: 4,
+                  name: '张小明',
+                  birthYear: '2000',
+                  spouse: null,
+                  children: []
+                },
+                {
+                  id: 5,
+                  name: '张小华',
+                  birthYear: '2003',
+                  spouse: null,
+                  children: []
+                }
+              ]
+            },
+            {
+              id: 3,
+              name: '张中强',
+              birthYear: '1978',
+              spouse: '刘芳',
+              children: [
+                {
+                  id: 6,
+                  name: '张小强',
+                  birthYear: '2010',
+                  spouse: null,
+                  children: []
+                }
+              ]
+            }
+          ]
+        });
+        
+        const selectedNode = ref(null);
+        const zoomLevel = ref(1);
+        
+        const selectNode = (node) => {
+          selectedNode.value = node;
+        };
+        
+        const zoomIn = () => {
+          if (zoomLevel.value < 2) {
+            zoomLevel.value += 0.1;
+          }
+        };
+        
+        const zoomOut = () => {
+          if (zoomLevel.value > 0.5) {
+            zoomLevel.value -= 0.1;
+          }
+        };
+        
+        const resetZoom = () => {
+          zoomLevel.value = 1;
+        };
+        
+        return {
+          familyData,
+          selectedNode,
+          zoomLevel,
+          selectNode,
+          zoomIn,
+          zoomOut,
+          resetZoom
+        };
+      },
+      template: `
+        <div class="container">
+          <h1>家族族谱图</h1>
+          
+          <div class="controls">
+            <button @click="zoomIn">放大</button>
+            <button @click="zoomOut">缩小</button>
+            <button @click="resetZoom">重置大小</button>
+          </div>
+          
+          <div class="family-tree">
+            <svg 
+              :width="1000 * zoomLevel" 
+              :height="600 * zoomLevel" 
+              viewBox="0 0 1000 600"
+            >
+              <FamilyNode 
+                :node="familyData" 
+                :x="500" 
+                :y="50" 
+                :level="0"
+                :selectedNode="selectedNode"
+                @select-node="selectNode"
+              />
+            </svg>
+          </div>
+          
+          <div class="node-info" v-if="selectedNode">
+            <h3>成员详细信息</h3>
+            <div class="node-details">
+              <div class="detail-item">
+                <span class="detail-label">姓名：</span>
+                {{ selectedNode.name }}
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">出生年份：</span>
+                {{ selectedNode.birthYear }}
+              </div>
+              <div class="detail-item" v-if="selectedNode.spouse">
+                <span class="detail-label">配偶：</span>
+                {{ selectedNode.spouse }}
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">后代数量：</span>
+                {{ selectedNode.children ? selectedNode.children.length : 0 }}
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+    };
+    
+    const FamilyNode = {
+      props: ['node', 'x', 'y', 'level', 'selectedNode'],
+      emits: ['select-node'],
+      setup(props, { emit }) {
+        const nodeSize = 80;
+        const verticalSpacing = 120;
+        const horizontalSpacing = 200;
+        
+        const onClick = () => {
+          emit('select-node', props.node);
+        };
+        
+        return {
+          nodeSize,
+          verticalSpacing,
+          horizontalSpacing,
+          onClick
+        };
+      },
+      computed: {
+        isSelected() {
+          return this.selectedNode && this.selectedNode.id === this.node.id;
+        }
+      },
+      template: `
+        <g>
+          <!-- 连接线 -->
+          <line 
+            v-if="level > 0"
+            :x1="x" 
+            :y1="y - nodeSize/2" 
+            :x2="x" 
+            :y2="y - verticalSpacing/2"
+            stroke="#7f8c8d" 
+            stroke-width="2"
+          />
+          
+          <!-- 节点 -->
+          <circle 
+            :cx="x" 
+            :cy="y" 
+            :r="nodeSize/2" 
+            :fill="isSelected ? '#3498db' : '#2c3e50'" 
+            stroke="#ecf0f1" 
+            stroke-width="2"
+            @click="onClick"
+            style="cursor: pointer;"
+          />
+          
+          <!-- 配偶 -->
+          <circle 
+            v-if="node.spouse"
+            :cx="x + nodeSize" 
+            :cy="y" 
+            :r="nodeSize/2" 
+            fill="#e74c3c" 
+            stroke="#ecf0f1" 
+            stroke-width="2"
+            style="cursor: pointer;"
+          />
+          
+          <!-- 姓名 -->
+          <text 
+            :x="x" 
+            :y="y + 5" 
+            text-anchor="middle" 
+            fill="white"
+            style="font-size: 12px; pointer-events: none;"
+          >
+            {{ node.name }}
+          </text>
+          
+          <!-- 配偶姓名 -->
+          <text 
+            v-if="node.spouse"
+            :x="x + nodeSize" 
+            :y="y + 5" 
+            text-anchor="middle" 
+            fill="white"
+            style="font-size: 12px; pointer-events: none;"
+          >
+            {{ node.spouse }}
+          </text>
+          
+          <!-- 子节点 -->
+          <g v-if="node.children && node.children.length">
+            <!-- 连接子节点的水平线 -->
+            <line 
+              :x1="x - (node.children.length - 1) * horizontalSpacing / 2" 
+              :y1="y + verticalSpacing/2" 
+              :x2="x + (node.children.length - 1) * horizontalSpacing / 2" 
+              :y2="y + verticalSpacing/2"
+              stroke="#7f8c8d" 
+              stroke-width="2"
+            />
+            
+            <!-- 连接到水平线的垂直线 -->
+            <line 
+              :x1="x" 
+              :y1="y + nodeSize/2" 
+              :x2="x" 
+              :y2="y + verticalSpacing/2"
+              stroke="#7f8c8d" 
+              stroke-width="2"
+            />
+            
+            <!-- 递归渲染子节点 -->
+            <FamilyNode 
+              v-for="(child, index) in node.children" 
+              :key="child.id"
+              :node="child" 
+              :x="x - (node.children.length - 1) * horizontalSpacing / 2 + index * horizontalSpacing"
+              :y="y + verticalSpacing" 
+              :level="level + 1"
+              :selectedNode="selectedNode"
+              @select-node="$emit('select-node', $event)"
+            />
+          </g>
+        </g>
+      `
+    };
+    
+    const app = createApp(App);
+    app.component('FamilyNode', FamilyNode);
+    app.mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+workflow:
+  name: example_workflow
+  description: This is an example workflow for DIFY system.
+  steps:
+    - name: data_loading
+      description: Load input data.
+      type: data_loading
+      config:
+        input_file: "/path/to/input/data.csv"
+        output_file: "/path/to/output/data_processed.csv"
+        delimiter: ","
+      
+    - name: data_processing
+      description: Process input data.
+      type: data_processing
+      config:
+        method: normalization
+        columns: 
+          - "age"
+          - "salary"
+        
+    - name: model_training
+      description: Train a machine learning model.
+      type: model_training
+      config:
+        model_type: "linear_regression"
+        input_file: "/path/to/output/data_processed.csv"
+        target_column: "target"
+        hyperparameters:
+          learning_rate: 0.01
+          epochs: 1000
+        
+    - name: model_evaluation
+      description: Evaluate the trained model.
+      type: model_evaluation
+      config:
+        model_file: "/path/to/output/model.pkl"
+        test_data: "/path/to/test/data.csv"
+        evaluation_metric: "rmse"
+        
+    - name: result_saving
+      description: Save the final results.
+      type: result_saving
+      config:
+        output_file: "/path/to/output/results.csv"
