@@ -201,57 +201,73 @@
 			background-size: contain;
 			/* 图片等比缩放，完全包含 */
 			background-position: right bottom;
-			left: 7.5%;
-			top: 370px;
-			width: 85%;
+			left: 10%;
+			top: calc(50% - 200px);
+			width: 80%;
 			z-index: 11;
 			display: flex;
 			justify-content: center;
 
 			.input-box--l {
 				content: "";
-				background: url('@/static/f-Images/input/input-l.png') no-repeat;
-				width: 12px;
-				height: 45px;
+				background: url('@/static/f-Images/input/input-l.png') 100% 100% no-repeat;
 				background-size: contain;
+				width: 53px;
+				height: 200px;
+
 
 			}
 
 			.input-box--r {
-				background: url('@/static/f-Images/input/input-r.png') no-repeat;
-				width: 13px;
-				height: 45px;
+				background: url('@/static/f-Images/input/input-r.png') 100% 100% no-repeat;
+				width: 58px;
+				height: 200px;
 				background-size: contain;
 			}
 
 			.input-box--m {
-				width: calc(85% - 25px);
-				background: url('@/static/f-Images/input/input-m.png') repeat-x;
-				height: 45px;
+				width: calc(80% - 111px);
+				background: url('@/static/f-Images/input/input-m.png') 100% 100% repeat-x;
+				height: 200px;
+				background-size: contain;
 			}
 
 			.z-input {
 				margin: 7px auto 10px;
+				height:200px;
+				font-size:70px;
 				position: relative;
 				display: flex;
 				justify-content: flex-end;
 
 				.el-input__wrapper {
 					background: none;
+					.el-input__inner{
+						height:200px!important;
+					}
 				}
 			}
 
 			&:hover {
 				.input-box--l {
-					background: url('@/static/f-Images/input/input-focus-l.png') no-repeat;
+					background: url('@/static/f-Images/input/input-focus-l.png') 100% 100% no-repeat;
+					background-size: contain;
+					width: 53px;
+					height: 200px;
 				}
 
 				.input-box--r {
-					background: url('@/static/f-Images/input/input-focus-r.png') no-repeat;
+					background: url('@/static/f-Images/input/input-focus-r.png') 100% 100% no-repeat;
+					width: 58px;
+					height: 200px;
+					background-size: contain;
 				}
 
 				.input-box--m {
-					background: url('@/static/f-Images/input/input-focus-m.png') repeat-x;
+					background: url('@/static/f-Images/input/input-focus-m.png') 100% 100% repeat-x;
+					width: calc(80% - 111px);
+					height: 200px;
+					background-size: contain;
 				}
 			}
 		}
@@ -265,7 +281,7 @@
 			right: -20px;
 			top: -20px;
 			width: 800px;
-			height:800px;
+			height: 800px;
 			z-index: 10;
 		}
 
@@ -390,8 +406,8 @@
 			background-position: center top;
 			/* 背景图居中 */
 			top: 900px;
-			left: 260px;
-			width: calc(100% - 520px);
+			left: 300px;
+			width: calc(100% - 600px);
 			height: 100%;
 			z-index: 11;
 		}
