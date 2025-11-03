@@ -180,13 +180,15 @@
 
 
 		.search-btn {
-			width: 150px;
-			height: 35px;
-			line-height: 35px;
+			width: 36%;
+			height: 180px;
+			line-height: 180px;
+			font-size:80px;
 			position: absolute;
-			top: 460px;
-			left: calc(50% - 75px);
+			top:calc(50% + 150px) ;
+			left: 32%;
 			z-index: 15;
+			border-radius: 20px;
 
 		}
 
